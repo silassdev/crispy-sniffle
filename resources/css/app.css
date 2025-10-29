@@ -1,16 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
+[x-cloak] { display: none !important; }
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-}
-:root {
-  --brand: #4f46e5;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-.dark .dark\:bg-gray-900 { background-color: #0b1220; }
+.active-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
+  transition: background-size 200ms ease;
+}
+.active-underline--show {
+  background-size: 100% 2px;
+}
+
+@layer base {
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280; 
+  opacity: 1; 
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  color: #9ca3af;
+}

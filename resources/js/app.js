@@ -1,10 +1,8 @@
-
-import './bootstrap'; // if you have this (recommended for axios setup)
+import './bootstrap';
 import Alpine from 'alpinejs';
+import { adminAuth } from './adminAuth';
+
+window.adminAuth = adminAuth;
 
 window.Alpine = Alpine;
 Alpine.start();
-
-if(!window.axios) {
-  
-}

@@ -1,49 +1,38 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Dashboard\AdminController;
-use App\Http\Controllers\Dashboard\TrainerController;
-use App\Http\Controllers\Dashboard\StudentController;
-use App\Http\Controllers\Admin\TrainerApprovalController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\CourseController;
-use App\Http\Controllers\CommunityController;
-use App\Http\Controllers\Trainer\CourseController as TrainerCourseController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\AuthController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
 
-require __DIR__.'/auth.php';
+Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+Route::get('password/token-invalid', function(){
+    return view('auth.passwords.token-expired');
+})->name('password.token.invalid');
 
-// Authenticated routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('courses', CourseController::class);
-    Route::get('community', [CommunityController::class, 'index']);
-});
 
-// Student dashboard
-Route::middleware(['auth','verified','role:student,trainer,admin'])->group(function () {
-    Route::get('/dashboard/student', [StudentController::class,'index'])->name('student.dashboard');
-});
+Route::post('/admin/login', [AuthController::class,'login'])->name('admin.login');
+Route::post('/admin/register', [AuthController::class,'register'])->name('admin.register');
+Route::post('/admin/logout', [AuthController::class,'logout'])->name('admin.logout')->middleware('auth');
 
-// Trainer routes
-Route::get('/trainer/pending', function () {
-    return view('auth.trainer_pending');
-})->name('trainer.pending');
 
-Route::middleware(['auth','role:trainer','approved.trainer'])->group(function () {
-    Route::get('/dashboard/trainer', [TrainerController::class, 'index'])->name('trainer.dashboard');
-    Route::resource('trainer/courses', TrainerCourseController::class)->names('trainer.courses');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
-// Admin routes
-Route::prefix('admin')->name('admin.')->middleware(['auth','role:admin'])->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-    Route::get('/trainers', [TrainerApprovalController::class,'index'])->name('trainers.index');
-    Route::get('/trainers/pending', [TrainerApprovalController::class, 'index'])->name('trainers.pending');
-    Route::post('/trainers/{user}/approve', [TrainerApprovalController::class, 'approve'])->name('trainers.approve');
+
+# Admin routes (protect with auth)
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
 });

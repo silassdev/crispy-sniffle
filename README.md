@@ -1,61 +1,58 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 Devs Open — Free Laravel MVP (Open Source)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A clean, production-minded starter for showcasing **apps, blogs, and custom APIs** — built with **Laravel + MariaDB** and a lightweight frontend stack: **Blade + Tailwind CSS + Alpine.js + Livewire**.  
+Perfect for freelancers or small teams who want a **fast portfolio + blog + admin dashboard** that’s easy to extend.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ⚡ Quick Pitch
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Devs Open** is a minimal, opinionated MVP you can clone and launch locally in minutes.  
+Includes: auth, blog CRUD, public API endpoints, admin dashboard, responsive UI, and a small WYSIWYG-ready editor scaffold.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Designed to be **readable, forkable, and easy to customize.**
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- 🔐 Admin auth (login + password reset)  
+- 👤 Seeded admin account for first run  
+- 📝 Blog CRUD: create, edit, publish, soft-delete  
+- 🖼️ Featured image uploads (with `storage:link`)  
+- 🏠 Public home with recent posts  
+- 🌐 API endpoints for blogs (JSON)  
+- 📱 Responsive nav + mobile drawer  
+- ⚙️ Tailwind + Alpine + Livewire UI  
+- ✉️ Mailer set to log (easy password reset testing)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🧰 Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Layer | Technology |
+|-------|-------------|
+| Backend | Laravel (latest) |
+| Database | MariaDB / MySQL |
+| Frontend | Blade, Tailwind CSS, Alpine.js, Livewire |
+| Bundler | Vite |
+| Recommended | `intervention/image` for uploads |
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🏁 Quick Start (Windows + XAMPP)
 
-## Contributing
+> Prereqs: PHP (via XAMPP), Composer, Node, NPM, VSCode
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+# Clone
+git clone https://github.com/yourname/devs-open.git
+cd devs-open
 
-## Code of Conduct
+# Install deps
+composer install
+npm install
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Copy & edit .env
+cp .env.example .env
+php artisan key:generate
