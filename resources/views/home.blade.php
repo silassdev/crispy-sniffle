@@ -16,9 +16,16 @@
     </p>
 
     <div class="mt-6 flex flex-wrap gap-3">
-      <a href="{{ route('register', ['role'=>'student']) }}" class="px-5 py-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Get started (Student)</a>
-      <a href="{{ route('register', ['role'=>'trainer']) }}" class="px-5 py-3 rounded-md bg-green-600 text-white hover:bg-green-700">Apply as Trainer</a>
-      <a href="{{ route('login') }}" class="px-5 py-3 rounded-md border hover:bg-gray-50 dark:hover:bg-white/5">Login</a>
+      @php
+        // Prepare register URLs: if named route exists, use it with query param, otherwise use path.
+        $studentRegisterUrl = Route::has('register') ? route('register', ['role'=>'student']) : url('/register?role=student');
+        $trainerRegisterUrl = Route::has('register') ? route('register', ['role'=>'trainer']) : url('/register?role=trainer');
+        $loginUrl = Route::has('login') ? route('login') : url('/login');
+      @endphp
+
+      <a href="{{ $studentRegisterUrl }}" class="px-5 py-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Get started (Student)</a>
+      <a href="{{ $trainerRegisterUrl }}" class="px-5 py-3 rounded-md bg-green-600 text-white hover:bg-green-700">Apply as Trainer</a>
+      <a href="{{ $loginUrl }}" class="px-5 py-3 rounded-md border hover:bg-gray-50 dark:hover:bg-white/5">Login</a>
     </div>
 
     <div class="mt-4 text-sm text-gray-500 dark:text-gray-400">
@@ -32,7 +39,7 @@
       <h3 class="font-semibold">Quick access</h3>
       <ul class="mt-3 space-y-3">
         <li>
-          <a href="{{ route('register', ['role'=>'student']) }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
+          <a href="{{ $studentRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
             <div>
               <div class="font-medium">Register — Student</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Join and enroll in courses</div>
@@ -44,7 +51,7 @@
         </li>
 
         <li>
-          <a href="{{ route('register', ['role'=>'trainer']) }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
+          <a href="{{ $trainerRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
             <div>
               <div class="font-medium">Apply — Trainer</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Create courses after admin approval</div>
@@ -56,7 +63,7 @@
         </li>
 
         <li>
-          <a href="{{ route('login') }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
+          <a href="{{ $loginUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
             <div>
               <div class="font-medium">Login</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Go to your dashboard</div>
