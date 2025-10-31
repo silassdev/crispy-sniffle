@@ -2,7 +2,7 @@
 
 ---
 
-# 📚 aShila LMS — README
+#  aShila LMS — README
 
 A minimal, modern **Learning Management System (LMS) MVP** built with **Laravel, Tailwind CSS, Alpine.js, and MySQL**.  
 This README covers setup, authentication (3 roles: student, trainer, admin), dashboards, trainer approval, assets, and troubleshooting.
