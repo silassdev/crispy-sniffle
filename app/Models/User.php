@@ -2,33 +2,42 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+
+    // Roles
+    public const ROLE_STUDENT = 'student';
+    public const ROLE_TRAINER = 'trainer';
+    public const ROLE_ADMIN   = 'admin';
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * Add 'role' and 'approved' so controllers can set them.
+     *
+     * @var array<int,string>
      */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'username',
-        'is_admin'
+        'role',
+        'approved',
+        'avatar',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays.
      *
-     * @var list<string>
+     * @var array<int,string>
      */
     protected $hidden = [
         'password',
@@ -36,15 +45,91 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attribute casts.
      *
-     * @return array<string, string>
+     * @var array<string,string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'approved' => 'boolean',
+    ];
+
+    /* ----------------------
+       Role helper methods
+       ---------------------- */
+
+    public function isAdmin(): bool
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isTrainer(): bool
+    {
+        return $this->role === self::ROLE_TRAINER;
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === self::ROLE_STUDENT;
+    }
+
+    /* ----------------------
+       Social accounts relation
+       ---------------------- */
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(\App\Models\SocialAccount::class);
+    }
+
+    /* --------------------------------------------------
+       Helper: find or create user from Socialite response
+       -------------------------------------------------- */
+    public static function findOrCreateFromSocialite($provider, $socialUser)
+    {
+        $providerId = $socialUser->getId();
+        $email = $socialUser->getEmail();
+        $name = $socialUser->getName() ?? $socialUser->getNickname() ?? ($email ? explode('@', $email)[0] : 'User');
+
+        // 1) existing social account
+        $sa = \App\Models\SocialAccount::where('provider_name', $provider)
+            ->where('provider_id', $providerId)
+            ->first();
+
+        if ($sa) {
+            return [$sa->user, false];
+        }
+
+        // 2) existing user by email -> link
+        if ($email) {
+            $user = self::where('email', $email)->first();
+            if ($user) {
+                $user->socialAccounts()->create([
+                    'provider_name' => $provider,
+                    'provider_id' => $providerId,
+                    'provider_email' => $email,
+                    'provider_raw' => $socialUser->user ?? null,
+                ]);
+                return [$user, false];
+            }
+        }
+
+        // 3) create new user (default: student)
+        $user = self::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make(Str::random(24)),
+            'role' => self::ROLE_STUDENT,
+            'approved' => true,
+        ]);
+
+        $user->socialAccounts()->create([
+            'provider_name' => $provider,
+            'provider_id' => $providerId,
+            'provider_email' => $email,
+            'provider_raw' => $socialUser->user ?? null,
+        ]);
+
+        return [$user, true];
     }
 }

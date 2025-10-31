@@ -1,47 +1,72 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.app')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title','Login')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+@section('content')
+<div class="max-w-md mx-auto">
+  <x-toast />
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+  @include('components.auth-hero', [
+    'title' => 'Welcome back',
+    'subtitle' => 'Sign in to continue building awesome things'
+  ])
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+  <form method="POST" action="{{ route('login') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
+    @csrf
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+    <div class="mb-3">
+      <label class="block text-sm font-medium">Email</label>
+      <input name="email" value="{{ old('email') }}" required class="mt-1 block w-full rounded-md border-gray-200"/>
+      @error('email') <p class="text-xs text-red-500">{{ $message }}</p> @enderror
+    </div>
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+    <div class="mb-3">
+      <label class="block text-sm font-medium">Password</label>
+      <input name="password" type="password" required class="mt-1 block w-full rounded-md border-gray-200"/>
+      @error('password') <p class="text-xs text-red-500">{{ $message }}</p> @enderror
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
+    <div class="flex items-center justify-between mb-4">
+      <label class="flex items-center gap-2 text-sm">
+        <input type="checkbox" name="remember" class="rounded" />
+        Remember me
+      </label>
+      <a href="{{ route('password.request') }}" class="text-sm text-indigo-600">Forgot password?</a>
+    </div>
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <div class="flex items-center gap-3">
+      <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md" :disabled="loading">
+        <span x-show="!loading">Login</span>
+        <span x-show="loading" class="flex items-center gap-2">
+          @include('components.donut-loader') <span>Logging in...</span>
+        </span>
+      </button>
+    </div>
+  </form>
+
+  {{-- social buttons snippet --}}
+  <div class="mt-6 text-center">
+    <div class="text-sm text-gray-500 mb-2">Or continue with</div>
+
+    <div class="flex gap-3 justify-center">
+      <!-- Google -->
+      <a href="{{ route('social.redirect', 'google') }}"
+         class="flex items-center gap-2 px-4 py-2 border rounded w-36 justify-center hover:bg-gray-50"
+         aria-label="Sign in with Google">
+        <span class="flex-shrink-0">@include('components.icons.google')</span>
+        <span class="text-sm">Google</span>
+      </a>
+
+      <!-- GitHub -->
+      <a href="{{ route('social.redirect', 'github') }}"
+         class="flex items-center gap-2 px-4 py-2 border rounded w-36 justify-center hover:bg-gray-50"
+         aria-label="Sign in with GitHub">
+        <span class="flex-shrink-0">@include('components.icons.github')</span>
+        <span class="text-sm">GitHub</span>
+      </a>
+    </div>
+  </div>
+  {{-- end social buttons --}}
+
+</div>
+@endsection

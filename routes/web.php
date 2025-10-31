@@ -47,6 +47,19 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
+use App\Http\Controllers\Auth\SocialAuthController;
+
+// redirect: /auth/redirect/{provider}
+Route::get('auth/redirect/{provider}', [SocialAuthController::class, 'redirectToProvider'])
+    ->name('social.redirect')
+    ->where('provider', 'google|github|facebook');
+
+// callback: /auth/callback/{provider}
+Route::get('auth/callback/{provider}', [SocialAuthController::class, 'handleProviderCallback'])
+    ->name('social.callback')
+    ->where('provider', 'google|github|facebook');
+
+
 
 # Admin routes (protect with auth)
 Route::middleware(['auth'])->prefix('admin')->group(function () {

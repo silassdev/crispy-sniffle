@@ -1,25 +1,22 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@extends('layouts.app')
+
+@section('title','Forgot Password')
+
+@section('content')
+<div class="max-w-md mx-auto">
+  <x-toast />
+  <form method="POST" action="{{ route('password.email') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
+    @csrf
+    <div class="mb-3">
+      <label class="block text-sm font-medium">Email</label>
+      <input name="email" value="{{ old('email') }}" required class="mt-1 block w-full rounded-md border-gray-200"/>
+      @error('email') <p class="text-xs text-red-500">{{ $message }}</p> @enderror
     </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md" :disabled="loading">
+      <span x-show="!loading">Send reset link</span>
+      <span x-show="loading" class="flex items-center gap-2">@include('components.donut-loader') Sending...</span>
+    </button>
+  </form>
+</div>
+@endsection
