@@ -85,7 +85,7 @@ class User extends Authenticatable
     /* --------------------------------------------------
        Helper: find or create user from Socialite response
        -------------------------------------------------- */
-    public static function findOrCreateFromSocialite($provider, $socialUser)
+    public static function findOrCreateFromSocialite($provider, $socialUser, $desiredRole = null)
     {
         $providerId = $socialUser->getId();
         $email = $socialUser->getEmail();
@@ -114,13 +114,16 @@ class User extends Authenticatable
             }
         }
 
-        // 3) create new user (default: student)
+         // 3) create new user with desired role (default to student)
+        $role = in_array($desiredRole, [self::ROLE_STUDENT, self::ROLE_TRAINER]) ? $desiredRole : self::ROLE_STUDENT;
+        $approved = $role === self::ROLE_TRAINER ? false : true;
+
         $user = self::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make(Str::random(24)),
-            'role' => self::ROLE_STUDENT,
-            'approved' => true,
+            'role' => $role,
+            'approved' => $approved,
         ]);
 
         $user->socialAccounts()->create([

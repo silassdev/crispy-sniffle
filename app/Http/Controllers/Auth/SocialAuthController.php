@@ -7,15 +7,26 @@ use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class SocialAuthController extends Controller
 {
     /**
-     * Redirect to provider.
+     * Redirect to provider and store desired role in session.
      */
-    public function redirectToProvider($provider)
+    public function redirectToProvider(Request $request, $provider)
     {
-        // Optionally allow stateless for API/mobile: Socialite::driver($provider)->stateless()->redirect();
+        $role = $request->query('role', 'student');
+        if (! in_array($role, ['student','trainer'])) {
+            $role = 'student';
+        }
+        // forbid admin creation via social
+        if ($role === User::ROLE_ADMIN) {
+            return redirect()->route('login')->with('error','Cannot register as admin via social login.');
+        }
+
+        session(['social_signup_role' => $role]);
         return Socialite::driver($provider)->redirect();
     }
 
@@ -27,22 +38,47 @@ class SocialAuthController extends Controller
         try {
             $socialUser = Socialite::driver($provider)->user();
         } catch (\Exception $e) {
-            // On error, redirect to login with toast error
-            return redirect()->route('login')->with('error','Unable to login using '.$provider.': '.$e->getMessage());
+            return redirect()->route('login')->with('error','Social login failed: '.$e->getMessage());
         }
 
-        // Use User::findOrCreateFromSocialite helper
-        [$user, $created] = User::findOrCreateFromSocialite($provider, $socialUser);
+        // Determine intended role from session (default student)
+        $role = session()->pull('social_signup_role', User::ROLE_STUDENT);
+        if (! in_array($role, ['student','trainer'])) {
+            $role = User::ROLE_STUDENT;
+        }
 
-        // If the user is a trainer and not approved, block login (unless you want to allow preview)
+        // Use the updated helper to create or find the user and supply role
+        [$user, $created] = User::findOrCreateFromSocialite($provider, $socialUser, $role);
+
+        // Send welcome/application email if user was created
+        if ($created) {
+            try {
+                if ($user->isTrainer()) {
+                    if (config('queue.default') !== 'sync') {
+                        Mail::to($user->email)->queue(new \App\Mail\TrainerApplicationReceivedMail($user));
+                    } else {
+                        Mail::to($user->email)->send(new \App\Mail\TrainerApplicationReceivedMail($user));
+                    }
+                } else {
+                    if (config('queue.default') !== 'sync') {
+                        Mail::to($user->email)->queue(new \App\Mail\StudentWelcomeMail($user));
+                    } else {
+                        Mail::to($user->email)->send(new \App\Mail\StudentWelcomeMail($user));
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::error('Social mail failed: '.$e->getMessage());
+            }
+        }
+
+        // If trainer and not approved, don't log them in yet
         if ($user->isTrainer() && ! $user->approved) {
-            return redirect()->route('login')->with('error','Your trainer account is pending admin approval.');
+            return redirect()->route('trainer.pending')->with('success','Application submitted. You will be notified when approved.');
         }
 
-        // login the user
+        // Otherwise, log the user in and redirect based on role
         Auth::login($user, true);
 
-        // redirect to role dashboard
         if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         } elseif ($user->isTrainer()) {

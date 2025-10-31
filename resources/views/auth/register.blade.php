@@ -4,12 +4,20 @@
 
 @section('content')
 <div class="max-w-md mx-auto">
-  <x-toast /> {{-- include toast component (below) --}}
+  <x-toast /> 
 
   @include('components.auth-hero', [
     'title' => 'Join the crew',
     'subtitle' => "Create an account — it's quick, fun, and free"
   ])
+
+   {{-- Determine role: from controller variable $role or query param or fallback to student --}}
+  @php
+    $role = $role ?? request()->query('role', 'student');
+    if (! in_array($role, ['student','trainer'])) {
+        $role = 'student';
+    }
+    @endphp
 
   <form method="POST" action="{{ route('register') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
