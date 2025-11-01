@@ -26,27 +26,25 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required','string','max:255'],
             'email' => ['required','email','max:255','unique:users'],
-            'password' => ['required','confirmed', Rules\Password::defaults()],
+            'password' => ['required','confirmed', \Illuminate\Validation\Rules\Password::defaults()],
             'role' => ['required','in:student,trainer'],
         ]);
 
         // Normalize role to the constant used by your User model
-        $role = $request->input('role', User::ROLE_STUDENT);
+        $role = $request->input('role', \App\Models\User::ROLE_STUDENT);
+        $approved = $role === \App\Models\User::ROLE_TRAINER ? false : true;
 
-        // For trainers, they must be approved by admin — set approved to false and DON'T auto-login
-        $approved = $role === User::ROLE_TRAINER ? false : true;
-
-        $user = User::create([
+        $user = \App\Models\User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'role' => $role,
             'approved' => $approved,
         ]);
 
-        // Send email (prefer queue if configured). Swallow errors so registration UI isn't blocked.
+        // Send email  queue and Swallow errors so registration UI isn't blocked.
         try {
-            if ($role === User::ROLE_TRAINER) {
+            if ($role === \App\Models\User::ROLE_TRAINER) {
                 // Trainer: send "application received" email
                 if (config('queue.default') !== 'sync') {
                     Mail::to($user->email)->queue(new TrainerApplicationReceivedMail($user));
@@ -65,7 +63,7 @@ class RegisteredUserController extends Controller
                 }
 
                 // Students: auto login
-                Auth::login($user);
+                \Illuminate\Support\Facades\Auth::login($user);
                 return redirect()->intended(route('student.dashboard'))->with('success', 'Account created — welcome!');
             }
         } catch (\Throwable $e) {
@@ -74,6 +72,7 @@ class RegisteredUserController extends Controller
 
             // If mail fails, continue with the same UX:
             if ($role === User::ROLE_TRAINER) {
+                session()->flash('trainer_email', $user->email);
                 return redirect()->route('trainer.pending')->with('success', 'Application submitted. You will be notified when your trainer account is approved.');
             } else {
                 Auth::login($user);

@@ -3,8 +3,11 @@
 @section('title','Register')
 
 @section('content')
+
+<x-toast />
+
 <div class="max-w-md mx-auto">
-  <x-toast /> 
+ 
 
   @include('components.auth-hero', [
     'title' => 'Join the crew',

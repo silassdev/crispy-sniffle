@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -25,10 +24,8 @@ class AuthenticatedSessionController extends Controller
         $remember = (bool) $request->boolean('remember');
 
         if (! Auth::attempt($credentials, $remember)) {
-            // helpful toast handled in the view via session('error')
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
+            return back()->withInput($request->only('email', 'remember'))
+                         ->with('error', 'The provided credentials are incorrect.');
         }
 
         $request->session()->regenerate();
@@ -41,15 +38,18 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('login')->with('error','Your trainer account is pending approval.');
         }
 
-        // redirect to role dashboard
+        // Redirect based on role
         if ($user->isAdmin()) {
-            return redirect()->intended(route('admin.dashboard'));
-        } elseif ($user->isTrainer()) {
-            return redirect()->intended(route('trainer.dashboard'));
-        } else {
-            return redirect()->intended(route('student.dashboard'));
+            return redirect()->route('admin.dashboard')->with('success', 'Welcome back, Admin!');     
         }
-    }
+
+        if ($user->isTrainer()) {
+            return redirect()->route('trainer.dashboard')->with('success', 'Welcome back, Trainer!');
+        }
+
+        // Default: student dashboard
+        return redirect()->route('student.dashboard')->with('success', 'Welcome back!');
+    } 
 
     public function destroy(Request $request)
     {

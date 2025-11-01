@@ -12,6 +12,10 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\TrainerPendingController;
+
+
 
 
 // temporary minimal auth route stubs
@@ -21,7 +25,7 @@ Route::get('/register', function () {
 })->name('register');
 
 Route::get('/login', function () {
-    return view('auth.login'); // or redirect()->route('home')
+    return view('auth.login'); 
 })->name('login');
 
 
@@ -47,17 +51,19 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-use App\Http\Controllers\Auth\SocialAuthController;
+// Trainer "pending approval" public page
+Route::get('/trainer/pending', [TrainerPendingController::class, 'index'])
+    ->name('trainer.pending');
 
 // redirect: /auth/redirect/{provider}
 Route::get('auth/redirect/{provider}', [SocialAuthController::class, 'redirectToProvider'])
     ->name('social.redirect')
-    ->where('provider', 'google|github|facebook');
+    ->where('provider', 'google|github');
 
 // callback: /auth/callback/{provider}
 Route::get('auth/callback/{provider}', [SocialAuthController::class, 'handleProviderCallback'])
     ->name('social.callback')
-    ->where('provider', 'google|github|facebook');
+    ->where('provider', 'google|github');
 
 
 

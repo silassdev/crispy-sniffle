@@ -3,8 +3,8 @@
 @section('title','Forgot Password')
 
 @section('content')
-<div class="max-w-md mx-auto">
   <x-toast />
+<div class="max-w-md mx-auto">
   <form method="POST" action="{{ route('password.email') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
     <div class="mb-3">

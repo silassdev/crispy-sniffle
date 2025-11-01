@@ -3,8 +3,9 @@
 @section('title','Reset password')
 
 @section('content')
-<div class="max-w-md mx-auto">
   <x-toast />
+
+<div class="max-w-md mx-auto">
   <form method="POST" action="{{ route('password.update') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
 

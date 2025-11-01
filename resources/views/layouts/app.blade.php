@@ -15,6 +15,7 @@
   @vite(['resources/css/app.css','resources/js/app.js']) 
 </head>
 <body class="bg-gray-50 text-gray-800">
+   <x-toast />
   <nav class="p-4 bg-white shadow">
 <nav x-data="{ open: false }" class="bg-white shadow">
   <div class="container mx-auto px-4">

@@ -3,8 +3,8 @@
 @section('title','Accept Admin Invite')
 
 @section('content')
-<div class="max-w-md mx-auto">
   <x-toast />
+<div class="max-w-md mx-auto">
   <form method="POST" action="{{ route('admin.invite.accept.submit') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
     <input type="hidden" name="token" value="{{ $token }}">
