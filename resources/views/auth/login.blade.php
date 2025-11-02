@@ -13,7 +13,7 @@
     'subtitle' => 'Sign in to continue building awesome things'
   ])
 
-  <form method="POST" action="{{ route('login') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
+  <form method="POST" action="{{ route('login.submit') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
 
     <div class="mb-3">

@@ -22,7 +22,7 @@
     }
     @endphp
 
-  <form method="POST" action="{{ route('register') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
+  <form method="POST" action="{{ route('register.submit') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
 
     {{-- Role hidden (prefill from controller) --}}

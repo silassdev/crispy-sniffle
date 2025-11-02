@@ -173,17 +173,10 @@
  </nav>
 
   <main class="container mx-auto p-6">
-    @if(session('success'))
-      <div class="mb-4 p-3 bg-green-100 text-green-700">{{ session('success') }}</div>
-    @endif
-
     @yield('content')
   </main>
 
  @include('layouts.footer')
- {{-- Layout: place after footer and before </body> --}}
-
-
 
 
  </body>
