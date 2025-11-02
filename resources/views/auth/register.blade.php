@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.guest')
 
 @section('title','Register')
 
@@ -8,19 +8,21 @@
 
 <div class="max-w-md mx-auto">
  
+<livewire:forms.register-form />
 
   @include('components.auth-hero', [
     'title' => 'Join the crew',
     'subtitle' => "Create an account — it's quick, fun, and free"
   ])
 
-   {{-- Determine role: from controller variable $role or query param or fallback to student --}}
   @php
     $role = $role ?? request()->query('role', 'student');
     if (! in_array($role, ['student','trainer'])) {
         $role = 'student';
     }
     @endphp
+
+      <div wire:ignore>
 
   <form method="POST" action="{{ route('register.submit') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf

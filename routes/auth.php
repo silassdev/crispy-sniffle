@@ -21,11 +21,11 @@ use App\Http\Controllers\Admin\AdminInviteController;
 // Public guest routes
 Route::middleware('guest')->group(function () {
     // Registration
-    Route::get('register', [RegisteredUserController::class, 'create'])->name('register');
+    Route::get('register', function(){ return view('auth.register'); })->name('register');
     Route::post('register', [RegisteredUserController::class, 'store'])->name('register.submit');
 
     // Login
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::get('login', function(){ return view('auth.login'); })->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
 
     // Password reset (request)

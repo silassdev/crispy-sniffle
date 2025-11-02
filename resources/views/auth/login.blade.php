@@ -12,6 +12,7 @@
     'title' => 'Welcome back',
     'subtitle' => 'Sign in to continue building awesome things'
   ])
+  <div wire:ignore>
 
   <form method="POST" action="{{ route('login.submit') }}" x-data="{ loading:false }" @submit.prevent="loading=true; $el.submit();">
     @csrf
