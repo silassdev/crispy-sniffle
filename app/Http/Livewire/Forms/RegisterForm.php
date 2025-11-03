@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Forms;
+namespace App\Http\Livewire\Forms;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
@@ -13,12 +13,12 @@ use App\Mail\TrainerApplicationReceivedMail;
 
 class RegisterForm extends Component
 {
+    // <-- MUST be public so Livewire can set it from the tag attribute
+    public $role = 'student';
     public $name = '';
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
-    public $role = 'student';
-    public $loading = false;
 
     protected function rules()
     {
@@ -28,6 +28,14 @@ class RegisterForm extends Component
             'password' => ['required','confirmed', Rules\Password::defaults()],
             'role' => 'required|in:student,trainer',
         ];
+    }
+
+    public function mount($role = null)
+    {
+        $roleFromQuery = request()->query('role');
+        $role = $role ?? $roleFromQuery ?? 'student';
+        $role = in_array($role, ['trainer','student']) ? $role : 'student';
+        $this->role = $role;
     }
 
     public function submit()
@@ -46,24 +54,14 @@ class RegisterForm extends Component
             'approved' => $approved,
         ]);
 
-        // Send welcome or pending mail (queue if configured)
         try {
             if ($role === User::ROLE_TRAINER) {
-                if (config('queue.default') !== 'sync') {
-                    Mail::to($user->email)->queue(new TrainerApplicationReceivedMail($user));
-                } else {
-                    Mail::to($user->email)->send(new TrainerApplicationReceivedMail($user));
-                }
+                Mail::to($user->email)->queue(new TrainerApplicationReceivedMail($user));
             } else {
-                if (config('queue.default') !== 'sync') {
-                    Mail::to($user->email)->queue(new StudentWelcomeMail($user));
-                } else {
-                    Mail::to($user->email)->send(new StudentWelcomeMail($user));
-                }
+                Mail::to($user->email)->queue(new StudentWelcomeMail($user));
             }
         } catch (\Throwable $e) {
-            // log but don't block UX
-            \Log::error('Registration email failed: '.$e->getMessage());
+            \Log::warning('Registration email failed: '.$e->getMessage());
         }
 
         if ($role === User::ROLE_TRAINER) {
@@ -72,7 +70,6 @@ class RegisterForm extends Component
             return redirect()->route('trainer.pending');
         }
 
-        // Student: auto-login and redirect
         Auth::login($user);
         return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
     }

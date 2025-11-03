@@ -19,7 +19,7 @@
   @include('layouts.navigation')
 
   {{-- Page content wrapper with responsive gutters and max width --}}
-  <main class="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     @yield('content')
   </main>
 
