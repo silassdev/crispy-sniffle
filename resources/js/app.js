@@ -1,8 +1,11 @@
 import './bootstrap';
-import Alpine from 'alpinejs';
+import Alpine from 'alpinejs'
+import persist from '@alpinejs/persist'
 
-window.Alpine = Alpine;
-Alpine.start();
+Alpine.plugin(persist)
+window.Alpine = Alpine
+Alpine.start()
+
 
 // Global toast helper (for other scripts to call)
 window.APP_TOAST = {
@@ -13,6 +16,5 @@ window.APP_TOAST = {
 };
 
 window.addEventListener('app-toast', (e) => {
-  // find any toast Alpine instances and call push via DOM
-  // We'll broadcast a global custom event; the toast component's init() can also listen if needed.
+  
 });

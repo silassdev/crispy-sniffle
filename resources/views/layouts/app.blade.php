@@ -12,13 +12,12 @@
   @stack('head')
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
-  {{-- Global toast --}}
+
   <x-toast />
 
-  {{-- Fixed navigation (already includes sticky/blur) --}}
   @include('layouts.navigation')
 
-  {{-- Page content wrapper with responsive gutters and max width --}}
+
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     @yield('content')
   </main>

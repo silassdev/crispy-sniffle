@@ -13,7 +13,6 @@ use App\Mail\TrainerApplicationReceivedMail;
 
 class RegisterForm extends Component
 {
-    // <-- MUST be public so Livewire can set it from the tag attribute
     public $role = 'student';
     public $name = '';
     public $email = '';
@@ -41,6 +40,17 @@ class RegisterForm extends Component
     public function submit()
     {
         $this->resetValidation();
+        try {
+        $this->validate();
+    } catch (ValidationException $e) {
+        $msg = implode(' - ', $e->validator->errors()->all());
+        $this->dispatchBrowserEvent('app-toast', [
+            'title' => 'Validation error',
+            'message' => $msg,
+            'ttl' => 9000
+        ]);
+        return;
+    }
         $this->validate();
 
         $role = $this->role === User::ROLE_TRAINER ? User::ROLE_TRAINER : User::ROLE_STUDENT;

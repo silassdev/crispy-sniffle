@@ -9,7 +9,6 @@ use Illuminate\Support\Str;
 
 class LoginForm extends Component
 {
-    // <-- MUST be public so Livewire can set it from the tag attribute
     public $role = 'student';
     public $email = '';
     public $password = '';
@@ -31,6 +30,17 @@ class LoginForm extends Component
     public function submit()
     {
         $this->resetValidation();
+        try {
+        $this->validate();
+    } catch (ValidationException $e) {
+        $msg = implode(' - ', $e->validator->errors()->all());
+        $this->dispatchBrowserEvent('app-toast', [
+            'title' => 'Validation error',
+            'message' => $msg,
+            'ttl' => 8000
+        ]);
+        return;
+    }
         $this->validate();
 
         $key = $this->throttleKey();

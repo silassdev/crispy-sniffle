@@ -13,7 +13,7 @@
   <?php echo $__env->yieldPushContent('head'); ?>
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
-  
+
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.toast','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -35,10 +35,9 @@
 <?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
 <?php endif; ?>
 
-  
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-  
+
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <?php echo $__env->yieldContent('content'); ?>
   </main>

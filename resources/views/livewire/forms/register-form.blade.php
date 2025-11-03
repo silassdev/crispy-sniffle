@@ -1,60 +1,193 @@
-<div class="max-w-md mx-auto p-6 bg-white rounded shadow">
-  <h2 class="text-xl font-semibold mb-4">Create an account</h2>
-
-  <form wire:submit.prevent="submit" autocomplete="off" novalidate>
-    <div class="mb-3">
-      <label class="block text-sm font-medium">I am signing up as</label>
-      <div class="flex gap-2 mt-2">
-        <label class="inline-flex items-center gap-2 px-3 py-2 border rounded cursor-pointer">
-          <input type="radio" wire:model="role" value="student" class="hidden" />
-          <span class="font-medium">Student</span>
-        </label>
-        <label class="inline-flex items-center gap-2 px-3 py-2 border rounded cursor-pointer">
-          <input type="radio" wire:model="role" value="trainer" class="hidden" />
-          <span class="font-medium">Trainer (requires approval)</span>
-        </label>
+<div id="register-form-root" class="w-full max-w-md mx-auto">
+  <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden">
+    <!-- top hero -->
+    <div class="px-6 py-6 sm:px-8 sm:py-8">
+      <div class="flex items-center gap-3">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Create an account</h2>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label class="block text-sm font-medium">Name</label>
-      <input wire:model.defer="name" required class="mt-1 block w-full rounded border-gray-200" />
-      @error('name') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
-    </div>
+    <div class="px-6 pb-6 sm:px-8 sm:pb-8">
+      <form wire:submit.prevent="submit" autocomplete="off" novalidate>
+        <div class="space-y-4">
 
-    <div class="mb-3">
-      <label class="block text-sm font-medium">Email</label>
-      <input wire:model.defer="email" type="email" required class="mt-1 block w-full rounded border-gray-200" />
-      @error('email') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
-    </div>
+          <!-- role selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Signing up as</label>
 
-    <div class="mb-3">
-      <label class="block text-sm font-medium">Password</label>
-      <input wire:model.defer="password" type="password" required class="mt-1 block w-full rounded border-gray-200" />
-      @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
-    </div>
+            <!-- displayed current role -->
+            <div class="mt-2 text-sm text-gray-700 dark:text-gray-200">
+              <strong>selected:</strong>
+              {{ $role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') ) }}
+            </div>
 
-    <div class="mb-3">
-      <label class="block text-sm font-medium">Confirm Password</label>
-      <input wire:model.defer="password_confirmation" type="password" required class="mt-1 block w-full rounded border-gray-200" />
-    </div>
+            @error('role') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
 
-    <div class="flex items-center gap-3">
-      <button type="submit" wire:loading.attr="disabled" class="px-4 py-2 bg-indigo-600 text-white rounded">
-        <span wire:loading.remove>Register</span>
-        <span wire:loading>Submitting…</span>
-      </button>
+          </div>
 
-      <a href="{{ route('login') }}" class="text-sm text-gray-600">Already have an account?</a>
-    </div>
+          <!-- name -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+            <input id="name" wire:model.defer="name" required
+                   class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+            />
+            @error('name') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+          </div>
 
-    <div class="mt-4 text-sm text-gray-500">
-      Or sign up using:
-      <div class="flex gap-2 mt-2">
-        <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="px-3 py-2 border rounded">Google</a>
-        <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="px-3 py-2 border rounded">GitHub</a>
-      </div>
+          <!-- email -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <input id="email" wire:model.defer="email" type="email" required
+                   class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+            />
+            @error('email') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+          </div>
+
+          <!-- password + show toggle -->
+          <div x-data="{ show: false }" class="relative">
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+            <input id="password" :type="show ? 'text' : 'password'" wire:model.defer="password" 
+            required
+            autocomplete="current-password"
+            class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
+            />
+            <button type="button" x-on:click="show = !show" class="absolute right-2 top-8 text-gray-400 hover:text-gray-600" aria-pressed="false" x-bind:aria-label="show ? 'Hide password' : 'Show password'">
+              <svg x-show="!show" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg x-show="show" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.88 9.88A3 3 0 0114.12 14.12"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c1.17 0 2.295.247 3.327.687"/>
+              </svg>
+            </button>
+            @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+          </div>
+
+          <!-- confirm password + show toggle -->
+          <div x-data="{ showConfirm: false }" class="relative">
+            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm password</label>
+            <input id="password_confirmation" :type="showConfirm ? 'text' : 'password'" wire:model.defer="password_confirmation" 
+            required
+            autocomplete="current-password"
+                   class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
+            />
+            <button type="button" x-on:click="showConfirm = !showConfirm" class="absolute right-2 top-8 text-gray-400 hover:text-gray-600" aria-pressed="false" x-bind:aria-label="showConfirm ? 'Hide confirm password' : 'Show confirm password'">
+              <svg x-show="!showConfirm" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+              <svg x-show="showConfirm" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.88 9.88A3 3 0 0114.12 14.12"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c1.17 0 2.295.247 3.327.687"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- global errors -->
+          @if($errors->has('registration'))
+            <div class="text-sm text-red-600">{{ $errors->first('registration') }}</div>
+          @endif
+
+          <!-- primary actions -->
+          <div class="grid grid-cols-1 gap-3">
+            <button type="submit" wire:loading.attr="disabled"
+                    class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 5v14M5 12h14"/>
+              </svg>
+              <span wire:loading.remove>Register</span>
+              <span wire:loading>Submitting…</span>
+            </button>
+
+            <div class="flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-300">
+              <span class="w-24 h-px bg-gray-200 dark:bg-gray-600 inline-block"></span>
+              <span>Or continue with</span>
+              <span class="w-24 h-px bg-gray-200 dark:bg-gray-600 inline-block"></span>
+            </div>
+
+            <!-- social buttons -->
+            <div class="grid grid-cols-2 gap-3">
+              <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
+                @if ( view()->exists('components.icons.google') )
+                  @include('components.icons.google', ['class' => 'w-5 h-5'])
+                @else
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
+                @endif
+                <span class="text-sm text-gray-700 dark:text-gray-200">Google</span>
+              </a>
+
+              <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
+                @if ( view()->exists('components.icons.github') )
+                  @include('components.icons.github', ['class' => 'w-5 h-5'])
+                @else
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
+                @endif
+                <span class="text-sm text-gray-700 dark:text-gray-200">GitHub</span>
+              </a>
+            </div>
+
+            <p class="text-center text-xs text-gray-500 dark:text-gray-300">
+              Already have an account?
+              <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Sign in</a>
+            </p>
+          </div>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
+
+  <script>
+document.addEventListener('livewire:load', function () {
+  // 1) small delay to pick up browser autofill on load
+  setTimeout(function () {
+    document.querySelectorAll('#register-form-root input').forEach(function (el) {
+      if (el.value) {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+    });
+  }, 140);
+
+  // 2) ensure values are synced to Livewire right before it sends the request
+  // This listener runs *before* Livewire's submit handler because Livewire prevents default
+  const form = document.querySelector('#register-form-root form');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      // dispatch input events (again) so wire:model.defer values are updated
+      document.querySelectorAll('#register-form-root input').forEach(function (el) {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+
+      // Also directly set the Livewire properties (guaranteed)
+      // find the Livewire component id on the root node (wire:id attribute)
+      const root = document.querySelector('#register-form-root [wire\\:id], #register-form-root[wire\\:id]');
+      if (root) {
+        const wireId = root.getAttribute('wire:id') || root.getAttribute('wire:id');
+        // Livewire exposes "Livewire" global; find the component by id and set props
+        try {
+          // prefer Livewire.find if available
+          if (window.Livewire && typeof Livewire.find === 'function') {
+            const comp = Livewire.find(root.getAttribute('wire:id'));
+            if (comp) {
+              // set props from inputs by name
+              const p = form.querySelector('input[name="password"]');
+              const pc = form.querySelector('input[name="password_confirmation"]');
+              if (p) comp.set('password', p.value);
+              if (pc) comp.set('password_confirmation', pc.value);
+            }
+          }
+        } catch (err) {
+          // silent: if Livewire internals differ in your version, we still have dispatched input events
+          console.warn('Livewire sync error (non-fatal):', err);
+        }
+      }
+      // allow Livewire's own submit to proceed (it uses preventDefault internally)
+    });
+  }
+});
+</script>
+
+
 </div>
-

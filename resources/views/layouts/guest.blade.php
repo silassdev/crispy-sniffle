@@ -13,10 +13,8 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
 
-  {{-- Optional small/brand nav or reuse full nav --}}
   @include('layouts.navigation')
 
-  {{-- Auth container: keep padding-top so fixed nav doesn't overlap --}}
   <main id="main" class="pt-20 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md px-4">
       @yield('content')

@@ -14,10 +14,8 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
 
-  
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-  
   <main id="main" class="pt-20 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md px-4">
       <?php echo $__env->yieldContent('content'); ?>
