@@ -17,7 +17,7 @@ class RegisterForm extends Component
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
-    public $role = 'student'; // default; frontend can set 'trainer'
+    public $role = 'student';
     public $loading = false;
 
     protected function rules()

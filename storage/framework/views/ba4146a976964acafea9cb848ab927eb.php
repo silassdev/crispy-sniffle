@@ -1,9 +1,9 @@
-@extends('layouts.app')
 
-@section('title', 'Home — ' . config('app.name'))
 
-@section('content')
-@php
+<?php $__env->startSection('title', 'Home — ' . config('app.name')); ?>
+
+<?php $__env->startSection('content'); ?>
+<?php
   $studentRegisterUrl = Route::has('register')
     ? route('register', ['role' => 'student'])
     : url('/register?role=student');
@@ -13,10 +13,10 @@
     : url('/register?role=trainer');
 
   $loginUrl = Route::has('login') ? route('login') : url('/login');
-@endphp
+?>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-  {{-- Left / hero --}}
+  
   <div class="space-y-4">
     <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
       Build skills. Teach others. Grow together.
@@ -27,13 +27,13 @@
     </p>
 
     <div class="flex flex-wrap gap-3">
-      <a href="{{ $studentRegisterUrl }}" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 text-sm sm:text-base">
+      <a href="<?php echo e($studentRegisterUrl); ?>" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 text-sm sm:text-base">
         Get started (Student)
       </a>
-      <a href="{{ $trainerRegisterUrl }}" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md bg-green-600 text-white hover:bg-green-700 text-sm sm:text-base">
+      <a href="<?php echo e($trainerRegisterUrl); ?>" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md bg-green-600 text-white hover:bg-green-700 text-sm sm:text-base">
         Apply as Trainer
       </a>
-      <a href="{{ $loginUrl }}" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md border hover:bg-gray-50 dark:hover:bg-white/5 text-sm sm:text-base">
+      <a href="<?php echo e($loginUrl); ?>" class="px-4 py-2 sm:px-5 sm:py-3 rounded-md border hover:bg-gray-50 dark:hover:bg-white/5 text-sm sm:text-base">
         Login
       </a>
     </div>
@@ -43,13 +43,13 @@
     </div>
   </div>
 
-  {{-- Right / quick access card --}}
+  
   <div>
     <div class="rounded-2xl p-5 sm:p-6 shadow bg-white dark:bg-gray-800 border">
       <h3 class="font-semibold text-base sm:text-lg">Quick access</h3>
       <ul class="mt-3 space-y-2 sm:space-y-3">
         <li>
-          <a href="{{ $studentRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
+          <a href="<?php echo e($studentRegisterUrl); ?>" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
             <div>
               <div class="font-medium">Register — Student</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Join and enroll in courses</div>
@@ -60,7 +60,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ $trainerRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg_WHITE/5">
+          <a href="<?php echo e($trainerRegisterUrl); ?>" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg_WHITE/5">
             <div>
               <div class="font-medium">Apply — Trainer</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Create courses after admin approval</div>
@@ -71,7 +71,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ $loginUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg_WHITE/5">
+          <a href="<?php echo e($loginUrl); ?>" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg_WHITE/5">
             <div>
               <div class="font-medium">Login</div>
               <div class="text-xs text-gray-500 dark:text-gray-400">Go to your dashboard</div>
@@ -85,4 +85,6 @@
     </div>
   </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/home.blade.php ENDPATH**/ ?>

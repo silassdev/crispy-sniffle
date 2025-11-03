@@ -7,29 +7,26 @@
 
   <title>@yield('title', config('app.name'))</title>
 
-  <!-- Styles -->
-  @vite(['resources/css/app.css','resources/js/app.js']) <!-- or your asset pipeline -->
+  @vite(['resources/css/app.css','resources/js/app.js'])
   @livewireStyles
-
   @stack('head')
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
-
-  <!-- Global toast (visible on all pages) -->
+  {{-- Global toast --}}
   <x-toast />
 
-  <!-- Navigation -->
-  @include('layouts.navigation') {{-- or <x-navigation/> --}}
+  {{-- Fixed navigation (already includes sticky/blur) --}}
+  @include('layouts.navigation')
 
-  <!-- Page content -->
-  <main class="pt-6">
+  {{-- Page content wrapper with responsive gutters and max width --}}
+  <main class="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     @yield('content')
   </main>
 
-  <!-- Footer -->
-  @include('layouts.footer')
+  
+      @include('layouts.footer')
+  
 
-  <!-- Scripts -->
   @livewireScripts
   @stack('scripts')
 </body>

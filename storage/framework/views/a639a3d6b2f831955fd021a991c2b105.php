@@ -1,4 +1,4 @@
-{{-- resources/views/layouts/footer.blade.php --}}
+
 <footer class="bg-slate-900 text-slate-200 mt-16">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -8,12 +8,12 @@
         <h3 class="text-white text-lg font-semibold mb-4">Useful Links</h3>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="{{ route('home') }}"
-               @class([
+            <a href="<?php echo e(route('home')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
                  'flex items-center gap-3 px-2 py-1 rounded transition',
                  'text-white' => request()->routeIs('home'),
                  'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('home')
-               ])>
+               ]); ?>">
               <!-- Home icon -->
               <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 11.5L12 4l9 7.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1V11.5z"/>
@@ -23,12 +23,12 @@
           </li>
 
           <li>
-            <a href="{{ route('blogs.index') }}"
-               @class([
+            <a href="<?php echo e(route('blogs.index')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
                  'flex items-center gap-3 px-2 py-1 rounded transition',
                  'text-white' => request()->routeIs('blogs.*'),
                  'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('blogs.*')
-               ])>
+               ]); ?>">
               <!-- Blog icon -->
               <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V7a2 2 0 012-2h9l7 7v6a2 2 0 01-2 2zM17 9H7"/>
@@ -38,12 +38,12 @@
           </li>
 
           <li>
-            <a href="{{ route('contact.show') }}"
-               @class([
+            <a href="<?php echo e(route('contact.show')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
                  'flex items-center gap-3 px-2 py-1 rounded transition',
                  'text-white' => request()->routeIs('contact.*'),
                  'text-slate-300 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('contact.*')
-               ])>
+               ]); ?>">
               <!-- Contact / mail icon -->
               <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l8.5 5L20 8M21 19H3a1 1 0 01-1-1V7a1 1 0 011-1h18a1 1 0 011 1v11a1 1 0 01-1 1z"/>
@@ -132,15 +132,15 @@
       <div class="md:text-right">
         <h3 class="text-white text-lg font-semibold mb-4">About</h3>
         <p class="text-sm text-slate-300 mb-4">Building clean, fast Laravel apps & custom APIs — available for hire.</p>
-        <div class="text-xs text-slate-500">© {{ date('Y') }} All Pilar</div>
+        <div class="text-xs text-slate-500">© <?php echo e(date('Y')); ?> All Pilar</div>
       </div>
     </div>
 
-    {{-- Bottom bar --}}
+    
     <div class="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-6 h-6">
-        <span class="text-sm text-slate-400">{{ config('app.name') }}</span>
+        <img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo" class="w-6 h-6">
+        <span class="text-sm text-slate-400"><?php echo e(config('app.name')); ?></span>
       </div>
 
       <ul class="flex flex-wrap items-center gap-4 text-xs text-slate-400">
@@ -151,3 +151,4 @@
     </div>
   </div>
 </footer>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/footer.blade.php ENDPATH**/ ?>
