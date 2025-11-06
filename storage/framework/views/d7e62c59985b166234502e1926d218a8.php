@@ -68,9 +68,9 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           <!-- password + show toggle -->
           <div x-data="{ show: false }" class="relative">
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-            <input id="password" :type="show ? 'text' : 'password'" wire:model.defer="password" 
-            required
-            autocomplete="current-password"
+            <input wire: model.defer="password" @input="$wire.set('password', $event.target.value)"
+            type="password"
+            autocomplete="new-password"
             class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
             />
             <button type="button" x-on:click="show = !show" class="absolute right-2 top-8 text-gray-400 hover:text-gray-600" aria-pressed="false" x-bind:aria-label="show ? 'Hide password' : 'Show password'">
@@ -97,10 +97,11 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           <!-- confirm password + show toggle -->
           <div x-data="{ showConfirm: false }" class="relative">
             <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm password</label>
-            <input id="password_confirmation" :type="showConfirm ? 'text' : 'password'" wire:model.defer="password_confirmation" 
-            required
-            autocomplete="current-password"
-                   class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
+            <input wire:model.defer="password_confirmation"
+            @input="$wire.set('password_confirmation', $event.target.value)"
+            type="password"
+            autocomplete="new-password"
+            class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
             />
             <button type="button" x-on:click="showConfirm = !showConfirm" class="absolute right-2 top-8 text-gray-400 hover:text-gray-600" aria-pressed="false" x-bind:aria-label="showConfirm ? 'Hide confirm password' : 'Show confirm password'">
               <svg x-show="!showConfirm" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

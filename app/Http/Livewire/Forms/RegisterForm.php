@@ -24,7 +24,7 @@ class RegisterForm extends Component
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
-            'password' => ['required','confirmed', Rules\Password::defaults()],
+            'password' => ['required','confirmed', \Illuminate\Validation\Rules\Password::defaults()],
             'role' => 'required|in:student,trainer',
         ];
     }
