@@ -49,6 +49,7 @@ json_encode(session('success')) !!},
   @include('layouts.footer')
 
   @livewireScripts
+
   @stack('scripts')
 </body>
 </html>

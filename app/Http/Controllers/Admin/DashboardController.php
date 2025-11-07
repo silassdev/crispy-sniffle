@@ -9,8 +9,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $blogsCount = Blog::count();
-        $adminsCount = User::where('is_admin', true)->count();
-        return view('admin.dashboard', compact('blogsCount','adminsCount'));
+        // $blogsCount = Blog::count();
+        // $adminsCount = User::where('is_admin', true)->count();
+        return view('admin.dashboard');
     }
 }

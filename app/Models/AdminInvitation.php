@@ -1,32 +1,36 @@
 <?php
+// app/Models/AdminInvitation.php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
 
 class AdminInvitation extends Model
 {
-    use HasFactory;
+    protected $fillable = ['email','token','inviter_id','expires_at','used_at'];
 
-    protected $fillable = ['email','token','expires_at','sent_by'];
+    protected $dates = ['expires_at','used_at'];
 
-    protected $dates = ['expires_at'];
-
-    public static function generateForEmail(string $email, int $sentBy = null, int $hours = 72)
+    public static function generateFor(string $email, ?int $inviterId = null, int $daysValid = 7): self
     {
-        return self::create([
+        return static::create([
             'email' => $email,
-            'token' => Str::random(64),
-            'sent_by' => $sentBy,
-            'expires_at' => Carbon::now()->addHours($hours),
+            'token' => hash('sha256', Str::random(48).microtime(true)),
+            'inviter_id' => $inviterId,
+            'expires_at' => Carbon::now()->addDays($daysValid),
         ]);
     }
 
-    public function isExpired()
+    public function isExpired(): bool
     {
         return $this->expires_at && $this->expires_at->isPast();
+    }
+
+    public function markUsed(): void
+    {
+        $this->used_at = now();
+        $this->save();
     }
 }

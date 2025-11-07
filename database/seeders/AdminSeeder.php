@@ -3,17 +3,22 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
     public function run()
     {
+        $email = env('INITIAL_ADMIN_EMAIL','shila@ap.com');
+        $pass  = env('INITIAL_ADMIN_PASSWORD','ashilatech');
+
         User::updateOrCreate(
-            ['email' => 'silas@ap.com'],
+            ['email' => $email],
             [
-                'name' => 'Pilars',
-                'password' => bcrypt('password123'),
-                'is_admin' => true,
+                'name' => 'Administrator',
+                'password' => Hash::make($pass),
+                'role' => User::ROLE_ADMIN,
+                'approved' => true,
             ]
         );
     }

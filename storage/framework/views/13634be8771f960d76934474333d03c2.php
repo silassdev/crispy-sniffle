@@ -49,6 +49,47 @@
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
   <?php echo $__env->yieldPushContent('scripts'); ?>
+
+<?php if(session()->has('app_toast')): ?>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const payload = <?php echo json_encode(session('app_toast'), 15, 512) ?>;
+
+            // Dispatch a native browser event named 'appToast'
+            window.dispatchEvent(new CustomEvent('appToast', { detail: payload }));
+
+            // Optional: If you want to immediately handle it here (fallback),
+            // attempt to use a common toast library if present (toastr example),
+            // otherwise just console.log.
+            try {
+                // If toastr is loaded
+                if (typeof toastr !== 'undefined') {
+                    const ttl = payload.ttl || 4000;
+                    const title = payload.title || '';
+                    const msg = payload.message || '';
+                    const level = payload.level || 'info';
+                    // toastr[level] exists for 'success','info','warning','error'
+                    if (typeof toastr[level] === 'function') {
+                        toastr[level](msg, title, { timeOut: ttl });
+                    } else {
+                        toastr.info(msg, title, { timeOut: ttl });
+                    }
+                } else if (typeof Notyf !== 'undefined') {
+                    // Notyf example
+                    const notyf = new Notyf();
+                    notyf.open({type: payload.level || 'info', message: payload.message});
+                } else {
+                    // Fallback: let app code (or dev console) handle it
+                    console.log('appToast payload:', payload);
+                }
+            } catch (err) {
+                console.error('Error showing toast fallback:', err);
+            }
+        });
+    </script>
+<?php endif; ?>
+
+
 </body>
 </html>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/app.blade.php ENDPATH**/ ?>

@@ -1,4 +1,5 @@
 <?php
+// app/Mail/AdminInviteMail.php
 
 namespace App\Mail;
 
@@ -22,12 +23,12 @@ class AdminInviteMail extends Mailable
     {
         $acceptUrl = route('admin.invite.accept', ['token' => $this->invitation->token]);
 
-        return $this->subject('You have been invited to be an Admin')
-                    ->view('emails.admin-invite')
+        return $this->subject('You were invited as Admin')
+                    ->view('emails.admin_invite')
                     ->with([
-                        'acceptUrl' => $acceptUrl,
                         'email' => $this->invitation->email,
-                        'expires_at' => $this->invitation->expires_at,
+                        'acceptUrl' => $acceptUrl,
+                        'expiresAt' => $this->invitation->expires_at,
                     ]);
     }
 }

@@ -27,30 +27,18 @@ Route::middleware('guest')->group(function () {
     // Login
     Route::get('login', function(){ return view('auth.login'); })->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('login.submit');
-
-    // Password reset (request)
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
-
-    // Password reset (form via token)
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
-
-    // Admin invite accept (invited admin uses this to set password)
-    Route::get('admin/invite/{token}', [AdminInviteController::class, 'showAcceptForm'])->name('admin.invite.accept');
-    Route::post('admin/invite/accept', [AdminInviteController::class, 'accept'])->name('admin.invite.accept.submit');
 });
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
-    // Logout (POST)
+
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
     // Social link/unlink for logged-in users
     Route::get('auth/link/{provider}', [SocialLinkController::class, 'redirect'])->name('social.link')
-        ->where('provider', 'google|github|facebook');
+        ->where('provider', 'google|github');
     Route::get('auth/link/callback/{provider}', [SocialLinkController::class, 'callback'])->name('social.link.callback')
-        ->where('provider', 'google|github|facebook');
+        ->where('provider', 'google|github');
     Route::post('auth/link/unlink', [SocialLinkController::class, 'unlink'])->name('social.link.unlink');
 
     // Admin-only invite sender

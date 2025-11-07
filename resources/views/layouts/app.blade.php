@@ -28,5 +28,46 @@
 
   @livewireScripts
   @stack('scripts')
+
+@if(session()->has('app_toast'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const payload = @json(session('app_toast'));
+
+            // Dispatch a native browser event named 'appToast'
+            window.dispatchEvent(new CustomEvent('appToast', { detail: payload }));
+
+            // Optional: If you want to immediately handle it here (fallback),
+            // attempt to use a common toast library if present (toastr example),
+            // otherwise just console.log.
+            try {
+                // If toastr is loaded
+                if (typeof toastr !== 'undefined') {
+                    const ttl = payload.ttl || 4000;
+                    const title = payload.title || '';
+                    const msg = payload.message || '';
+                    const level = payload.level || 'info';
+                    // toastr[level] exists for 'success','info','warning','error'
+                    if (typeof toastr[level] === 'function') {
+                        toastr[level](msg, title, { timeOut: ttl });
+                    } else {
+                        toastr.info(msg, title, { timeOut: ttl });
+                    }
+                } else if (typeof Notyf !== 'undefined') {
+                    // Notyf example
+                    const notyf = new Notyf();
+                    notyf.open({type: payload.level || 'info', message: payload.message});
+                } else {
+                    // Fallback: let app code (or dev console) handle it
+                    console.log('appToast payload:', payload);
+                }
+            } catch (err) {
+                console.error('Error showing toast fallback:', err);
+            }
+        });
+    </script>
+@endif
+
+
 </body>
 </html>

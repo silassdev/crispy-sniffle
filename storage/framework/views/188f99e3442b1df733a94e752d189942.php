@@ -49,6 +49,7 @@
 
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
+
   <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/guest.blade.php ENDPATH**/ ?>
