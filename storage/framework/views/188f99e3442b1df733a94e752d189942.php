@@ -13,6 +13,29 @@
   <?php echo $__env->yieldPushContent('head'); ?>
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
+<?php if(session('success') || session('error')): ?>
+   <script>
+         document.addEventListener('DOMContentLoaded', function () {
+    <?php if(session('success')): ?> window.dispatchEvent(newCustomEvent('app-toast', {
+     detail: { 
+     title: 'Success', 
+     message: <?php echo json_encode(session('success')); ?>, 
+     ttl:6000 }
+    }
+    }));
+   <?php endif; ?>
+   
+<?php if(session('error')): ?> window.dispatchEvent(newCustomEvent('app-toast', {
+    detail: {
+    title: 'Error', 
+    message: <?php echo json_encode(session('success')); ?>, 
+       ttl:8000 }
+       }
+    }));
+  <?php endif; ?>
+  });
+  </script>
+<?php endif; ?>
 
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 

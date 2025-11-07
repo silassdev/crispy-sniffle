@@ -15,9 +15,7 @@ use App\Http\Controllers\Admin\AuthController;
 
 use App\Http\Controllers\TrainerPendingController;
 
-Route::get('/test-toast', function () {
-    return redirect()->route('home')->with('success', 'This is a test toast!');
-});
+Route::get('/', function () { return view('home'); })->name('home');
 
 
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -41,11 +39,17 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-// Trainer "pending approval" public page
-Route::get('/trainer/pending', [TrainerPendingController::class, 'index'])
-    ->name('trainer.pending');
 
 
+Route::middleware(['auth'])->group(function () {
+    Route::view('/student/dashboard', 'dashboards.student')->name('student.dashboard');
+    Route::view('/trainer/dashboard', 'dashboards.trainer')->name('trainer.dashboard');
+    Route::view('/admin/dashboard', 'dashboards.admin')->name('admin.dashboard');
+
+    // trainer pending page
+Route::get('/trainer/pending', function () {
+    return view('trainer.pending');})->name('trainer.pending');
+});
 
 # Admin routes (protect with auth)
 Route::middleware(['auth'])->prefix('admin')->group(function () {

@@ -12,6 +12,31 @@
   @stack('head')
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
+@if (session('success') || session('error'))
+   <script>
+         document.addEventListener('DOMContentLoaded', function () {
+    @if(session('success')) window.dispatchEvent(newCustomEvent('app-toast', {
+     detail: { 
+     title: 'Success', 
+     message: {!! 
+ json_encode(session('success')) !!}, 
+     ttl:6000 }
+    }
+    }));
+   @endif
+   
+@if(session('error')) window.dispatchEvent(newCustomEvent('app-toast', {
+    detail: {
+    title: 'Error', 
+    message: {!! 
+json_encode(session('success')) !!}, 
+       ttl:8000 }
+       }
+    }));
+  @endif
+  });
+  </script>
+@endif
 
   @include('layouts.navigation')
 

@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Forms;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\User;
@@ -76,13 +77,21 @@ class RegisterForm extends Component
 
         if ($role === User::ROLE_TRAINER) {
             session()->flash('trainer_email', $user->email);
-            session()->flash('success', 'Application submitted. An admin will review your application.');
-            return redirect()->route('trainer.pending');
+            $this->dispatchBrowserEvent('app-toast', [
+                'title' => 'Application submitted',
+                'message' => 'Your application is pending admin approval.',
+                'ttl' => 6000
+            ]);
+            $this->reset(['name', 'email', 'password', 'password_confirmation']);
         }
 
         Auth::login($user);
-        return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
-    }
+        if (Route::has('student.dashboard')) {
+    return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
+}
+
+    return redirect()->route('home')->with('success', 'Account created — welcome!');
+}
 
     public function render()
     {

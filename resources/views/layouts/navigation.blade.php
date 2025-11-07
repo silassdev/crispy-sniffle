@@ -1,83 +1,55 @@
-
-<nav x-data="nav()" 
-     x-init="init()" 
-     :class="scrolled ? 'backdrop-blur bg-white/80 shadow-md' : 'bg-transparent'"
-     class="fixed w-full z-50 transition-all duration-300">
+{{-- resources/views/layouts/navigation.blade.php --}}
+<nav x-data="nav()" class="bg-white border-b shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
-      
       {{-- left: logo --}}
-      <a href="{{ route('home') }}" class="flex items-center gap-2">
-        <img src="{{ asset('img/icon.jpg') }}" alt="Logo" class="w-10 h-10 object-contain">
-        <span class="font-bold text-lg tracking-tight">{{ config('app.name') }}</span>
-      </a>
+      <div class="flex items-center gap-4">
+        <a href="{{ auth()->check() ? route('student.dashboard') : route('home') }}" class="flex items-center gap-2">
+          <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+          <span class="font-bold text-lg">{{ config('app.name') }}</span>
+        </a>
+      </div>
 
-      {{-- middle: desktop nav --}}
+      {{-- middle: desktop nav (only for guests) --}}
+      @guest
       <div class="hidden md:flex md:items-center md:space-x-6">
-
-        {{-- Solutions --}}
-        <div class="relative" @mouseenter="openMenu('solutions')" @mouseleave="closeMenuDelayed()">
-          <button class="flex items-center gap-2 py-2 px-2 font-medium text-gray-700 hover:text-indigo-600 transition" aria-haspopup="true" :aria-expanded="open === 'solutions'">
-            {{-- Squares 2x2 icon --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.75h-6v6h6v-6zM20.25 3.75h-6v6h6v-6zM9.75 14.25h-6v6h6v-6zM20.25 14.25h-6v6h6v-6z"/>
-            </svg>
-            <span>Solutions</span>
-            <svg class="w-4 h-4 transition-transform" :class="open === 'solutions' ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" />
-            </svg>
+        {{-- Solutions dropdown --}}
+        <div class="relative" x-on:mouseenter="open('solutions')" x-on:mouseleave="closeDelayed('solutions')">
+          <button @click="toggle('solutions')" class="flex items-center gap-2 py-2 px-3 hover:bg-gray-50 rounded">
+            <span class="font-medium">Solutions</span>
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" /></svg>
           </button>
 
-          <div x-show="open === 'solutions'"
-               x-cloak
-               x-transition:enter="transition ease-out duration-150"
-               x-transition:enter-start="opacity-0 translate-y-1"
-               x-transition:enter-end="opacity-100 translate-y-0"
-               x-transition:leave="transition ease-in duration-100"
-               x-transition:leave-start="opacity-100 translate-y-0"
-               x-transition:leave-end="opacity-0 translate-y-1"
-               class="absolute left-0 mt-3 w-72 bg-white/90 backdrop-blur border rounded-lg shadow-lg origin-top"
-               @mouseenter="cancelClose()" @mouseleave="closeMenuDelayed()"
-               style="display: none;">
-            <ul class="p-3 space-y-2 text-sm">
-              <li class="flex items-start gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Bolt icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.813 2.25l-6.563 9h7.5l-1.5 10.5 10.5-13.5h-7.5l-2.937-6z"/>
-                </svg>
+          <div x-show="isOpen('solutions')" x-transition x-cloak
+               @mouseenter="clearCloseTimeout('solutions')" @mouseleave="closeDelayed('solutions')"
+               class="absolute left-0 mt-2 w-64 bg-white border rounded shadow-lg z-50">
+            <ul class="p-3 space-y-2">
+              <li class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded">
+                <svg class="w-5 h-5 text-indigo-600 mt-0.5" viewBox="0 0 24 24" fill="none"><path d="M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
                 <div>
-                  <div class="font-medium">Automation Suite</div>
-                  <div class="text-xs text-gray-500">Kickstart workflows and reduce manual ops</div>
+                  <div class="font-medium">Solution One</div>
+                  <div class="text-xs text-gray-500">Short description</div>
                 </div>
               </li>
-              <li class="flex items-start gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Chart bar icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 20.25h18M6.75 16.5V9.75M12 16.5V6.75M17.25 16.5V12.75"/>
-                </svg>
+              <li class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded">
+                <svg class="w-5 h-5 text-indigo-600 mt-0.5" viewBox="0 0 24 24" fill="none"><path d="M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
                 <div>
-                  <div class="font-medium">Analytics</div>
-                  <div class="text-xs text-gray-500">Real-time dashboards and insights</div>
+                  <div class="font-medium">Solution Two</div>
+                  <div class="text-xs text-gray-500">Short description</div>
                 </div>
               </li>
-              <li class="flex items-start gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Shield check icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3.75l7.5 3v6.75c0 4.223-3.375 6.75-7.5 6.75s-7.5-2.527-7.5-6.75V6.75l7.5-3zM9 12.75l2 2 4-4"/>
-                </svg>
+              <li class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded">
+                <svg class="w-5 h-5 text-indigo-600 mt-0.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"></circle></svg>
                 <div>
-                  <div class="font-medium">Security</div>
-                  <div class="text-xs text-gray-500">Compliance-ready access controls</div>
+                  <div class="font-medium">Solution Three</div>
+                  <div class="text-xs text-gray-500">Short description</div>
                 </div>
               </li>
-              <li class="flex items-start gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Globe alt icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21.75c5.385 0 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25 2.25 6.615 2.25 12s4.365 9.75 9.75 9.75zM4.5 9h15M4.5 15h15M12 2.25c0 0 3.75 4.5 3.75 9.75S12 21.75 12 21.75 8.25 17.25 8.25 12 12 2.25 12 2.25z"/>
-                </svg>
+              <li class="flex items-start gap-3 p-2 hover:bg-gray-50 rounded">
+                <svg class="w-5 h-5 text-indigo-600 mt-0.5" viewBox="0 0 24 24" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="2"></path></svg>
                 <div>
-                  <div class="font-medium">Global CDN</div>
-                  <div class="text-xs text-gray-500">Fast delivery across regions</div>
+                  <div class="font-medium">Solution Four</div>
+                  <div class="text-xs text-gray-500">Short description</div>
                 </div>
               </li>
             </ul>
@@ -85,173 +57,71 @@
         </div>
 
         {{-- Products --}}
-        <div class="relative" @mouseenter="openMenu('products')" @mouseleave="closeMenuDelayed()">
-          <button class="flex items-center gap-2 py-2 px-2 font-medium text-gray-700 hover:text-indigo-600 transition" aria-haspopup="true" :aria-expanded="open === 'products'">
-            {{-- Cube icon --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511l-8.25-4.5-8.25 4.5M20.25 8.511v6.978l-8.25 4.5-8.25-4.5V8.511M12 20.0V12"/>
-            </svg>
-            <span>Products</span>
-            <svg class="w-4 h-4 transition-transform" :class="open === 'products' ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" />
-            </svg>
+        <div class="relative" x-on:mouseenter="open('products')" x-on:mouseleave="closeDelayed('products')">
+          <button @click="toggle('products')" class="flex items-center gap-2 py-2 px-3 hover:bg-gray-50 rounded">
+            <span class="font-medium">Products</span>
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" /></svg>
           </button>
-
-          <div x-show="open === 'products'"
-               x-cloak
-               x-transition:enter="transition ease-out duration-150"
-               x-transition:enter-start="opacity-0 translate-y-1"
-               x-transition:enter-end="opacity-100 translate-y-0"
-               x-transition:leave="transition ease-in duration-100"
-               x-transition:leave-start="opacity-100 translate-y-0"
-               x-transition:leave-end="opacity-0 translate-y-1"
-               class="absolute left-0 mt-3 w-56 bg-white/90 backdrop-blur border rounded-lg shadow-lg origin-top"
-               @mouseenter="cancelClose()" @mouseleave="closeMenuDelayed()"
-               style="display: none;">
-            <ul class="p-3 space-y-2 text-sm">
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Server stack icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 6.75h18v3H3v-3zM3 12.75h18v3H3v-3zM3 18.75h18v3H3v-3z"/>
-                </svg>
-                <span>Product A</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Cog-6-tooth icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.75h4.5l.75 2.25 2.25.75v4.5l-2.25.75-.75 2.25h-4.5l-.75-2.25-2.25-.75v-4.5l2.25-.75.75-2.25zM12 10.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/>
-                </svg>
-                <span>Product B</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Command line icon --}}
-                <svg xmlns="http://http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 9l3 3-3 3M13 15h3M3.75 5.25h16.5v13.5H3.75z"/>
-                </svg>
-                <span>Product C</span>
-              </li>
+          <div x-show="isOpen('products')" x-cloak x-transition class="absolute left-0 mt-2 w-56 bg-white border rounded shadow-lg z-50">
+            <ul class="p-3 space-y-2">
+              <li class="p-2 hover:bg-gray-50 rounded">Product A</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Product B</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Product C</li>
             </ul>
           </div>
         </div>
 
         {{-- Resources --}}
-        <div class="relative" @mouseenter="openMenu('resources')" @mouseleave="closeMenuDelayed()">
-          <button class="flex items-center gap-2 py-2 px-2 font-medium text-gray-700 hover:text-indigo-600 transition" aria-haspopup="true" :aria-expanded="open === 'resources'">
-            {{-- Book open icon --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.75c-2.25-1.5-4.5-1.5-6.75 0v10.5c2.25-1.5 4.5-1.5 6.75 0 2.25-1.5 4.5-1.5 6.75 0V6.75c-2.25-1.5-4.5-1.5-6.75 0z"/>
-            </svg>
-            <span>Resources</span>
-            <svg class="w-4 h-4 transition-transform" :class="open === 'resources' ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" />
-            </svg>
+        <div class="relative" x-on:mouseenter="open('resources')" x-on:mouseleave="closeDelayed('resources')">
+          <button @click="toggle('resources')" class="flex items-center gap-2 py-2 px-3 hover:bg-gray-50 rounded">
+            <span class="font-medium">Resources</span>
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" /></svg>
           </button>
-
-          <div x-show="open === 'resources'"
-               x-cloak
-               x-transition:enter="transition ease-out duration-150"
-               x-transition:enter-start="opacity-0 translate-y-1"
-               x-transition:enter-end="opacity-100 translate-y-0"
-               x-transition:leave="transition ease-in duration-100"
-               x-transition:leave-start="opacity-100 translate-y-0"
-               x-transition:leave-end="opacity-0 translate-y-1"
-               class="absolute left-0 mt-3 w-56 bg-white/90 backdrop-blur border rounded-lg shadow-lg origin-top"
-               @mouseenter="cancelClose()" @mouseleave="closeMenuDelayed()"
-               style="display: none;">
-            <ul class="p-3 space-y-2 text-sm">
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Document text icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6.75h6M9 10.5h6M9 14.25h6M6.75 3.75h10.5v16.5H6.75z"/>
-                </svg>
-                <span>Docs</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Play circle icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21.75a9.75 9.75 0 100-19.5 9.75 9.75 0 000 19.5zM10.5 9.75l4.5 2.25-4.5 2.25v-4.5z"/>
-                </svg>
-                <span>Tutorials</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Newspaper icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 6.75h10.5v10.5H4.5zM18.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25H6.75"/>
-                </svg>
-                <span>Blog</span>
-              </li>
+          <div x-show="isOpen('resources')" x-cloak x-transition class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+            <ul class="p-3 space-y-2">
+              <li class="p-2 hover:bg-gray-50 rounded">Docs</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Tutorials</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Blog</li>
             </ul>
           </div>
         </div>
 
         {{-- Company --}}
-        <div class="relative" @mouseenter="openMenu('company')" @mouseleave="closeMenuDelayed()">
-          <button class="flex items-center gap-2 py-2 px-2 font-medium text-gray-700 hover:text-indigo-600 transition" aria-haspopup="true" :aria-expanded="open === 'company'">
-            {{-- Building office icon --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75h10.5v16.5H6.75zM9.75 7.5h2.25M9.75 10.5h2.25M9.75 13.5h2.25M12 20.25v-3h2.25"/>
-            </svg>
-            <span>Company</span>
-            <svg class="w-4 h-4 transition-transform" :class="open === 'company' ? 'rotate-180' : ''" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" />
-            </svg>
+        <div class="relative" x-on:mouseenter="open('company')" x-on:mouseleave="closeDelayed('company')">
+          <button @click="toggle('company')" class="flex items-center gap-2 py-2 px-3 hover:bg-gray-50 rounded">
+            <span class="font-medium">Company</span>
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.67l3.71-3.48a.75.75 0 111.04 1.08l-4.25 4a.75.75 0 01-1.04 0l-4.25-4a.75.75 0 01-.02-1.06z" clip-rule="evenodd" /></svg>
           </button>
-
-          <div x-show="open === 'company'"
-               x-cloak
-               x-transition:enter="transition ease-out duration-150"
-               x-transition:enter-start="opacity-0 translate-y-1"
-               x-transition:enter-end="opacity-100 translate-y-0"
-               x-transition:leave="transition ease-in duration-100"
-               x-transition:leave-start="opacity-100 translate-y-0"
-               x-transition:leave-end="opacity-0 translate-y-1"
-               class="absolute left-0 mt-3 w-56 bg-white/90 backdrop-blur border rounded-lg shadow-lg origin-top"
-               @mouseenter="cancelClose()" @mouseleave="closeMenuDelayed()"
-               style="display: none;">
-            <ul class="p-3 space-y-2 text-sm">
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Information circle icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21.75a9.75 9.75 0 100-19.5 9.75 9.75 0 000 19.5zM12 9.75h.008v.008H12V9.75zm0 3v4.5"/>
-                </svg>
-                <span>About</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Briefcase icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 6.75h6v3H9v-3zM3.75 9.75h16.5V18a3 3 0 01-3 3H6.75a3 3 0 01-3-3V9.75z"/>
-                </svg>
-                <span>Careers</span>
-              </li>
-              <li class="flex items-center gap-3 p-2 rounded hover:bg-indigo-50">
-                {{-- Envelope icon --}}
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 6.75h16.5v10.5H3.75zM4.5 8.25l7.5 5.25 7.5-5.25"/>
-                </svg>
-                <span>Contact</span>
-              </li>
+          <div x-show="isOpen('company')" x-cloak x-transition class="absolute left-0 mt-2 w-48 bg-white border rounded shadow-lg z-50">
+            <ul class="p-3 space-y-2">
+              <li class="p-2 hover:bg-gray-50 rounded">About</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Careers</li>
+              <li class="p-2 hover:bg-gray-50 rounded">Contact</li>
             </ul>
           </div>
         </div>
-
       </div>
+      @endguest
 
-      {{-- right: auth + mobile --}}
+      {{-- right side: auth-specific --}}
       <div class="flex items-center gap-4">
         @guest
-          <a href="{{ route('login') }}" class="hidden md:inline text-sm hover:text-indigo-600">Login</a>
-          <a href="{{ route('register') }}" class="hidden md:inline text-sm px-3 py-1 border rounded-lg hover:bg-indigo-600 hover:text-white transition">Sign up</a>
+          <a href="{{ route('login') }}" class="hidden md:inline text-sm">Login</a>
+          <a href="{{ route('register') }}" class="hidden md:inline text-sm px-3 py-1 border rounded">Sign up</a>
         @else
-          <a href="{{ route('student.dashboard') }}" class="hidden md:inline text-sm hover:text-indigo-600">Dashboard</a>
-          <livewire:actions.logout class="hidden md:inline" />
+          {{-- For authenticated users just show dashboard link and logout --}}
+          <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard')) }}" class="hidden md:inline text-sm">Dashboard</a>
+          <div class="hidden md:inline">
+            <livewire:actions.logout />
+          </div>
         @endguest
 
         {{-- mobile hamburger --}}
-        <button @click="mobile = !mobile" class="md:hidden p-2 rounded focus:outline-none" aria-label="Toggle menu">
-          <svg x-show="!mobile" x-cloak xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor">
+        <button @click="mobile = !mobile" class="md:hidden p-2 rounded focus:outline-none" aria-label="Open menu">
+          <svg x-show="!mobile" x-cloak class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
-          <svg x-show="mobile" x-cloak xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor">
+          <svg x-show="mobile" x-cloak class="w-6 h-6 transform rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
           </svg>
         </button>
@@ -259,121 +129,43 @@
     </div>
   </div>
 
-  {{-- mobile slide-in menu --}}
-  <div x-show="mobile" x-cloak
-       x-transition:enter="transition transform duration-300"
-       x-transition:enter-start="-translate-x-full opacity-0"
-       x-transition:enter-end="translate-x-0 opacity-100"
-       x-transition:leave="transition transform duration-300"
-       x-transition:leave-start="translate-x-0 opacity-100"
-       x-transition:leave-end="-translate-x-full opacity-0"
-       class="fixed inset-y-0 left-0 w-72 bg-white shadow-lg p-6 z-50">
-    <nav class="space-y-4">
-      <a href="#" class="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
-        {{-- Squares 2x2 --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 3.75h-6v6h6v-6zM20.25 3.75h-6v6h6v-6zM9.75 14.25h-6v6h6v-6zM20.25 14.25h-6v6h6v-6z"/>
-        </svg>
-        <span>Solutions</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
-        {{-- Cube --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511l-8.25-4.5-8.25 4.5M20.25 8.511v6.978l-8.25 4.5-8.25-4.5V8.511M12 20.0V12"/>
-        </svg>
-        <span>Products</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
-        {{-- Book open --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.75c-2.25-1.5-4.5-1.5-6.75 0v10.5c2.25-1.5 4.5-1.5 6.75 0 2.25-1.5 4.5-1.5 6.75 0V6.75c-2.25-1.5-4.5-1.5-6.75 0z"/>
-        </svg>
-        <span>Resources</span>
-      </a>
-      <a href="#" class="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
-        {{-- Building office --}}
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6.75 3.75h10.5v16.5H6.75zM9.75 7.5h2.25M9.75 10.5h2.25M9.75 13.5h2.25M12 20.25v-3h2.25"/>
-        </svg>
-        <span>Company</span>
-      </a>
+  {{-- mobile menu --}}
+  <div x-show="mobile" x-cloak x-transition class="md:hidden border-t bg-white">
+    <div class="px-4 py-4 space-y-2">
+      @guest
+        <a @click="mobile = false" href="#" class="block py-2">Solutions</a>
+        <a @click="mobile = false" href="#" class="block py-2">Products</a>
+        <a @click="mobile = false" href="#" class="block py-2">Resources</a>
+        <a @click="mobile = false" href="#" class="block py-2">Company</a>
 
-      <div class="pt-4 border-t space-y-2">
-        @guest
-          <a href="{{ route('login') }}" class="flex items-center gap-3">
-            {{-- Arrow right on rectangle (login) --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6.75h3v10.5h-3M12 15l3-3-3-3M6.75 4.5h6v15h-6a2.25 2.25 0 01-2.25-2.25V6.75A2.25 2.25 0 016.75 4.5z"/>
-            </svg>
-            <span>Login</span>
-          </a>
-          <a href="{{ route('register') }}" class="flex items-center gap-3">
-            {{-- User plus --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 8.25A3 3 0 119 8.25a3 3 0 016 0zM4.5 19.5a6 6 0 0112 0M18 8.25v3M19.5 9.75h-3"/>
-            </svg>
-            <span>Sign up</span>
-          </a>
-        @else
-          <a href="{{ route('student.dashboard') }}" class="flex items-center gap-3">
-            {{-- Squares plus (dashboard) --}}
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.5 4.5h6v6h-6zM13.5 4.5h6v6h-6zM4.5 13.5h6v6h-6zM16.5 13.5h3M18 12v3"/>
-            </svg>
-            <span>Dashboard</span>
-          </a>
+        <div class="pt-3 border-t">
+          <a href="{{ route('login') }}" class="block py-2">Login</a>
+          <a href="{{ route('register') }}" class="block py-2">Sign up</a>
+        </div>
+      @else
+        <a @click="mobile = false" href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard')) }}" class="block py-2">Dashboard</a>
+        <div class="pt-3 border-t">
           <livewire:actions.logout />
-        @endguest
-      </div>
-    </nav>
+        </div>
+      @endguest
+    </div>
   </div>
 
   <script>
     function nav(){
       return {
         mobile: false,
-        scrolled: false,
-        // which menu is open: null | 'solutions' | 'products' | 'resources' | 'company'
-        open: null,
-        closeTimeout: null,
-        init() {
-          // scroll listener
-          window.addEventListener('scroll', () => this.scrolled = window.scrollY > 10);
-          // close menus on escape
-          window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.closeNow();
-          });
-          // click outside to close
-          document.addEventListener('click', (e) => {
-            // if a menu is open and click target is outside nav, close
-            const navEl = document.querySelector('nav[x-data="nav()"]') || document.querySelector('nav');
-            if (!navEl) return;
-            if (this.open && !navEl.contains(e.target)) this.closeNow();
-          });
+        openMenus: {},
+        timeouts: {},
+        open(name){ this.openMenus[name] = true; this.clearCloseTimeout(name); },
+        toggle(name){ this.openMenus[name] = !this.openMenus[name]; },
+        isOpen(name){ return !!this.openMenus[name]; },
+        closeDelayed(name){
+          this.clearCloseTimeout(name);
+          this.timeouts[name] = setTimeout(()=> this.openMenus[name] = false, 250);
         },
-        openMenu(name) {
-          // cancel an in-flight close
-          this.cancelClose();
-          // set the open menu
-          this.open = name;
-        },
-        closeMenuDelayed(delay = 150) {
-          // schedule close (gives user time to move pointer to dropdown)
-          this.cancelClose();
-          this.closeTimeout = setTimeout(() => {
-            this.open = null;
-            this.closeTimeout = null;
-          }, delay);
-        },
-        cancelClose() {
-          if (this.closeTimeout) {
-            clearTimeout(this.closeTimeout);
-            this.closeTimeout = null;
-          }
-        },
-        closeNow() {
-          this.cancelClose();
-          this.open = null;
+        clearCloseTimeout(name){
+          if(this.timeouts[name]){ clearTimeout(this.timeouts[name]); this.timeouts[name] = null; }
         }
       }
     }

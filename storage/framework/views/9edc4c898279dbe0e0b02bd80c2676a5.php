@@ -21,4 +21,4 @@
       </div>
     </div>
   </div>
-</div>
+</div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/actions/logout.blade.php ENDPATH**/ ?>
