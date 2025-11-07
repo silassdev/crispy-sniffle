@@ -11,14 +11,22 @@ class EnsureRole
      * Usage: ->middleware(['auth','role:student'])
      */
     public function handle(Request $request, Closure $next, $role)
-    {
-        if (! $request->user()) {
+    {   
+        $user = $request->user();
+
+        if (! $user) {
             return redirect()->route('login');
         }
 
-        $roles = explode('|', $role); // support role1|role2
-        if (! in_array($request->user()->role, $roles)) {
-            abort(403);
+        $allowed = array_map('strval', $roles);
+
+        if (! in_array($user->role, $allowed, true)) 
+            {
+
+                return response()->view('errors.forbidden_role', [
+                    'userRole' => $user->role,
+                    'requiredRoles' => $allowed,
+                ], 403);
         }
 
         return $next($request);

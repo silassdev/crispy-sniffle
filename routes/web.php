@@ -42,13 +42,22 @@ Route::post('/admin/register', [AuthController::class,'register'])->name('admin.
 Route::post('/admin/logout', [AuthController::class,'logout'])->name('admin.logout')->middleware('auth');
 
 // Admin routes — grouped, named, and protected
-Route::prefix('admin')
-     ->name('admin.')
-     ->middleware(['auth', EnsureUserIsAdmin::class])
-     ->group(function () {
-         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-         // add other admin routes here, e.g. Route::resource('users', AdminUserController::class)->names('users');
-     });
+
+// admin
+Route::middleware(['auth','role:admin'])->prefix('admin')->group(function () {
+    Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+});
+
+// trainer
+Route::middleware(['auth','role:trainer'])->prefix('trainer')->group(function () {
+    Route::get('dashboard', [App\Http\Controllers\Trainer\DashboardController::class, 'index'])->name('trainer.dashboard');
+});
+
+// student
+Route::middleware(['auth','role:student'])->prefix('student')->group(function () {
+    Route::get('dashboard', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('student.dashboard');
+});
+
 
 // Invite accept (public link)
 Route::get('admin/invite/accept/{token}', function ($token){
@@ -57,8 +66,6 @@ Route::get('admin/invite/accept/{token}', function ($token){
 
 // Authenticated user dashboards
 Route::middleware(['auth'])->group(function () {
-    Route::view('/student/dashboard', 'dashboards.student')->name('student.dashboard');
-    Route::view('/trainer/dashboard', 'dashboards.trainer')->name('trainer.dashboard');
     Route::get('/trainer/pending', function () {
         return view('trainer.pending');
     })->name('trainer.pending');
