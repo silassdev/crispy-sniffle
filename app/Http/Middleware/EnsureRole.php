@@ -10,7 +10,7 @@ class EnsureRole
      * Ensure the authenticated user has one of the allowed roles.
      * Usage: ->middleware(['auth','role:student'])
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {   
         $user = $request->user();
 
