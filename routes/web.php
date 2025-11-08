@@ -12,6 +12,8 @@ use App\Http\Middleware\EnsureRole;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
+use App\Http\Controllers\Auth\TrainerRegisterController;
+
 
 if (file_exists(__DIR__.'/auth.php')) {
     require __DIR__.'/auth.php';
@@ -37,6 +39,18 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 Route::get('password/token-invalid', function(){
     return view('auth.passwords.token-expired');
 })->name('password.token.invalid');
+
+Route::post('register/trainer', [TrainerRegisterController::class, 'store'])->name('register.trainer');
+
+Route::get('/debug/session', function () {
+    return response()->json([
+        'auth' => auth()->check(),
+        'user' => auth()->user() ? auth()->user()->only(['id','email','role','approved']) : null,
+        'intended' => session('url.intended'),
+    ]);
+});
+
+
 
 // Public admin auth (login/register/logout)
 Route::post('/admin/login', [AuthController::class,'login'])->name('admin.login');

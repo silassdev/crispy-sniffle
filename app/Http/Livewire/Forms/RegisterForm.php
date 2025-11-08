@@ -41,68 +41,74 @@ class RegisterForm extends Component
     }
 
     public function submit()
-{
+  {
     $this->resetValidation();
 
+    // basic validation
     try {
         $this->validate();
     } catch (\Illuminate\Validation\ValidationException $e) {
         $msg = implode(' - ', $e->validator->errors()->all());
-        $this->emit('appToast', ['title' => 'Validation error', 'message' => $msg, 'ttl' => 8000]);
-        return;
+        Log::info('LoginForm::validation_failed', ['email'=>$this->email, 'role'=>$this->role, 'errors'=>$e->validator->errors()->all()]);
+        session()->flash('error', $msg);
+        return redirect()->route('login', ['role' => $this->role]);
     }
 
-    // Determine role value to store in DB
-    $roleVal = $this->role === 'trainer' ? \App\Models\User::ROLE_TRAINER : \App\Models\User::ROLE_STUDENT;
-    $approved = $roleVal === \App\Models\User::ROLE_TRAINER ? false : true;
+    $email = $this->email;
+    $password = $this->password;
 
-    try {
-        $user = \App\Models\User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'password' => \Illuminate\Support\Facades\Hash::make($this->password),
-            'role' => $roleVal,
-            'approved' => $approved,
-        ]);
-    } catch (\Throwable $e) {
-        \Log::error('Registration failed: '.$e->getMessage(), ['exception' => $e]);
-        $this->emit('appToast', ['title' => 'Error', 'message' => 'Unable to create account. Try again.', 'ttl' => 7000]);
-        return;
+    Log::info('LoginForm::attempt', ['email'=>$email, 'role'=>$this->role, 'ip'=>request()->ip()]);
+
+    // Find user first so we can log exact reason
+    $user = User::where('email', $email)->first();
+
+    if (! $user) {
+        Log::warning('LoginForm::no_user', ['email'=>$email]);
+        session()->flash('error', 'The provided credentials are incorrect.');
+        return redirect()->route('login', ['role' => $this->role]);
     }
 
-    // Prepare flash payload for trainer path (always send this with the redirect so it's reliable)
-    $trainerFlash = [
-        'trainer_email' => $user->email,
-        'success' => 'Application submitted. An admin will review your application.',
-    ];
+    // Log user basic info (not password)
+    Log::info('LoginForm::user_found', ['id'=>$user->id, 'email'=>$user->email, 'role'=>$user->role, 'approved'=>$user->approved]);
 
-    // Trainer flow
-    if ($roleVal === \App\Models\User::ROLE_TRAINER) {
-        // Attempt to queue the mail, but do not let it prevent the redirect/flash.
-        try {
-            \Illuminate\Support\Facades\Mail::to($user->email)->queue(new \App\Mail\TrainerApplicationReceivedMail($user));
-        } catch (\Throwable $e) {
-            \Log::warning('Trainer mail queue failed after registration: '.$e->getMessage(), ['exception' => $e, 'user_id' => $user->id ?? null]);
-            // continue — we still redirect and flash success for the user
-        }
-
-        return redirect()->route('trainer.pending')->with($trainerFlash);
+    // check password explicitly
+    if (! Hash::check($password, $user->password)) {
+        Log::warning('LoginForm::bad_password', ['email'=>$email]);
+        session()->flash('error', 'The provided credentials are incorrect.');
+        return redirect()->route('login', ['role' => $this->role]);
     }
 
-    // Student flow: welcome and login
-    try {
-        \Illuminate\Support\Facades\Mail::to($user->email)->queue(new \App\Mail\StudentWelcomeMail($user));
-        \Illuminate\Support\Facades\Auth::login($user);
-        return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
-    } catch (\Throwable $e) {
-        \Log::warning('Mail fail after registration: '.$e->getMessage(), ['exception' => $e]);
-
-        $this->emit('appToast', ['title' => 'Notice', 'message' => 'Account created. Mail may have failed.', 'ttl' => 6000]);
-        \Illuminate\Support\Facades\Auth::login($user);
-        return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
+    // At this point password is correct. Check trainer approval
+    if ($user->isTrainer() && ! $user->approved) {
+        Log::info('LoginForm::trainer_not_approved', ['email'=>$email]);
+        // ensure user is not logged in
+        auth()->logout();
+        session()->flash('error', 'Your trainer account is pending approval. We will notify you by email when approved.');
+        return redirect()->route('login', ['role' => 'trainer']);
     }
-}
 
+    // If role param was supplied ensure user matches requested role — defend against cross-role login
+    if (in_array($this->role, ['trainer','student']) && $user->role !== $this->role) {
+        Log::warning('LoginForm::role_mismatch', ['email'=>$email, 'requested'=>$this->role, 'actual'=>$user->role]);
+        session()->flash('error', 'Account role mismatch. Try the correct login option.');
+        return redirect()->route('login');
+    }
+
+    // All checks passed. Log in user
+    auth()->login($user, (bool)$this->remember);
+    session()->regenerate();
+
+    Log::info('LoginForm::login_success', ['id'=>$user->id, 'email'=>$user->email, 'role'=>$user->role]);
+
+    // redirect to the correct dashboard
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard')->with('success', 'Welcome back, admin!');
+    } elseif ($user->isTrainer()) {
+        return redirect()->route('trainer.dashboard')->with('success', 'Welcome back, trainer!');
+    } else {
+        return redirect()->route('student.dashboard')->with('success', 'Welcome back!');
+    }
+  }
 
     public function render()
     {

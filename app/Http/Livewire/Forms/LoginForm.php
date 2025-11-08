@@ -66,6 +66,7 @@ class LoginForm extends Component
         if ($user->isTrainer() && ! $user->approved) {
             Auth::logout();
             session()->flash('error', 'Your trainer account is pending approval. We will notify you by email when approved.');
+
             return redirect()->route('login');
         }
 
