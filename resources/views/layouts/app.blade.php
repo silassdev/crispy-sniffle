@@ -17,57 +17,108 @@
 
   @include('layouts.navigation')
 
-
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     @yield('content')
   </main>
 
-  
-      @include('layouts.footer')
-  
+  @include('layouts.footer')
 
   @livewireScripts
   @stack('scripts')
 
-@if(session()->has('app_toast'))
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const payload = @json(session('app_toast'));
+  {{-- Unified toast handler: session + Livewire + manual dispatch support --}}
+  <script>
+  (function () {
+    // central dispatcher - normalises payload and shows the toast via available library
+    function showToast(payload) {
+      if (!payload || typeof payload !== 'object') payload = {};
 
-            // Dispatch a native browser event named 'appToast'
-            window.dispatchEvent(new CustomEvent('appToast', { detail: payload }));
+      var level = payload.level || payload.type || 'info';
+      var title = payload.title || '';
+      var message = payload.message || payload.msg || payload.body || '';
+      var ttl = payload.ttl || payload.timeout || 4000;
 
-            // Optional: If you want to immediately handle it here (fallback),
-            // attempt to use a common toast library if present (toastr example),
-            // otherwise just console.log.
-            try {
-                // If toastr is loaded
-                if (typeof toastr !== 'undefined') {
-                    const ttl = payload.ttl || 4000;
-                    const title = payload.title || '';
-                    const msg = payload.message || '';
-                    const level = payload.level || 'info';
-                    // toastr[level] exists for 'success','info','warning','error'
-                    if (typeof toastr[level] === 'function') {
-                        toastr[level](msg, title, { timeOut: ttl });
-                    } else {
-                        toastr.info(msg, title, { timeOut: ttl });
-                    }
-                } else if (typeof Notyf !== 'undefined') {
-                    // Notyf example
-                    const notyf = new Notyf();
-                    notyf.open({type: payload.level || 'info', message: payload.message});
-                } else {
-                    // Fallback: let app code (or dev console) handle it
-                    console.log('appToast payload:', payload);
-                }
-            } catch (err) {
-                console.error('Error showing toast fallback:', err);
-            }
+      // Try toastr if present
+      try {
+        if (typeof toastr !== 'undefined' && typeof toastr[level] === 'function') {
+          toastr[level](message, title, { timeOut: ttl });
+          return;
+        }
+      } catch (e) {
+        console.error('toastr error:', e);
+      }
+
+      // Try Notyf
+      try {
+        if (typeof Notyf !== 'undefined') {
+          var notyf = new Notyf();
+          notyf.open({ type: level, message: message || title });
+          return;
+        }
+      } catch (e) {
+        console.error('Notyf error:', e);
+      }
+
+      try {
+        window.dispatchEvent(new CustomEvent('app-toast-fallback', { detail: payload }));
+      } catch (e) {
+        console.error('app-toast-fallback dispatch failed', e);
+      }
+
+      // Final fallback: console
+      console.log('toast', { level: level, title: title, message: message, ttl: ttl });
+    }
+
+    // expose helper
+    window.appToast = function (payload) {
+      try { showToast(payload); } catch (err) { console.error('appToast helper error', err); }
+    };
+
+    // Listen for the canonical event name (CustomEvent with detail)
+    window.addEventListener('app-toast', function (e) {
+      showToast(e && e.detail ? e.detail : {});
+    });
+
+    // Accept legacy / alternate event name
+    window.addEventListener('appToast', function (e) {
+      showToast(e && e.detail ? e.detail : {});
+    });
+
+    // Accept Livewire's dispatchBrowserEvent which fires native events by name on window/document
+    // If you do: $this->dispatchBrowserEvent('app-toast', $payload) in Livewire, it will be caught above.
+    // Add explicit listener for backwards compatibility (some setups deliver event on document)
+    document.addEventListener('app-toast', function (e) {
+      showToast(e && e.detail ? e.detail : {});
+    });
+
+    // Wire up Livewire .on emitter (Livewire.emit('appToast', payload) or Livewire.emit('app-toast', payload))
+    if (typeof Livewire !== 'undefined' && Livewire.on) {
+      try {
+        Livewire.on('appToast', function (payload) {
+          // Livewire.emit sends payload directly
+          showToast(payload || {});
         });
-    </script>
-@endif
+        Livewire.on('app-toast', function (payload) {
+          showToast(payload || {});
+        });
+      } catch (err) {
+        console.error('Livewire toast wiring error', err);
+      }
+    }
 
+    // If there is a session flash (server-rendered), dispatch it on DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', function () {
+      @if(session()->has('app_toast'))
+        (function () {
+          var payload = @json(session('app_toast'));
+          try { showToast(payload); } catch (err) { console.error('session toast error', err); }
+        })();
+      @endif
+    });
+
+   
+  })();
+  </script>
 
 </body>
 </html>

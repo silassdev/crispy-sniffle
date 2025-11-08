@@ -41,7 +41,7 @@ class RegisterForm extends Component
     }
 
     public function submit()
- {
+{
     $this->resetValidation();
 
     try {
@@ -65,37 +65,44 @@ class RegisterForm extends Component
             'approved' => $approved,
         ]);
     } catch (\Throwable $e) {
-        \Log::error('Registration failed: '.$e->getMessage());
+        \Log::error('Registration failed: '.$e->getMessage(), ['exception' => $e]);
         $this->emit('appToast', ['title' => 'Error', 'message' => 'Unable to create account. Try again.', 'ttl' => 7000]);
         return;
     }
 
-    // Send queued mails (non-blocking)
-    try {
-        if ($roleVal === \App\Models\User::ROLE_TRAINER) {
+    // Prepare flash payload for trainer path (always send this with the redirect so it's reliable)
+    $trainerFlash = [
+        'trainer_email' => $user->email,
+        'success' => 'Application submitted. An admin will review your application.',
+    ];
+
+    // Trainer flow
+    if ($roleVal === \App\Models\User::ROLE_TRAINER) {
+        // Attempt to queue the mail, but do not let it prevent the redirect/flash.
+        try {
             \Illuminate\Support\Facades\Mail::to($user->email)->queue(new \App\Mail\TrainerApplicationReceivedMail($user));
-            session()->flash('trainer_email', $user->email);
-            session()->flash('success', 'Application submitted. An admin will review your application.');
-            return redirect()->route('trainer.pending');
+        } catch (\Throwable $e) {
+            \Log::warning('Trainer mail queue failed after registration: '.$e->getMessage(), ['exception' => $e, 'user_id' => $user->id ?? null]);
+            // continue — we still redirect and flash success for the user
         }
 
-        // Student flow: welcome and login
+        return redirect()->route('trainer.pending')->with($trainerFlash);
+    }
+
+    // Student flow: welcome and login
+    try {
         \Illuminate\Support\Facades\Mail::to($user->email)->queue(new \App\Mail\StudentWelcomeMail($user));
         \Illuminate\Support\Facades\Auth::login($user);
         return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
     } catch (\Throwable $e) {
-        // Don't break creation on mail error; fallback with toast
-        \Log::warning('Mail fail after registration: '.$e->getMessage());
+        \Log::warning('Mail fail after registration: '.$e->getMessage(), ['exception' => $e]);
+
         $this->emit('appToast', ['title' => 'Notice', 'message' => 'Account created. Mail may have failed.', 'ttl' => 6000]);
-        if ($roleVal === \App\Models\User::ROLE_TRAINER) {
-            return redirect()->route('trainer.pending');
-        }
         \Illuminate\Support\Facades\Auth::login($user);
         return redirect()->route('student.dashboard')->with('success', 'Account created — welcome!');
     }
+}
 
-
-    }
 
     public function render()
     {

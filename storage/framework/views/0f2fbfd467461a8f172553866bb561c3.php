@@ -1,10 +1,28 @@
 
+
+<?php
+  // Compute the correct dashboard route name once so views stay simple.
+  $dashboardRoute = 'home';
+
+  if (auth()->check()) {
+      $u = auth()->user();
+
+      if (method_exists($u, 'isAdmin') && $u->isAdmin()) {
+          $dashboardRoute = 'admin.dashboard';
+      } elseif (method_exists($u, 'isTrainer') && $u->isTrainer()) {
+          $dashboardRoute = 'trainer.dashboard';
+      } else {
+          $dashboardRoute = 'student.dashboard';
+      }
+  }
+?>
+
 <nav x-data="nav()" class="bg-white border-b shadow-sm">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
       
       <div class="flex items-center gap-4">
-        <a href="<?php echo e(auth()->check() ? route('student.dashboard') : route('home')); ?>" class="flex items-center gap-2">
+        <a href="<?php echo e(route($dashboardRoute)); ?>" class="flex items-center gap-2">
           <img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-bold text-lg"><?php echo e(config('app.name')); ?></span>
         </a>
@@ -110,7 +128,7 @@
           <a href="<?php echo e(route('register')); ?>" class="hidden md:inline text-sm px-3 py-1 border rounded">Sign up</a>
         <?php else: ?>
           
-          <a href="<?php echo e(auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard'))); ?>" class="hidden md:inline text-sm">Dashboard</a>
+          <a href="<?php echo e(route($dashboardRoute)); ?>" class="hidden md:inline text-sm">Dashboard</a>
           <div class="hidden md:inline">
             <?php
 $__split = function ($name, $params = []) {
@@ -158,7 +176,7 @@ if (isset($__slots)) unset($__slots);
           <a href="<?php echo e(route('register')); ?>" class="block py-2">Sign up</a>
         </div>
       <?php else: ?>
-        <a @click="mobile = false" href="<?php echo e(auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard'))); ?>" class="block py-2">Dashboard</a>
+        <a @click="mobile = false" href="<?php echo e(route($dashboardRoute)); ?>" class="block py-2">Dashboard</a>
         <div class="pt-3 border-t">
           <?php
 $__split = function ($name, $params = []) {
@@ -200,4 +218,5 @@ if (isset($__slots)) unset($__slots);
       }
     }
   </script>
-</nav><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/navigation.blade.php ENDPATH**/ ?>
+</nav>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/navigation.blade.php ENDPATH**/ ?>
