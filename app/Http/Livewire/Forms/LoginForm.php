@@ -37,7 +37,7 @@ class LoginForm extends Component
             $this->validate();
         } catch (ValidationException $e) {
             $msg = implode(' - ', $e->validator->errors()->all());
-            $this->dispatchBrowserEvent('app-toast', [
+            $this->dispatch('app-toast', [
                 'title' => 'Validation error',
                 'message' => $msg,
                 'ttl' => 8000
@@ -48,13 +48,21 @@ class LoginForm extends Component
         $key = $this->throttleKey();
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
-            $this->addError('too_many_attempts', "Too many login attempts. Try again in {$seconds} seconds.");
+            $this->dispatch('app-toast', [
+                'title' => 'Too Many Attempts',
+                'message' => "Too many login attempts. Try again in {$seconds} seconds.",
+                'ttl' => 6000
+            ]);
             return;
         }
 
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], (bool)$this->remember)) {
             RateLimiter::hit($key, 60);
-            $this->addError('credentials', 'The provided credentials are incorrect.');
+            $this->dispatch('app-toast', [
+                'title' => 'Login failed',
+                'message' => 'The provided credentials are incorrect.',
+                'ttl' => 6000
+            ]);
             return;
         }
 
@@ -65,9 +73,13 @@ class LoginForm extends Component
 
         if ($user->isTrainer() && ! $user->approved) {
             Auth::logout();
-            session()->flash('error', 'Your trainer account is pending approval. We will notify you by email when approved.');
-
-            return redirect()->route('login');
+            $this->dispatch('app-toast', [
+                'title' => 'Account Pending',
+                'message' => 'Your trainer account is pending approval. We will notify you by email when approved.',
+                'ttl' => 9000
+            ]);
+            $this->dispatch('login-redirect');
+            return;
         }
 
         // ---- role-safe intended handling by route name ----
@@ -109,17 +121,37 @@ class LoginForm extends Component
         };
 
         if ($intendedRouteName && $allowedForRole($intendedRouteName, $user)) {
-            return redirect()->to($intended);
+            $this->dispatch('intended-redirect', ['url' => $intended]);
+            return;
         }
 
         // ---- default role dashboards ----
         if ($user->isAdmin()) {
-            return redirect()->route('admin.dashboard')->with('success', 'Welcome back, admin!');
+            $this->dispatch('admin-dashboard-redirect');
+            $this->dispatch('app-toast', [
+                'title' => 'Welcome',
+                'message' => 'Welcome back, admin!',
+                'ttl' => 6000
+            ]);
+            return;
         } elseif ($user->isTrainer()) {
-            return redirect()->route('trainer.dashboard')->with('success', 'Welcome back, trainer!');
+            $this->dispatch('trainer-dashboard-redirect');
+            $this->dispatch('app-toast', [
+                'title' => 'Welcome',
+                'message' => 'Welcome back, trainer!',
+                'ttl' => 6000
+            ]);
+            return;
         }
 
-        return redirect()->route('student.dashboard')->with('success', 'Welcome back!');
+        // Default: student
+        $this->dispatch('student-dashboard-redirect');
+        $this->dispatch('app-toast', [
+            'title' => 'Welcome',
+            'message' => 'Welcome back!',
+            'ttl' => 6000
+        ]);
+        return;
     }
 
     protected function throttleKey()

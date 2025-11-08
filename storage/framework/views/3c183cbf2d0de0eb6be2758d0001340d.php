@@ -135,4 +135,25 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
     </div>
   </div>
 
+<script>
+window.addEventListener('trainer-pending-redirect', function () {
+    window.location = "<?php echo e(route('trainer.pending')); ?>";
+});
+window.addEventListener('student-dashboard-redirect', function () {
+    window.location = "<?php echo e(route('student.dashboard')); ?>";
+});
+window.addEventListener('trainer-dashboard-redirect', function () {
+    window.location = "<?php echo e(route('trainer.dashboard')); ?>";
+});
+window.addEventListener('admin-dashboard-redirect', function () {
+    window.location = "<?php echo e(route('admin.dashboard')); ?>";
+});
+window.addEventListener('login-redirect', function () {
+    window.location = "<?php echo e(route('login')); ?>";
+});
+window.addEventListener('intended-redirect', function (e) {
+    window.location = e.detail.url || "<?php echo e(route('login')); ?>";
+});
+</script>
+
 </div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/forms/login-form.blade.php ENDPATH**/ ?>

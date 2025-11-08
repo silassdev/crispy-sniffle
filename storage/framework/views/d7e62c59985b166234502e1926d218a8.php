@@ -18,10 +18,18 @@
             <!-- displayed current role -->
             <div class="mt-2 text-sm text-gray-700 dark:text-gray-200">
               <strong>selected:</strong>
-              {{ $role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') ) }}
+              <?php echo e($role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') )); ?>
+
             </div>
 
-            @error('role') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['role'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
           </div>
 
@@ -31,7 +39,14 @@
             <input id="name" wire:model.defer="name" required
                    class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
             />
-            @error('name') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
           <!-- email -->
@@ -40,7 +55,14 @@
             <input id="email" wire:model.defer="email" type="email" required
                    class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
             />
-            @error('email') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
           <!-- password + show toggle -->
@@ -82,7 +104,14 @@
       </svg>
     </button>
 
-    @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+    <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
   </div>
 
   <!-- Confirm password -->
@@ -123,9 +152,9 @@
           </div>
 
           <!-- global errors -->
-          @if($errors->has('registration'))
-            <div class="text-sm text-red-600">{{ $errors->first('registration') }}</div>
-          @endif
+          <!--[if BLOCK]><![endif]--><?php if($errors->has('registration')): ?>
+            <div class="text-sm text-red-600"><?php echo e($errors->first('registration')); ?></div>
+          <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
           <!-- primary actions -->
           <div class="grid grid-cols-1 gap-3">
@@ -146,28 +175,28 @@
 
             <!-- social buttons -->
             <div class="grid grid-cols-2 gap-3">
-              <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
-                @if ( view()->exists('components.icons.google') )
-                  @include('components.icons.google', ['class' => 'w-5 h-5'])
-                @else
+              <a href="<?php echo e(route('social.redirect', ['provider' => 'google'])); ?>?role=<?php echo e($role); ?>" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
+                <!--[if BLOCK]><![endif]--><?php if( view()->exists('components.icons.google') ): ?>
+                  <?php echo $__env->make('components.icons.google', ['class' => 'w-5 h-5'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php else: ?>
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <span class="text-sm text-gray-700 dark:text-gray-200">Google</span>
               </a>
 
-              <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
-                @if ( view()->exists('components.icons.github') )
-                  @include('components.icons.github', ['class' => 'w-5 h-5'])
-                @else
+              <a href="<?php echo e(route('social.redirect', ['provider' => 'github'])); ?>?role=<?php echo e($role); ?>" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-white/5">
+                <?php if( view()->exists('components.icons.github') ): ?>
+                  <?php echo $__env->make('components.icons.github', ['class' => 'w-5 h-5'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php else: ?>
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <span class="text-sm text-gray-700 dark:text-gray-200">GitHub</span>
               </a>
             </div>
 
             <p class="text-center text-xs text-gray-500 dark:text-gray-300">
               Already have an account?
-              <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Sign in</a>
+              <a href="<?php echo e(route('login')); ?>" class="text-indigo-600 hover:underline">Sign in</a>
             </p>
           </div>
         </div>
@@ -177,23 +206,24 @@
 
 <script>
 window.addEventListener('trainer-pending-redirect', function () {
-    window.location = "{{ route('trainer.pending') }}";
+    window.location = "<?php echo e(route('trainer.pending')); ?>";
 });
 window.addEventListener('student-dashboard-redirect', function () {
-    window.location = "{{ route('student.dashboard') }}";
+    window.location = "<?php echo e(route('student.dashboard')); ?>";
 });
 window.addEventListener('trainer-dashboard-redirect', function () {
-    window.location = "{{ route('trainer.dashboard') }}";
+    window.location = "<?php echo e(route('trainer.dashboard')); ?>";
 });
 window.addEventListener('admin-dashboard-redirect', function () {
-    window.location = "{{ route('admin.dashboard') }}";
+    window.location = "<?php echo e(route('admin.dashboard')); ?>";
 });
 window.addEventListener('login-redirect', function () {
-    window.location = "{{ route('login') }}";
+    window.location = "<?php echo e(route('login')); ?>";
 });
 window.addEventListener('intended-redirect', function (e) {
-    window.location = e.detail.url || "{{ route('login') }}";
+    window.location = e.detail.url || "<?php echo e(route('login')); ?>";
 });
 </script>
 
 </div>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/forms/register-form.blade.php ENDPATH**/ ?>

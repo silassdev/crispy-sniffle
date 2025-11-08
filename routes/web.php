@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
 use App\Http\Controllers\Auth\TrainerRegisterController;
+use App\Http\Controllers\TrainerPendingController;
 
 
 if (file_exists(__DIR__.'/auth.php')) {
@@ -40,15 +41,6 @@ Route::get('password/token-invalid', function(){
     return view('auth.passwords.token-expired');
 })->name('password.token.invalid');
 
-Route::post('register/trainer', [TrainerRegisterController::class, 'store'])->name('register.trainer');
-
-Route::get('/debug/session', function () {
-    return response()->json([
-        'auth' => auth()->check(),
-        'user' => auth()->user() ? auth()->user()->only(['id','email','role','approved']) : null,
-        'intended' => session('url.intended'),
-    ]);
-});
 
 
 
@@ -83,8 +75,6 @@ Route::get('admin/invite/accept/{token}', function ($token){
 })->name('admin.invite.accept');
 
 // Authenticated user dashboards
-Route::middleware(['auth'])->group(function () {
-    Route::get('/trainer/pending', function () {
-        return view('trainer.pending');
-    })->name('trainer.pending');
-});
+Route::get('/trainer/pending', [TrainerPendingController::class, 'pending'])
+    ->name('trainer.pending')
+    ->middleware(['auth', 'trainer.pending']);
