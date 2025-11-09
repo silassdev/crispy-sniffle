@@ -30,134 +30,76 @@ class LoginForm extends Component
     }
 
     public function submit()
-    {
-        $this->resetValidation();
+{
+    $this->resetValidation();
 
-        try {
-            $this->validate();
-        } catch (ValidationException $e) {
-            $msg = implode(' - ', $e->validator->errors()->all());
-            $this->dispatch('app-toast', [
-                'title' => 'Validation error',
-                'message' => $msg,
-                'ttl' => 8000
-            ]);
-            return;
-        }
-
-        $key = $this->throttleKey();
-        if (RateLimiter::tooManyAttempts($key, 5)) {
-            $seconds = RateLimiter::availableIn($key);
-            $this->dispatch('app-toast', [
-                'title' => 'Too Many Attempts',
-                'message' => "Too many login attempts. Try again in {$seconds} seconds.",
-                'ttl' => 6000
-            ]);
-            return;
-        }
-
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], (bool)$this->remember)) {
-            RateLimiter::hit($key, 60);
-            $this->dispatch('app-toast', [
-                'title' => 'Login failed',
-                'message' => 'The provided credentials are incorrect.',
-                'ttl' => 6000
-            ]);
-            return;
-        }
-
-        RateLimiter::clear($key);
-        session()->regenerate();
-
-        $user = Auth::user();
-
-       if ($user->isTrainer() && !$user->approved) {
-    Auth::logout();
-    
-    $this->dispatch('app-toast', [
-        'title' => 'Account Pending',
-        'message' => 'Your trainer account is pending approval.',
-        'ttl' => 8000
-    ]);
-    
-    $this->dispatch('redirect-to', [
-        'url' => route('trainer.pending', ['email' => $this->email])
-    ]);
-    
-    return;
-}
-
-        // ---- role-safe intended handling by route name ----
-        $intended = session()->pull('url.intended');
-        $intendedRouteName = null;
-
-        if ($intended) {
-            try {
-                $requestForIntended = \Illuminate\Http\Request::create($intended);
-                $route = app('router')->getRoutes()->match($requestForIntended);
-                $intendedRouteName = $route->getName();
-            } catch (\Throwable $e) {
-                $intendedRouteName = null;
-            }
-        }
-
-        $allowedForRole = function (?string $routeName, $user) : bool {
-            if (! $routeName) return false;
-
-            // Admin: allow admin.* or non-student/trainer routes
-            if ($user->isAdmin()) {
-                if (Str::startsWith($routeName, 'admin.')) return true;
-                return ! (Str::startsWith($routeName, 'student.') || Str::startsWith($routeName, 'trainer.'));
-            }
-
-            // Trainer: allow trainer.* or non-admin routes
-            if ($user->isTrainer()) {
-                if (Str::startsWith($routeName, 'trainer.')) return true;
-                return ! Str::startsWith($routeName, 'admin.');
-            }
-
-            // Student: allow student.* or non-admin/trainer routes
-            if ($user->isStudent()) {
-                if (Str::startsWith($routeName, 'student.')) return true;
-                return ! (Str::startsWith($routeName, 'admin.') || Str::startsWith($routeName, 'trainer.'));
-            }
-
-            return false;
-        };
-
-        if ($intendedRouteName && $allowedForRole($intendedRouteName, $user)) {
-            $this->dispatch('intended-redirect', ['url' => $intended]);
-            return;
-        }
-
-        // ---- default role dashboards ----
-        if ($user->isAdmin()) {
-            $this->dispatch('admin-dashboard-redirect');
-            $this->dispatch('app-toast', [
-                'title' => 'Welcome',
-                'message' => 'Welcome back, admin!',
-                'ttl' => 6000
-            ]);
-            return;
-        } elseif ($user->isTrainer()) {
-            $this->dispatch('trainer-dashboard-redirect');
-            $this->dispatch('app-toast', [
-                'title' => 'Welcome',
-                'message' => 'Welcome back, trainer!',
-                'ttl' => 6000
-            ]);
-            return;
-        }
-
-        // Default: student
-        $this->dispatch('student-dashboard-redirect');
+    try {
+        $this->validate();
+    } catch (\Illuminate\Validation\ValidationException $e) {
         $this->dispatch('app-toast', [
-            'title' => 'Welcome',
-            'message' => 'Welcome back!',
-            'ttl' => 6000
+            'title' => 'Validation Error',
+            'message' => implode(' - ', $e->validator->errors()->all()),
+            'ttl' => 8000,
         ]);
         return;
     }
+
+    $key = $this->throttleKey();
+    if (\Illuminate\Support\Facades\RateLimiter::tooManyAttempts($key, 5)) {
+        $seconds = RateLimiter::availableIn($key);
+        $this->dispatch('app-toast', [
+            'title' => 'Too Many Attempts',
+            'message' => "Please wait {$seconds} seconds before trying again.",
+            'ttl' => 6000,
+        ]);
+        return;
+    }
+
+    if (!Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        RateLimiter::hit($key, 60); // Throttle failed login attempts
+        $this->dispatch('app-toast', [
+            'title' => 'Login Failed',
+            'message' => 'The provided credentials are incorrect.',
+            'ttl' => 6000,
+        ]);
+        return;
+    }
+
+    RateLimiter::clear($key);
+    session()->regenerate();
+
+    $user = Auth::user();
+
+    // Handle pending trainer scenario
+    if ($user->isTrainer() && !$user->approved) {
+        Auth::logout();
+
+        // Store email in session before redirect
+        session()->put('trainer_email', $this->email);
+
+        $this->dispatch('app-toast', [
+            'title' => 'Account Pending',
+            'message' => 'Your trainer account is pending administrator approval.',
+            'ttl' => 8000,
+        ]);
+
+        return redirect()->route('trainer.pending');
+    }
+
+    // Handle other roles
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard')
+            ->with('success', 'Welcome back Admin!');
+    }
+
+    if ($user->isTrainer()) {
+        return redirect()->route('trainer.dashboard')
+            ->with('success', 'Welcome back Trainer!');
+    }
+
+    return redirect()->route('student.dashboard')
+        ->with('success', 'Welcome back Student!');
+  }
 
     protected function throttleKey()
     {

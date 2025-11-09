@@ -14,6 +14,27 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
 
+  <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.toast','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('toast'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal7cfab914afdd05940201ca0b2cbc009b)): ?>
+<?php $attributes = $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b; ?>
+<?php unset($__attributesOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b)): ?>
+<?php $component = $__componentOriginal7cfab914afdd05940201ca0b2cbc009b; ?>
+<?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
+<?php endif; ?>
+
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
   <main id="main" class="pt-20 min-h-screen flex items-center justify-center">
@@ -28,16 +49,30 @@
 
 
   <?php if(session('success') || session('error')): ?>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  <?php if(session('success')): ?>
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Success', message: <?php echo json_encode(session('success')); ?>, ttl: 6000 } }));
-  <?php endif; ?>
-  <?php if(session('error')): ?>
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Error', message: <?php echo json_encode(session('error')); ?>, ttl: 8000 } }));
-  <?php endif; ?>
-});
-</script>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if(session('success')): ?>
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Success',
+            message: <?php echo json_encode(session('success')); ?>,
+            ttl: 6000
+          }
+        }));
+      <?php endif; ?>
+
+      <?php if(session('error')): ?>
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Error',
+            message: <?php echo json_encode(session('error')); ?>,
+            ttl: 8000
+          }
+        }));
+      <?php endif; ?>
+    });
+  </script>
 <?php endif; ?>
 
 </body>

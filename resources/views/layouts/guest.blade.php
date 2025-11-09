@@ -13,6 +13,8 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-800">
 
+  <x-toast />
+
   @include('layouts.navigation')
 
   <main id="main" class="pt-20 min-h-screen flex items-center justify-center">
@@ -26,16 +28,30 @@
   @livewireScripts
 
   @if(session('success') || session('error'))
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  @if(session('success'))
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Success', message: {!! json_encode(session('success')) !!}, ttl: 6000 } }));
-  @endif
-  @if(session('error'))
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Error', message: {!! json_encode(session('error')) !!}, ttl: 8000 } }));
-  @endif
-});
-</script>
+
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      @if(session('success'))
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Success',
+            message: {!! json_encode(session('success')) !!},
+            ttl: 6000
+          }
+        }));
+      @endif
+
+      @if(session('error'))
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Error',
+            message: {!! json_encode(session('error')) !!},
+            ttl: 8000
+          }
+        }));
+      @endif
+    });
+  </script>
 @endif
 
 </body>

@@ -50,15 +50,28 @@
 
  <?php if(session('success') || session('error')): ?>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-  <?php if(session('success')): ?>
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Success', message: <?php echo json_encode(session('success')); ?>, ttl: 6000 } }));
-  <?php endif; ?>
-  <?php if(session('error')): ?>
-    window.dispatchEvent(new CustomEvent('app-toast', { detail: { title: 'Error', message: <?php echo json_encode(session('error')); ?>, ttl: 8000 } }));
-  <?php endif; ?>
-});
-</script>
+    document.addEventListener('DOMContentLoaded', function () {
+      <?php if(session('success')): ?>
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Success',
+            message: <?php echo json_encode(session('success')); ?>,
+            ttl: 6000
+          }
+        }));
+      <?php endif; ?>
+
+      <?php if(session('error')): ?>
+        window.dispatchEvent(new CustomEvent('app-toast', {
+          detail: {
+            title: 'Error',
+            message: <?php echo json_encode(session('error')); ?>,
+            ttl: 8000
+          }
+        }));
+      <?php endif; ?>
+    });
+  </script>
 <?php endif; ?>
 
 </body>
