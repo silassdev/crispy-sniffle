@@ -68,13 +68,11 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
         Route::get('dashboard', [StudentDashboard::class,'index'])->name('student.dashboard');
     });
 
+Route::get('/trainer/pending', [TrainerPendingController::class, 'index'])
+    ->name('trainer.pending');
 
 // Invite accept (public link)
 Route::get('admin/invite/accept/{token}', function ($token){
     return view('admin.invites.accept', ['token' => $token]);
 })->name('admin.invite.accept');
 
-// Authenticated user dashboards
-Route::get('/trainer/pending', [TrainerPendingController::class, 'pending'])
-    ->name('trainer.pending')
-    ->middleware(['auth', 'trainer.pending']);

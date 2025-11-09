@@ -51,8 +51,8 @@ Route::middleware('auth')->group(function () {
 // Social auth redirect & callback (guest or stateful)
 Route::get('auth/redirect/{provider}', [SocialAuthController::class, 'redirectToProvider'])
     ->name('social.redirect')
-    ->where('provider', 'google|github|facebook');
+    ->where('provider', 'google|github');
 
 Route::get('auth/callback/{provider}', [SocialAuthController::class, 'handleProviderCallback'])
     ->name('social.callback')
-    ->where('provider', 'google|github|facebook');
+    ->where('provider', 'google|github');

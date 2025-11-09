@@ -6,16 +6,20 @@ use Illuminate\Http\Request;
 
 class TrainerPendingController extends Controller
 {
-    /**
-     * Show the trainer pending page (application received).
-     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->middleware('trainer.pending');
+    }
+
     public function index(Request $request)
     {
-        // You can pass extras (email, status) if you want:
-        $email = session('trainer_email') ?? $request->query('email');
-
-        return view('auth.trainer_pending', [
-            'email' => $email,
+        $user = $request->user();
+        
+        return view('trainer.pending', [ 
+            'email' => $user->email,
+            'name' => $user->name,
+            'created_at' => $user->created_at->format('F j, Y'),
         ]);
     }
 }

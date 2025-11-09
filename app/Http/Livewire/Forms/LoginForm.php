@@ -71,16 +71,13 @@ class LoginForm extends Component
 
         $user = Auth::user();
 
-        if ($user->isTrainer() && ! $user->approved) {
-            Auth::logout();
-            $this->dispatch('app-toast', [
-                'title' => 'Account Pending',
-                'message' => 'Your trainer account is pending approval. We will notify you by email when approved.',
-                'ttl' => 9000
-            ]);
-            $this->dispatch('login-redirect');
-            return;
-        }
+        if ($user->isTrainer() && !$user->approved) {
+    Auth::logout();
+    session()->flash('trainer_email', $user->email);
+    
+    return redirect()->route('trainer.pending')
+        ->with('message', 'Your trainer account is pending approval.');
+}
 
         // ---- role-safe intended handling by route name ----
         $intended = session()->pull('url.intended');
