@@ -69,7 +69,8 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
     });
 
 Route::get('/trainer/pending', [TrainerPendingController::class, 'index'])
-    ->name('trainer.pending');
+    ->name('trainer.pending')
+    ->middleware(['auth', 'trainer.pending']);
 
 // Invite accept (public link)
 Route::get('admin/invite/accept/{token}', function ($token){

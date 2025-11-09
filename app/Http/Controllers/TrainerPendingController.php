@@ -6,20 +6,19 @@ use Illuminate\Http\Request;
 
 class TrainerPendingController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('trainer.pending');
-    }
-
     public function index(Request $request)
     {
-        $user = $request->user();
-        
-        return view('trainer.pending', [ 
-            'email' => $user->email,
-            'name' => $user->name,
-            'created_at' => $user->created_at->format('F j, Y'),
+        // Retrieve trainer email and pending status from session
+        $email = session('trainer_email');
+        $isPending = session('trainer_pending', false);
+
+        // Redirect to login if session data is missing or invalid
+        if (!$email || !$isPending) {
+            return redirect()->route('login')->with('error', 'Please log in with a valid trainer account.');
+        }
+
+        return view('trainer.pending', [
+            'email' => $email,
         ]);
     }
 }

@@ -5,46 +5,15 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Trainer Account Pending</div>
-
+                <div class="card-header">Account Pending Approval</div>
                 <div class="card-body">
-                    @if(session('message'))
-                        <div class="alert alert-info">
-                            {{ session('message') }}
-                        </div>
-                    @endif
-
-                    <div class="alert alert-warning">
-                        <h5>Account Status: Pending Approval</h5>
-                        <p>Your trainer account is awaiting administrator approval.</p>
-                        
-                        <hr>
-                        
-                        <dl class="row">
-                            <dt class="col-sm-4">Email:</dt>
-                            <dd class="col-sm-8">{{ $email }}</dd>
-                            
-                            <dt class="col-sm-4">Name:</dt>
-                            <dd class="col-sm-8">{{ $name }}</dd>
-                            
-                            <dt class="col-sm-4">Submitted:</dt>
-                            <dd class="col-sm-8">{{ $created_at }}</dd>
-                        </dl>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <p class="mb-3">We will notify you by email once your account has been approved.</p>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-secondary">
-                                Logout
-                            </button>
-                        </form>
-                    </div>
+                    <p>Your trainer account <strong>{{ $email }}</strong> is pending approval.</p>
+                    <p>Please wait for an administrator to approve your account. You will receive an email notification when your account has been activated.</p>
+                    <hr>
+                    <p class="text-muted">Contact support if you have any questions.</p>
                 </div>
             </div>
         </div>
     </div>
-    
 </div>
 @endsection
