@@ -15,6 +15,8 @@
 
   <x-toast />
 
+  <div id="toast-container" class="toast-container" style="position:fixed;top:20px;right:20px;z-index:1000;display:block;"></div>
+
   @include('layouts.navigation')
 
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -29,28 +31,36 @@
 
  @if(session('success') || session('error'))
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      @if(session('success'))
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Success',
-            message: {!! json_encode(session('success')) !!},
-            ttl: 6000
-          }
-        }));
-      @endif
+    // Listener for toast events
+    window.addEventListener('app-toast', function (event) {
+        const toastContainer = document.getElementById('toast-container');
+        const { title, message, ttl } = event.detail;
 
-      @if(session('error'))
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Error',
-            message: {!! json_encode(session('error')) !!},
-            ttl: 8000
-          }
-        }));
-      @endif
+        // Check if container exists
+        if (toastContainer) {
+            toastContainer.innerHTML = `
+                <div class="toast">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+
+            // Automatically clear toast after TTL
+            setTimeout(() => {
+                toastContainer.innerHTML = '';
+            }, ttl || 5000);
+        }
     });
-  </script>
+
+    // Listener for redirect events
+    window.addEventListener('redirect-to', function (event) {
+        const { url } = event.detail;
+        if (url) {
+            // Redirect browser
+            window.location.href = url;
+        }
+    });
+</script>
 @endif
 
 </body>

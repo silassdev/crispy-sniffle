@@ -35,6 +35,8 @@
 <?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
 <?php endif; ?>
 
+  <div id="toast-container" class="toast-container" style="position:fixed;top:20px;right:20px;z-index:1000;display:block;"></div>
+
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -50,28 +52,36 @@
 
  <?php if(session('success') || session('error')): ?>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      <?php if(session('success')): ?>
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Success',
-            message: <?php echo json_encode(session('success')); ?>,
-            ttl: 6000
-          }
-        }));
-      <?php endif; ?>
+    // Listener for toast events
+    window.addEventListener('app-toast', function (event) {
+        const toastContainer = document.getElementById('toast-container');
+        const { title, message, ttl } = event.detail;
 
-      <?php if(session('error')): ?>
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Error',
-            message: <?php echo json_encode(session('error')); ?>,
-            ttl: 8000
-          }
-        }));
-      <?php endif; ?>
+        // Check if container exists
+        if (toastContainer) {
+            toastContainer.innerHTML = `
+                <div class="toast">
+                    <h4>${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+
+            // Automatically clear toast after TTL
+            setTimeout(() => {
+                toastContainer.innerHTML = '';
+            }, ttl || 5000);
+        }
     });
-  </script>
+
+    // Listener for redirect events
+    window.addEventListener('redirect-to', function (event) {
+        const { url } = event.detail;
+        if (url) {
+            // Redirect browser
+            window.location.href = url;
+        }
+    });
+</script>
 <?php endif; ?>
 
 </body>

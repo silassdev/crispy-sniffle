@@ -76,6 +76,7 @@ class LoginForm extends Component
 
         // Store email in session before redirect
         session()->put('trainer_email', $this->email);
+        session()->put('trainer_pending', true);
 
         $this->dispatch('app-toast', [
             'title' => 'Account Pending',
@@ -83,7 +84,11 @@ class LoginForm extends Component
             'ttl' => 8000,
         ]);
 
-        return redirect()->route('trainer.pending');
+        $this->dispatch('redirect-to', [
+        'url' => route('trainer.pending'),
+        ]);
+
+        return;
     }
 
     // Handle other roles
