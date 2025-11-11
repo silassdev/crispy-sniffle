@@ -7,7 +7,8 @@
     </div>
 
     <div class="px-6 pb-6 sm:px-8 sm:pb-8">
-      <form wire:submit.prevent="submit" autocomplete="off" novalidate>
+      <form wire:submit.prevent="submit" method="POST">
+       @csrf
         <div class="space-y-4">
           {{-- email --}}
           <div>

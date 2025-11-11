@@ -50,29 +50,43 @@
 
   <?php if(session('success') || session('error')): ?>
 
- <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      <?php if(session('success')): ?>
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Success',
-            message: <?php echo json_encode(session('success')); ?>,
-            ttl: 6000
-          }
-        }));
-      <?php endif; ?>
 
-      <?php if(session('error')): ?>
-        window.dispatchEvent(new CustomEvent('app-toast', {
-          detail: {
-            title: 'Error',
-            message: <?php echo json_encode(session('error')); ?>,
-            ttl: 8000
-          }
-        }));
-      <?php endif; ?>
+<script>
+    window.addEventListener('app-toast', function(event) {
+        const toastContainer = document.getElementById('toast-container');
+        const { title, message, ttl } = event.detail;
+
+        if (toastContainer) {
+            toastContainer.innerHTML = `
+                <div class="toast bg-indigo-500 text-white rounded-lg shadow-lg px-4 py-3 mb-3">
+                    <h4 class="text-lg font-semibold">${title}</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+
+            setTimeout(() => {
+                toastContainer.innerHTML = '';
+            }, ttl || 5000); 
+        }
     });
-  </script>
+
+    window.addEventListener('trainer-pending-redirect', function() {
+        window.location.href = "<?php echo e(route('trainer.pending')); ?>";
+    });
+
+    window.addEventListener('student-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('student.dashboard')); ?>";
+    });
+
+    window.addEventListener('trainer-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('trainer.dashboard')); ?>";
+    });
+
+    window.addEventListener('admin-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('admin.dashboard')); ?>";
+    });
+</script>
+
 <?php endif; ?>
 
 </body>

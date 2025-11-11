@@ -14,15 +14,15 @@
   </template>
 </div>
 
+
 <script>
   function toast() {
     return {
       queue: [],
       active: null,
       timer: null,
-      initialized: false,   // <--- prevent double-init
-      lastShownId: null,    // optional: track last shown if you want further dedupe
-
+      initialized: false,   
+      lastShownId: null,   
       init() {
         if (this.initialized) return;
         this.initialized = true;
@@ -85,8 +85,8 @@
             this.lastShownId = this.active.id;
             this.active = null;
             this.timer = null;
-            this.process(); // show next in queue, if any
-          }, 300); // adjust if you changed x-transition duration
+            this.process(); 
+          }, 300); 
         }, next.ttl);
       },
 

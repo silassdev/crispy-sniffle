@@ -35,8 +35,7 @@
 <?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
 <?php endif; ?>
 
-  <div id="toast-container" class="toast-container" style="position:fixed;top:20px;right:20px;z-index:1000;display:block;"></div>
-
+  
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,35 +50,41 @@
 
 
  <?php if(session('success') || session('error')): ?>
+
+
 <script>
-    // Listener for toast events
-    window.addEventListener('app-toast', function (event) {
+    window.addEventListener('app-toast', function(event) {
         const toastContainer = document.getElementById('toast-container');
         const { title, message, ttl } = event.detail;
 
-        // Check if container exists
         if (toastContainer) {
             toastContainer.innerHTML = `
-                <div class="toast">
-                    <h4>${title}</h4>
+                <div class="toast bg-indigo-500 text-white rounded-lg shadow-lg px-4 py-3 mb-3">
+                    <h4 class="text-lg font-semibold">${title}</h4>
                     <p>${message}</p>
                 </div>
             `;
 
-            // Automatically clear toast after TTL
             setTimeout(() => {
                 toastContainer.innerHTML = '';
-            }, ttl || 5000);
+            }, ttl || 5000); // Default TTL is 5 seconds if undefined
         }
     });
 
-    // Listener for redirect events
-    window.addEventListener('redirect-to', function (event) {
-        const { url } = event.detail;
-        if (url) {
-            // Redirect browser
-            window.location.href = url;
-        }
+    window.addEventListener('trainer-pending-redirect', function() {
+        window.location.href = "<?php echo e(route('trainer.pending')); ?>";
+    });
+
+    window.addEventListener('student-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('student.dashboard')); ?>";
+    });
+
+    window.addEventListener('trainer-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('trainer.dashboard')); ?>";
+    });
+
+    window.addEventListener('admin-dashboard-redirect', function() {
+        window.location.href = "<?php echo e(route('admin.dashboard')); ?>";
     });
 </script>
 <?php endif; ?>

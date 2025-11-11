@@ -23,6 +23,10 @@ if (file_exists(__DIR__.'/auth.php')) {
 // Home (single declaration)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
+
 // Blog + contact
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
@@ -68,9 +72,11 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
         Route::get('dashboard', [StudentDashboard::class,'index'])->name('student.dashboard');
     });
 
-Route::get('/trainer/pending', [TrainerPendingController::class, 'show'])
-    ->name('trainer.pending')
-    ->middleware(['auth']);
+Route::get('/trainer/pending', function () {
+    return view('trainer.pending', [
+        'email' => session('trainer_email'),
+    ]);
+})->name('trainer.pending')->middleware('pending-trainer-access');
 
 // Invite accept (public link)
 Route::get('admin/invite/accept/{token}', function ($token){
