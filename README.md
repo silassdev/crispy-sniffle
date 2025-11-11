@@ -2,14 +2,14 @@
 
 ---
 
-#  aShila LMS — README
+# LMS — README
 
-A minimal, modern **Learning Management System (LMS) MVP** built with **Laravel, Tailwind CSS, Alpine.js, and MySQL**.  
+A modern **Learning Management System (LMS) MVP** built with **Laravel, Tailwind CSS, Alpine.js, Laravel,  and MySQL**.  
 This README covers setup, authentication (3 roles: student, trainer, admin), dashboards, trainer approval, assets, and troubleshooting.
 
 ---
 
-## 📑 Table of Contents
+##  Table of Contents
 - [Project Summary](#project-summary)  
 - [Requirements](#requirements)  
 - [Quick Setup](#quick-setup)  
@@ -31,7 +31,7 @@ This README covers setup, authentication (3 roles: student, trainer, admin), das
 
 ---
 
-## 🚀 Project Summary
+##  Project Summary
 - Roles: **student**, **trainer** (requires admin approval), **admin**  
 - Auth: Laravel Breeze/Jetstream/Fortify adaptable  
 - Frontend: Tailwind CSS + Alpine.js  
@@ -40,17 +40,16 @@ This README covers setup, authentication (3 roles: student, trainer, admin), das
 
 ---
 
-## ⚙️ Requirements
+##  Requirements
 - PHP 8.1+  
 - Composer  
 - Node.js + npm  
 - MySQL (or MariaDB)  
-- Redis (recommended for queues/cache)  
-- Optional: Docker  
+
 
 ---
 
-## 🛠 Quick Setup
+##  Quick Setup
 ```bash
 git clone <repo-url> lms-mvp
 cd lms-mvp
@@ -80,7 +79,7 @@ php artisan serve
 
 ---
 
-## 🔑 Environment Variables
+##  Environment Variables
 Minimum changes in `.env`:
 ```env
 APP_NAME="ALLPILAR LMS"
@@ -111,11 +110,10 @@ php artisan migrate
 
 ---
 
-## 👤 Seed an Admin User
+##  Seed an Admin User
 ```bash
 php artisan db:seed --class=AdminUserSeeder
 ```
-⚠️ Change the seeded password after first login.
 
 ---
 
@@ -130,7 +128,7 @@ php artisan db:seed --class=AdminUserSeeder
 
 ---
 
-## 🎨 Assets (Vite / Tailwind / Alpine)
+##  Assets (Vite / Tailwind / Alpine)
 - `resources/css/app.css` → Tailwind directives  
 - `resources/js/app.js` → Alpine.js bootstrap  
 - `tailwind.config.js` → purge paths  
@@ -144,7 +142,7 @@ npm run dev
 
 ---
 
-## 🌐 Routes (Summary)
+##  Routes (Summary)
 - `/` → Home (`resources/views/home.blade.php`)  
 - Auth: `/register`, `/login`, `/logout`, password reset, verification  
 - Student dashboard: `/dashboard/student`  
@@ -155,7 +153,7 @@ npm run dev
 
 ---
 
-## 🖼 Views
+##  Views
 - `resources/views/layouts/app.blade.php` — base layout  
 - `resources/views/home.blade.php` — homepage  
 - Dashboards:  
@@ -165,7 +163,7 @@ npm run dev
 
 ---
 
-## 🔐 Middleware & Auth
+##  Middleware & Auth
 - `RoleMiddleware` → restrict by role (`role:admin`, `role:trainer,admin`)  
 - `EnsureTrainerApproved` → redirect unapproved trainers to `/trainer/pending`  
 
@@ -177,7 +175,7 @@ Register in `app/Http/Kernel.php`:
 
 ---
 
-## ✅ Trainer Approval Flow
+##  Trainer Approval Flow
 1. Trainer registers → `approved=false`  
 2. Admin sees pending trainers at `/admin/trainers/pending`  
 3. Admin approves → `approved=true`  
@@ -185,7 +183,7 @@ Register in `app/Http/Kernel.php`:
 
 ---
 
-## 🛠 Troubleshooting
+##  Troubleshooting
 - Ensure `.env` exists and run `php artisan key:generate`  
 - Run migrations + seed admin  
 - Clear caches:  
@@ -201,19 +199,6 @@ Register in `app/Http/Kernel.php`:
 
 ---
 
-## ⚡ Useful Artisan Commands
-```bash
-php artisan migrate
-php artisan migrate:fresh   # reset DB
-php artisan db:seed
-php artisan tinker
-php artisan route:list
-php artisan queue:work
-php artisan storage:link
-```
-
----
-
 ## 🚀 Deployment Notes
 - Use S3/DigitalOcean Spaces + CDN  
 - Run `php artisan config:cache` and `php artisan route:cache`  
@@ -223,26 +208,12 @@ php artisan storage:link
 
 ---
 
-## 🧪 Tests
+##  Tests
 Start with feature tests for:
 - Registration (student & trainer)  
 - Trainer approval flow  
 - Login redirects to dashboards  
 - Route protection (middleware)  
-
----
-
-## 🔮 Future Improvements
-- Use `spatie/laravel-permission` for flexible ACL  
-- Add notifications & queues for heavy tasks  
-- Build JSON API endpoints with Sanctum  
-- Add PWA, search (Meilisearch/Algolia), analytics  
-
----
-
-## 📜 License / Credits
-Use and modify freely.  
-Built on the **Laravel ecosystem** (Laravel, Tailwind CSS, Alpine.js).  
 
 ---
 
