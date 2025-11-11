@@ -71,6 +71,23 @@ Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
         Route::get('dashboard', [StudentDashboard::class,'index'])->name('student.dashboard');
     });
 
+// dash routes
+Route::middleware(['auth','is_admin'])->prefix('admin')->group(function(){
+    Route::get('dashboard', \App\Http\Controllers\Admin\DashboardController::class.'@index')->name('admin.dashboard');
+    // useful trainer admin view/edit:
+    Route::get('trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class,'show'])->name('admin.trainer.view');
+    Route::get('trainers/{id}/edit', [\App\Http\Controllers\Admin\TrainerController::class,'edit'])->name('admin.trainer.edit');
+});
+
+Route::middleware(['auth','is_trainer'])->prefix('trainer')->group(function(){
+    Route::get('dashboard', function(){ return view('trainer.dashboard'); })->name('trainer.dashboard');
+});
+
+Route::middleware(['auth','is_student'])->prefix('student')->group(function(){
+    Route::get('dashboard', function(){ return view('student.dashboard'); })->name('student.dashboard');
+});
+
+
 Route::get('/trainer/pending', function () {
     return view('trainer.pending', [
         'email' => session('trainer_email'),
