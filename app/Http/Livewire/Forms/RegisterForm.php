@@ -27,7 +27,7 @@ class RegisterForm extends Component
     {
         $roleFromQuery = request()->query('role');
         $role = $role ?? $roleFromQuery ?? 'student';
-        $this->role = in_array($role, ['trainer','student']) ? $role : 'student';
+        $this->role = in_array($role, ['trainer', 'student']) ? $role : 'student';
     }
 
     public function submit()
@@ -37,12 +37,10 @@ class RegisterForm extends Component
         try {
             $this->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $msg = implode(' - ', $e->validator->errors()->all());
-            Log::info('RegisterForm::validation_failed', ['errors' => $e->validator->errors()->all()]);
             $this->dispatch('app-toast', [
                 'title' => 'Validation error',
-                'message' => $msg,
-                'ttl' => 8000
+                'message' => implode(' - ', $e->validator->errors()->all()),
+                'ttl' => 8000,
             ]);
             return;
         }
@@ -63,37 +61,33 @@ class RegisterForm extends Component
             $this->dispatch('app-toast', [
                 'title' => 'Error',
                 'message' => 'Unable to create account. Try again later.',
-                'ttl' => 8000
+                'ttl' => 8000,
             ]);
             return;
         }
 
-        // Trainer flow: don't auto-login, show toast and redirect with browser event
+        // Trainer flow: show toast and stay on page
         if ($roleVal === User::ROLE_TRAINER) {
             $this->dispatch('app-toast', [
                 'title' => 'Application submitted',
                 'message' => 'An administrator will review your profile.',
-                'ttl' => 8000
+                'ttl' => 8000,
             ]);
-            $this->dispatch('trainer-pending-redirect');
-            $this->reset(); // Clear form fields
+            $this->reset();
             return;
         }
 
-        // Student flow: auto-login and go to student dashboard
+        // Student flow: auto-login and then perform a server-side redirect with session flash.
         try {
             Auth::login($user);
         } catch (\Throwable $e) {
             Log::warning('RegisterForm::auto_login_failed', ['error' => $e->getMessage()]);
+            // even if login fails, we'll redirect so user can re-login; keep behavior consistent
         }
 
-        $this->dispatch('app-toast', [
-            'title' => 'Registration successful',
-            'message' => 'Account created — welcome!',
-            'ttl' => 5000
-        ]);
-        $this->dispatch('student-dashboard-redirect');
-        return;
+        // Do NOT dispatch a Livewire toast here — return a server redirect with session flash
+        return redirect()->route('student.dashboard')
+            ->with('success', 'Account created — welcome!');
     }
 
     public function render()

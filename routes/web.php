@@ -12,7 +12,6 @@ use App\Http\Middleware\EnsureRole;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
-use App\Http\Controllers\Auth\TrainerRegisterController;
 use App\Http\Controllers\TrainerPendingController;
 
 
@@ -76,7 +75,7 @@ Route::get('/trainer/pending', function () {
     return view('trainer.pending', [
         'email' => session('trainer_email'),
     ]);
-})->name('trainer.pending')->middleware('pending-trainer-access');
+})->name('trainer.pending')->middleware('pending-');
 
 // Invite accept (public link)
 Route::get('admin/invite/accept/{token}', function ($token){

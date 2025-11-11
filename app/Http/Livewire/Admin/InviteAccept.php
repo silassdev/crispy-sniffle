@@ -52,7 +52,7 @@ class InviteAccept extends Component
     public function submit()
     {
         if (! $this->valid || ! $this->invitation) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Invalid or expired invitation','ttl'=>6000]);
+            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Invalid or expired invitation','ttl'=>6000]);
             return;
         }
 
@@ -65,7 +65,7 @@ class InviteAccept extends Component
         if ($user) {
             // If already admin, stop
             if ($user->isAdmin()) {
-                $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Account already exists as admin','ttl'=>6000]);
+                $this->dispatch('app-toast', ['title'=>'Error','message'=>'Account already exists as admin','ttl'=>6000]);
                 return;
             }
             $user->update([

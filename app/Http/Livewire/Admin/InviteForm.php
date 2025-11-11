@@ -31,7 +31,7 @@ class InviteForm extends Component
             Mail::to($this->email)->queue(new AdminInviteMail($invitation));
         } catch (\Throwable $e) {
             \Log::error('Admin invite mail failed: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Unable to send invite','ttl'=>6000]);
+            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Unable to send invite','ttl'=>6000]);
             $this->sending = false;
             return;
         }

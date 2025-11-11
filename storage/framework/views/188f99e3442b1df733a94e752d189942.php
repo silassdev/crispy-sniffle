@@ -11,8 +11,8 @@
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
   <?php echo $__env->yieldPushContent('head'); ?>
-</head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
+ </head>
+ <body class="min-h-screen bg-gray-50 text-gray-800">
 
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
@@ -37,11 +37,9 @@
 
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-  <main id="main" class="pt-20 min-h-screen flex items-center justify-center">
     <div class="w-full max-w-md px-4">
       <?php echo $__env->yieldContent('content'); ?>
     </div>
-  </main>
 
   <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
@@ -49,46 +47,8 @@
 
 
   <?php if(session('success') || session('error')): ?>
+    <?php endif; ?>
 
-
-<script>
-    window.addEventListener('app-toast', function(event) {
-        const toastContainer = document.getElementById('toast-container');
-        const { title, message, ttl } = event.detail;
-
-        if (toastContainer) {
-            toastContainer.innerHTML = `
-                <div class="toast bg-indigo-500 text-white rounded-lg shadow-lg px-4 py-3 mb-3">
-                    <h4 class="text-lg font-semibold">${title}</h4>
-                    <p>${message}</p>
-                </div>
-            `;
-
-            setTimeout(() => {
-                toastContainer.innerHTML = '';
-            }, ttl || 5000); 
-        }
-    });
-
-    window.addEventListener('trainer-pending-redirect', function() {
-        window.location.href = "<?php echo e(route('trainer.pending')); ?>";
-    });
-
-    window.addEventListener('student-dashboard-redirect', function() {
-        window.location.href = "<?php echo e(route('student.dashboard')); ?>";
-    });
-
-    window.addEventListener('trainer-dashboard-redirect', function() {
-        window.location.href = "<?php echo e(route('trainer.dashboard')); ?>";
-    });
-
-    window.addEventListener('admin-dashboard-redirect', function() {
-        window.location.href = "<?php echo e(route('admin.dashboard')); ?>";
-    });
-</script>
-
-<?php endif; ?>
-
-</body>
+ </body>
 </html>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/guest.blade.php ENDPATH**/ ?>
