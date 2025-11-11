@@ -1,5 +1,7 @@
+@php $section = $section ?? 'overview'; @endphp
+
+
 <div class="space-y-6">
-  {{-- overview header cards --}}
   @if($section === 'overview')
     <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       <x-stat-card title="Students" :value="$counters['students']" color="indigo" />

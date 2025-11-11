@@ -7,95 +7,87 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Middleware\EnsureUserIsAdmin;
-use App\Http\Middleware\EnsureRole;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
+use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
-use App\Http\Controllers\TrainerPendingController;
-
 
 if (file_exists(__DIR__.'/auth.php')) {
     require __DIR__.'/auth.php';
 }
 
-// Home (single declaration)
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::fallback(function () {
-    return response()->view('errors.404', [], 404);
+Route::fallback(fn () => response()->view('errors.404', [], 404));
+
+// Blog
+Route::prefix('blogs')->group(function () {
+    Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('{slug}', [BlogController::class, 'show'])->name('blogs.show');
 });
 
-// Blog + contact
-Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
-Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.show');
+// Contact
+Route::controller(ContactController::class)->group(function () {
+    Route::get('/contact', 'show')->name('contact.show');
+    Route::post('/contact', 'submit')->name('contact.submit');
+});
 
-Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
-Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
+// Password reset
+Route::prefix('password')->group(function () {
+    Route::get('reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+    Route::get('token-invalid', fn () => view('auth.passwords.token-expired'))->name('password.token.invalid');
+});
 
-// Password routes
-Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
-     ->name('password.reset'); 
-Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
+/*
+|--------------------------------------------------------------------------
+| Admin Auth Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('admin')->group(function () {
+    Route::post('login', [AuthController::class, 'login'])->name('admin.login');
+    Route::post('register', [AuthController::class, 'register'])->name('admin.register');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('admin.logout');
 
-Route::get('password/token-invalid', function(){
-    return view('auth.passwords.token-expired');
-})->name('password.token.invalid');
+    // Protected admin routes
+    Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {
+        Route::get('dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
 
-
-
-
-// Public admin auth (login/register/logout)
-Route::post('/admin/login', [AuthController::class,'login'])->name('admin.login');
-Route::post('/admin/register', [AuthController::class,'register'])->name('admin.register');
-Route::post('/admin/logout', [AuthController::class,'logout'])->name('admin.logout')->middleware('auth');
-
-// Admin routes — grouped, named, and protected
-Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])
-    ->prefix('admin')
-    ->group(function () {
-        Route::get('dashboard', [AdminDashboard::class,'index'])->name('admin.dashboard');
+        // Trainer management
+        Route::get('trainers/{id}', [TrainerController::class, 'show'])->name('admin.trainer.view');
+        Route::get('trainers/{id}/edit', [TrainerController::class, 'edit'])->name('admin.trainer.edit');
     });
 
-Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])
-    ->prefix('trainer')
-    ->group(function () {
-        Route::get('dashboard', [TrainerDashboard::class,'index'])->name('trainer.dashboard');
-    });
-
-Route::middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
-    ->prefix('student')
-    ->group(function () {
-        Route::get('dashboard', [StudentDashboard::class,'index'])->name('student.dashboard');
-    });
-
-// dash routes
-Route::middleware(['auth','is_admin'])->prefix('admin')->group(function(){
-    Route::get('dashboard', \App\Http\Controllers\Admin\DashboardController::class.'@index')->name('admin.dashboard');
-    // useful trainer admin view/edit:
-    Route::get('trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class,'show'])->name('admin.trainer.view');
-    Route::get('trainers/{id}/edit', [\App\Http\Controllers\Admin\TrainerController::class,'edit'])->name('admin.trainer.edit');
+    // Invite accept (public)
+    Route::get('invite/accept/{token}', fn ($token) => view('admin.invites.accept', ['token' => $token]))
+        ->name('admin.invite.accept');
 });
 
-Route::middleware(['auth','is_trainer'])->prefix('trainer')->group(function(){
-    Route::get('dashboard', function(){ return view('trainer.dashboard'); })->name('trainer.dashboard');
+/*
+|--------------------------------------------------------------------------
+| Trainer Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('trainer')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])->group(function () {
+    Route::get('dashboard', [TrainerDashboard::class, 'index'])->name('trainer.dashboard');
 });
 
-Route::middleware(['auth','is_student'])->prefix('student')->group(function(){
-    Route::get('dashboard', function(){ return view('student.dashboard'); })->name('student.dashboard');
+Route::get('/trainer/pending', fn () => view('trainer.pending', [
+    'email' => session('trainer_email'),
+]))->middleware('pending-')->name('trainer.pending');
+
+/*
+|--------------------------------------------------------------------------
+| Student Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('student')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])->group(function () {
+    Route::get('dashboard', [StudentDashboard::class, 'index'])->name('student.dashboard');
 });
-
-
-Route::get('/trainer/pending', function () {
-    return view('trainer.pending', [
-        'email' => session('trainer_email'),
-    ]);
-})->name('trainer.pending')->middleware('pending-');
-
-// Invite accept (public link)
-Route::get('admin/invite/accept/{token}', function ($token){
-    return view('admin.invites.accept', ['token' => $token]);
-})->name('admin.invite.accept');
-
