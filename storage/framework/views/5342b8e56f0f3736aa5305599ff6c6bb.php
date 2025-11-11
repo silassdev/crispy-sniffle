@@ -46,7 +46,7 @@ unset($__defined_vars, $__key, $__value); ?>
   <button
     type="button"
     class="dash-item w-full text-left"
-    onclick="window.Livewire ? Livewire.emit('showSection','<?php echo e($component); ?>') : (function(){ location.href='<?php echo e($href); ?>' })()"
+    onclick="window.Livewire ? Livewire.dispatch('showSection','<?php echo e($component); ?>') : (function(){ location.href='<?php echo e($href); ?>' })()"
     title="<?php echo e($label); ?>"
   >
     <span class="inline-block align-middle"><?php echo $svg; ?></span>

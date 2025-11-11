@@ -18,7 +18,7 @@
   <button
     type="button"
     class="dash-item w-full text-left"
-    onclick="window.Livewire ? Livewire.emit('showSection','{{ $component }}') : (function(){ location.href='{{ $href }}' })()"
+    onclick="window.Livewire ? Livewire.dispatch('showSection','{{ $component }}') : (function(){ location.href='{{ $href }}' })()"
     title="{{ $label }}"
   >
     <span class="inline-block align-middle">{!! $svg !!}</span>
