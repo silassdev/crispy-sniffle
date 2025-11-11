@@ -92,13 +92,9 @@ DB_DATABASE=lms_mvp
 DB_USERNAME=your_db_user
 DB_PASSWORD=your_db_password
 
-REDIS_HOST=127.0.0.1
-```
-👉 For quick dev: `DB_CONNECTION=sqlite` and create `database/database.sqlite`.
-
 ---
 
-## 🗄 Database & Migrations
+##  Database & Migrations
 Includes migrations for:
 - `users` (role enum + approved flag)  
 - `courses`, `lessons`, `enrollments`, `notes`, `community_posts`, `comments`, `media`, `zoom_links`, `notifications`  
@@ -117,7 +113,7 @@ php artisan db:seed --class=AdminUserSeeder
 
 ---
 
-## 💻 Run the App (Local)
+##  Run the App (Local)
 - Backend: `php artisan serve`  
 - Frontend:  
   ```bash
@@ -199,7 +195,7 @@ Register in `app/Http/Kernel.php`:
 
 ---
 
-## 🚀 Deployment Notes
+##  Deployment Notes
 - Use S3/DigitalOcean Spaces + CDN  
 - Run `php artisan config:cache` and `php artisan route:cache`  
 - Use Redis for queues/cache  
