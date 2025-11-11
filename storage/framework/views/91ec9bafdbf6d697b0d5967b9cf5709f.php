@@ -1,5 +1,17 @@
+<?php
+    $section = $section ?? 'overview';
+    $counters = $counters ?? [
+        'students' => 0,
+        'trainers' => 0,
+        'admins' => 0,
+        'posts' => 0,
+        'invites' => 0,
+    ];
+    $recentApprovedTrainers = $recentApprovedTrainers ?? collect();
+?>
+
+
 <div class="space-y-6">
-  
   <!--[if BLOCK]><![endif]--><?php if($section === 'overview'): ?>
     <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       <?php if (isset($component)) { $__componentOriginal179d930850cbc0b57567dfb2ba44c92f = $component; } ?>

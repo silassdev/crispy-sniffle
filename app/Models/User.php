@@ -74,6 +74,13 @@ class User extends Authenticatable
     }
 
     /* ----------------------
+       course accounts relation
+       ---------------------- */
+    public function courses() {
+    return $this->hasMany(\App\Models\Course::class, 'trainer_id');
+     }
+
+    /* ----------------------
        Social accounts relation
        ---------------------- */
 

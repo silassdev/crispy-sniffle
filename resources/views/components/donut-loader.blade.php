@@ -1,6 +1,6 @@
-<span class="inline-flex items-center" aria-hidden="true">
-  <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+<div role="status" class="flex items-center justify-center">
+  <svg class="animate-spin h-14 w-14" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="25" cy="25" r="20" stroke="#e5e7eb" stroke-width="6"></circle>
+    <path d="M45 25a20 20 0 00-20-20" stroke="#4f46e5" stroke-width="6" stroke-linecap="round"></path>
   </svg>
-</span>
+</div>

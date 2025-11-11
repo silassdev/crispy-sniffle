@@ -25,3 +25,10 @@
     opacity: 0;
   }
 }
+
+body[data-sidebar-open="false"] aside { width: 4rem !important; }
+body[data-sidebar-open="false"] .dash-label { display: none !important; }
+body[data-sidebar-open="false"] .dash-item { justify-content: center; }
+body[data-sidebar-open="false"] .dash-item svg { margin-right: 0 !important; }
+.dash-item { display:flex; align-items:center; gap:0.75rem; }
+.dash-label { transition: opacity .12s ease; }

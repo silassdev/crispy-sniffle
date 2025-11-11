@@ -11,22 +11,25 @@
   @livewireStyles
   @stack('head')
  </head>
- <body class="min-h-screen bg-gray-50 text-gray-800">
+ <body class="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
 
   <x-toast />
 
   @include('layouts.navigation')
 
+  <main class="flex-1 flex items-center justify-center">
     <div class="w-full max-w-md px-4">
       @yield('content')
     </div>
+  </main>
 
   @include('layouts.footer')
 
   @livewireScripts
 
   @if(session('success') || session('error'))
-    @endif
+  @endif
 
- </body>
+</body>
+
 </html>

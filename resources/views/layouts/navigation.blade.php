@@ -23,7 +23,7 @@
       {{-- left: logo --}}
       <div class="flex items-center gap-4">
         <a href="{{ route($dashboardRoute) }}" class="flex items-center gap-2">
-          <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-10 h-10 object-contain">
+          <img src="{{ asset('img/icon.jpg') }}" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-bold text-lg">{{ config('app.name') }}</span>
         </a>
       </div>

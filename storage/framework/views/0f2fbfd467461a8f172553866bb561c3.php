@@ -23,7 +23,7 @@
       
       <div class="flex items-center gap-4">
         <a href="<?php echo e(route($dashboardRoute)); ?>" class="flex items-center gap-2">
-          <img src="<?php echo e(asset('img/logo.png')); ?>" alt="Logo" class="w-10 h-10 object-contain">
+          <img src="<?php echo e(asset('img/icon.jpg')); ?>" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-bold text-lg"><?php echo e(config('app.name')); ?></span>
         </a>
       </div>

@@ -1,21 +1,32 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Not Found</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- Adjust if you have custom CSS -->
-</head>
-<body>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <div class="text-center">
-            <h1 class="text-5xl font-bold text-red-500">404</h1>
-            <p class="mt-4 text-xl font-semibold text-gray-700">Oops! The page you're looking for doesn't exist.</p>
-            <p class="mt-2 text-md text-gray-600">It might have been removed, or you might have the wrong URL.</p>
-            <a href="{{ url('/') }}" class="mt-6 inline-block px-6 py-3 bg-indigo-600 text-white text-lg font-medium rounded-lg hover:bg-indigo-700">
-                Go Back to Home
-            </a>
-        </div>
+@extends('layouts.guest')
+
+@section('title','Not Found')
+
+@section('content')
+<div class="flex items-center justify-center min-h-screen bg-gray-50">
+  <div class="text-center max-w-md p-8">
+    
+    <!-- Empty box illustration -->
+    <div class="flex justify-center mb-6">
+      <svg class="w-24 h-24 text-gray-400 animate-bounce-slow" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 9h18M9 21V9" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
-</body>
-</html>
+
+    <!-- Title -->
+    <h1 class="text-2xl font-semibold text-gray-800 mb-2">Nothing here...</h1>
+
+    <!-- Description -->
+    <p class="text-gray-600 mb-4">
+      Looks like this collection is empty. The page you’re looking for doesn’t exist.
+    </p>
+
+    <!-- Action -->
+    <a href="{{ url('/') }}" 
+       class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md transition transform hover:scale-105 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
+      Back to Home
+    </a>
+  </div>
+</div>
+@endsection

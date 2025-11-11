@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
+use App\Http\Controllers\Admin\ViewAsController;
+
 
 if (file_exists(__DIR__.'/auth.php')) {
     require __DIR__.'/auth.php';
@@ -70,6 +72,11 @@ Route::prefix('admin')->group(function () {
         ->name('admin.invite.accept');
 });
 
+
+Route::post('admin/view-as', [ViewAsController::class, 'set'])->name('admin.view-as')->middleware(['auth','is_admin']);
+Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])->name('admin.view-as.clear')->middleware(['auth','is_admin']);
+
+
 /*
 |--------------------------------------------------------------------------
 | Trainer Routes
@@ -78,6 +85,16 @@ Route::prefix('admin')->group(function () {
 Route::prefix('trainer')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])->group(function () {
     Route::get('dashboard', [TrainerDashboard::class, 'index'])->name('trainer.dashboard');
 });
+
+Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(function(){
+    Route::get('trainers', [\App\Http\Controllers\Admin\TrainerController::class,'index'])->name('trainers');
+    Route::get('trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class,'show'])->name('trainer.view');
+
+    Route::get('trainers/{id}/edit', function($id){
+        return view('admin.trainers.edit', ['id' => $id]);
+    })->name('trainer.edit');
+});
+
 
 Route::get('/trainer/pending', fn () => view('trainer.pending', [
     'email' => session('trainer_email'),

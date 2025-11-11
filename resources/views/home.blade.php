@@ -154,7 +154,7 @@
 <section class="py-8 sm:py-12 bg-transparent">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-xl sm:text-2xl font-semibold">What our community says</h3>
+      <h3 class="text-xl sm:">What our community says</h3>
       <p class="mt-2 text-gray-600 dark:text-gray-300">Real stories from learners and instructors using the platform.</p>
 
       <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">

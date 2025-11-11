@@ -12,7 +12,7 @@
 
   <?php echo $__env->yieldPushContent('head'); ?>
  </head>
- <body class="min-h-screen bg-gray-50 text-gray-800">
+ <body class="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
 
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
@@ -37,9 +37,11 @@
 
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
+  <main class="flex-1 flex items-center justify-center">
     <div class="w-full max-w-md px-4">
       <?php echo $__env->yieldContent('content'); ?>
     </div>
+  </main>
 
   <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
@@ -47,8 +49,9 @@
 
 
   <?php if(session('success') || session('error')): ?>
-    <?php endif; ?>
+  <?php endif; ?>
 
- </body>
+</body>
+
 </html>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/guest.blade.php ENDPATH**/ ?>

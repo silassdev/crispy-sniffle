@@ -7,59 +7,65 @@
   <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css','resources/js/app.js']); ?> 
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
+
 </head>
 <body class="bg-gray-50">
   <div id="app" class="min-h-screen flex">
     
-    <aside x-data="{ open: true }" :class="open ? 'w-72' : 'w-16'" class="transition-all duration-200 border-r bg-white">
-      <div class="h-screen flex flex-col">
-        <div class="flex items-center justify-between p-4">
-          <a href="<?php echo e(auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard'))) : route('home')); ?>" class="flex items-center gap-2">
-            <img src="<?php echo e(asset('img/logo.png')); ?>" class="w-8 h-8" alt="logo">
-            <span x-show="open" class="font-bold" style="display:inline-block"><?php echo e(config('app.name')); ?></span>
-          </a>
-          <button @click="open = !open" class="p-1 rounded hover:bg-gray-100">
-            <svg x-show="open" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor"><path d="M6 6l8 4-8 4V6z" /></svg>
-            <svg x-show="!open" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" x-cloak><path d="M4 6h12M4 10h12M4 14h12" /></svg>
-          </button>
-        </div>
 
-        <div class="flex-1 overflow-auto">
-          
-          <?php if(auth()->check() && auth()->user()->isAdmin()): ?>
-            <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'admin', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-          <?php elseif(auth()->check() && auth()->user()->isTrainer()): ?>
-            <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'trainer', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-          <?php else: ?>
-            <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'student', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-          <?php endif; ?>
-        </div>
+    <aside x-data="{ open: true }"
+       x-init="() => { 
+         document.body.dataset.sidebarOpen = open ? 'true' : 'false'; 
+         $watch('open', v => document.body.dataset.sidebarOpen = v ? 'true' : 'false') 
+       }"
+       :class="open ? 'w-72' : 'w-16'"
+       class="transition-all duration-200 border-r bg-white">
 
-        <div class="p-4 border-t bg-white">
-          <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-500"><?php if(auth()->guard()->check()): ?> <?php echo e(auth()->user()->name); ?> <?php endif; ?></div>
-            <div>
-              <?php
-$__split = function ($name, $params = []) {
-    return [$name, $params];
-};
-[$__name, $__params] = $__split('actions.logout', []);
+  <div class="h-screen flex flex-col">
+    
+    <div class="flex items-center p-4">
+      <a href="<?php echo e(auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard'))) : route('home')); ?>" 
+         class="flex items-center gap-2">
+        <img src="<?php echo e(asset('img/icon.jpg')); ?>" class="w-8 h-8" alt="logo">
+      </a>
+    </div>
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-1570940825-0', $__slots ?? [], get_defined_vars());
+    
+    <div class="flex-1 overflow-auto">
+      <?php if(auth()->check() && auth()->user()->isAdmin()): ?>
+        <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'admin', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+      <?php elseif(auth()->check() && auth()->user()->isTrainer()): ?>
+        <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'trainer', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+      <?php else: ?>
+        <?php echo $__env->make('dashboards.partials.sidebar', ['role' => 'student', 'open' => true], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+      <?php endif; ?>
+    </div>
 
-echo $__html;
+    <div class="p-4 border-t bg-white space-y-2">
+  
+  <a href="<?php echo e(route('logout')); ?>" 
+     class="flex items-center gap-2 p-2 rounded hover:bg-gray-100">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h6a2 2 0 012 2v1" />
+    </svg>
+    <span x-show="open" x-transition>Logout</span>
+  </a>
 
-unset($__html);
-unset($__name);
-unset($__params);
-unset($__split);
-if (isset($__slots)) unset($__slots);
-?>
-            </div>
-          </div>
-        </div>
-      </div>
-    </aside>
+  
+  <button @click="open = !open" 
+          class="w-full flex items-center justify-center p-2 rounded hover:bg-gray-100">
+    <svg x-show="open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+    </svg>
+    <svg x-show="!open" x-cloak class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+    </svg>
+  </button>
+</div>
+  </div>
+</aside>
+
 
     
     <main class="flex-1 p-6">

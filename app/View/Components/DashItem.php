@@ -1,5 +1,7 @@
 <?php
+
 namespace App\View\Components;
+
 use Illuminate\View\Component;
 
 class DashItem extends Component
@@ -8,9 +10,23 @@ class DashItem extends Component
     public $icon;
     public $label;
     public $component;
-    public function __construct($href='#', $icon='view-grid', $label='', $component=null)
+
+    /**
+     * @param string $href  target url (optional)
+     * @param string $icon  heroicon name (e.g. users, shield-check, academic-cap)
+     * @param string $label visible text
+     * @param string|null $component event payload for Livewire section switching
+     */
+    public function __construct($href = '#', $icon = 'view-grid', $label = '', $component = null)
     {
-        $this->href = $href; $this->icon = $icon; $this->label = $label; $this->component = $component;
+        $this->href = $href;
+        $this->icon = $icon;
+        $this->label = $label;
+        $this->component = $component;
     }
-    public function render(){ return view('components.dash-item'); }
+
+    public function render()
+    {
+        return view('components.dash-item');
+    }
 }

@@ -18,7 +18,14 @@
   
   @include('layouts.navigation')
 
+  <div class="flex-1 overflow-auto">
+    <livewire:sidebar />
+  </div>
+
+
+
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
     @yield('content')
   </main>
 

@@ -1,4 +1,14 @@
-@php $section = $section ?? 'overview'; @endphp
+@php
+    $section = $section ?? 'overview';
+    $counters = $counters ?? [
+        'students' => 0,
+        'trainers' => 0,
+        'admins' => 0,
+        'posts' => 0,
+        'invites' => 0,
+    ];
+    $recentApprovedTrainers = $recentApprovedTrainers ?? collect();
+@endphp
 
 
 <div class="space-y-6">
