@@ -11,6 +11,7 @@
   @livewireStyles
   @stack('head')
  </head>
+ 
  <body class="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
 
   <x-toast />

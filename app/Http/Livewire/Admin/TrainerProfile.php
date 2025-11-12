@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
@@ -26,7 +27,7 @@ class TrainerProfile extends Component
     public $total_courses = 0;
     public $achievements = [];
 
-    public $avatar; // temporary upload
+    public $avatar;
 
     protected $rules = [
         'name' => 'required|string|max:150',

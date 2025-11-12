@@ -1,5 +1,7 @@
 <?php
-namespace App\Livewire\Admin;
+
+namespace App\Http\Livewire\Admin;
+
 use Livewire\Component;
 use App\Models\User;
 use App\Models\Post;

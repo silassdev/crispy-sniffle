@@ -141,7 +141,7 @@ unset($__defined_vars, $__key, $__value); ?>
     </div>
 
     <div x-cloak class="flex flex-col rounded-b-lg divide-y divide-neutral-200 border-t border-neutral-200 dark:divide-white/5 dark:border-white/5" x-show="expanded">
-        <?php $__currentLoopData = $frames; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $frame): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $frames; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $frame): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div class="flex flex-col divide-y divide-neutral-200 dark:divide-white/5">
                 <?php if (isset($component)) { $__componentOriginal96f0b6f4219e16dc62468d91b0335b32 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal96f0b6f4219e16dc62468d91b0335b32 = $attributes; } ?>
@@ -164,7 +164,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php unset($__componentOriginal96f0b6f4219e16dc62468d91b0335b32); ?>
 <?php endif; ?>
             </div>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
     </div>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/vendor-frames.blade.php ENDPATH**/ ?>
