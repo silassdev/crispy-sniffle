@@ -6,23 +6,37 @@ use Livewire\Component;
 
 class Sidebar extends Component
 {
-    // optional: expose current "view as" role if you set it in session
     public $viewAs;
-    public $role; // expose $role for views that expect it
+    public $role;
+    public $section = 'courses'; // default active section
 
-    public function mount()
+    public function mount($viewAs = null)
     {
-        $this->viewAs = session('view_as', auth()->check() ? auth()->user()->role : 'student');
-
-        // alias so blade files that expect $role won't break
-        $this->role = $this->viewAs;
+        $this->viewAs = $viewAs ?? session('view_as');
+        $this->role = $this->viewAs ?? optional(auth()->user())->role ?? 'student';
     }
 
-    // emit to the admin shell specifically so it reacts
     public function showSection(string $section)
     {
-        // target the admin dashboard shell component explicitly
-        $this->emitTo('admin.dashboard-shell', 'showSection', $section);
+
+        $this->section = $section;
+
+       
+        $this->emitTo(\App\Http\Livewire\Admin\DashboardShell::class, 'showSection', $section);
+    }
+
+    // computed property available in Blade as $headerBg
+    public function getHeaderBgProperty()
+    {
+        $map = [
+            'admin'   => 'bg-indigo-600 text-white',
+            'trainer' => 'bg-emerald-600 text-white',
+            'student' => 'bg-sky-600 text-white',
+            'community'=> 'bg-amber-600 text-white',
+            'courses' => 'bg-emerald-600 text-white',
+        ];
+
+        return $map[$this->section] ?? $map[$this->role] ?? 'bg-gray-700 text-white';
     }
 
     public function render()

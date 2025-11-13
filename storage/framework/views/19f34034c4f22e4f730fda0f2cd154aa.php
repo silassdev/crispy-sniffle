@@ -5,11 +5,12 @@
         'trainers' => 0,
         'admins' => 0,
         'posts' => 0,
-        'invites' => 0,
+        'invites' => 10,
     ];
     $recentApprovedTrainers = $recentApprovedTrainers ?? collect();
 ?>
-
+  
+  
 
 <div class="space-y-6">
   <!--[if BLOCK]><![endif]--><?php if($section === 'overview'): ?>

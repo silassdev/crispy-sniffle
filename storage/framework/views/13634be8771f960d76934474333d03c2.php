@@ -39,7 +39,6 @@
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
 
-
   <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <?php echo $__env->yieldContent('content'); ?>

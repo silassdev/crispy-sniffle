@@ -1,4 +1,5 @@
-// app/Http/Controllers/Admin/InviteController.php
+<?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;

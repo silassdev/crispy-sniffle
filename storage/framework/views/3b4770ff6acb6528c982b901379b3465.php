@@ -1,7 +1,7 @@
 
 
 <?php $__env->startSection('title','Admin Dashboard'); ?>
-<?php $__env->startSection('page-title','Admin Dashboard'); ?>
+<?php $__env->startSection('page-title','welcome admin'); ?>
 
 <?php $__env->startSection('content'); ?>
   <?php
