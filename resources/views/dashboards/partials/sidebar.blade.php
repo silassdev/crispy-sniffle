@@ -1,60 +1,141 @@
 @php
-  // role color map (tailwind utilities)
-  $colors = [
-    'admin' => 'bg-indigo-600 text-white',
-    'trainer' => 'bg-emerald-600 text-white',
-    'student' => 'bg-sky-600 text-white',
-  ];
-  $bg = $colors[$role] ?? 'bg-gray-700 text-white';
+    $role = $viewAs
+        ?? session('view_as')
+        ?? (auth()->user()->role ?? 'student');
+
+    $colors = [
+        'admin'   => 'bg-indigo-600 text-white',
+        'trainer' => 'bg-emerald-600 text-white',
+        'student' => 'bg-sky-600 text-white',
+    ];
+
+    $bg = $colors[$role] ?? 'bg-gray-700 text-white';
 @endphp
 
-<div class="px-2 py-4 pt-8">
-  {{-- section header --}}
-  <div class="px-2 mb-4" x-show="open">
-    <div class="rounded p-2 {{ $bg }}">
-      <div class="flex items-center gap-2">
-      
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v4a1 1 0 001 1h3v6h8v-6h3a1 1 0 001-1V7"/>
-        </svg>
-        <div>
-          <div class="font-semibold">{{ ucfirst($role) }} Console</div>
-          <div class="text-xs opacity-80">Quick actions & overview</div>
+<aside class="w-64 min-h-screen bg-white border-r">
+  <div class="p-4">
+
+    {{-- header / quick actions --}}
+    <div class="px-2 mb-4">
+      <div class="rounded p-2 {{ $bg }}">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center text-sm font-bold">a</div>
+          <div>
+            <div class="font-semibold">{{ strtoupper($role) }} console</div>
+            <div class="text-xs opacity-80">Quick actions</div>
+          </div>
         </div>
       </div>
     </div>
+
+    {{-- navigation --}}
+    <nav class="space-y-1">
+      @if($role === 'admin')
+        <button wire:click="showSection('students')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- users (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-4-4h-1M9 20H6a4 4 0 01-4-4v-2h5m6 6v-6m0 0V9a4 4 0 00-4-4H6a4 4 0 00-4 4v6h5" />
+            </svg>
+          </span>
+          <span class="dash-label">Students</span>
+        </button>
+
+        <button wire:click="showSection('admins')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- shield-check (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4zM9 12l2 2 4-4" />
+            </svg>
+          </span>
+          <span class="dash-label">Admins</span>
+        </button>
+
+        <button wire:click="showSection('trainers')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- academic-cap (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l9 5-9 5-9-5 9-5zm0 10v6m-6-8v6a6 6 0 0012 0v-6" />
+            </svg>
+          </span>
+          <span class="dash-label">Trainers</span>
+        </button>
+
+        <button wire:click="showSection('community')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- chat-bubble (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4v9z" />
+            </svg>
+          </span>
+          <span class="dash-label">Community</span>
+        </button>
+
+        <button wire:click="showSection('comments')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- chat-bubble-left-right (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9h8M8 13h6M5 20l-3 2V6a3 3 0 013-3h10a3 3 0 013 3v10a3 3 0 01-3 3H5z" />
+            </svg>
+          </span>
+          <span class="dash-label">Comments</span>
+        </button>
+
+        <button wire:click="showSection('posts')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- document-text (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 11h10M7 15h6M6 3h8l4 4v13a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1z" />
+            </svg>
+          </span>
+          <span class="dash-label">Posts</span>
+        </button>
+
+        <button wire:click="showSection('feedback')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- chat-bubble (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4v9z" />
+            </svg>
+          </span>
+          <span class="dash-label">Feedback</span>
+        </button>
+
+        <button wire:click="showSection('other-actions')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- view-grid (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
+            </svg>
+          </span>
+          <span class="dash-label">Other Actions</span>
+        </button>
+
+      @elseif($role === 'trainer')
+        <button wire:click="showSection('courses')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- book-open (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M3 6h7a3 3 0 013 3v9H6a3 3 0 00-3 3V6zm18 0h-7a3 3 0 00-3 3v9h7a3 3 0 013 3V6z" />
+            </svg>
+          </span>
+          <span class="dash-label">Courses</span>
+        </button>
+        {{-- add more trainer-specific items here --}}
+
+      @else
+        <button wire:click="showSection('courses')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- book-open (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12M3 6h7a3 3 0 013 3v9H6a3 3 0 00-3 3V6zm18 0h-7a3 3 0 00-3 3v9h7a3 3 0 013 3V6z" />
+            </svg>
+          </span>
+          <span class="dash-label">Courses</span>
+        </button>
+        {{-- student items --}}
+      @endif
+    </nav>
+
   </div>
-
-  {{-- menu items (for admin populate many items) --}}
-  <nav class="space-y-5 pt-8">
-  @if($role === 'admin')
-    <x-dash-item icon="users" label="Students" component="students" />
-    <x-dash-item icon="shield-check" label="Admins" component="admins" />
-    <x-dash-item icon="academic-cap" label="Trainers" component="trainers" />
-    <x-dash-item icon="chat" label="Community" component="community" />
-    <x-dash-item icon="chat-bubble-left-right" label="Comments" component="comments" />
-    <x-dash-item icon="document-text" label="Posts" component="posts" />
-    <x-dash-item icon="chat" label="Feedback" component="feedback" />
-  @elseif($role === 'trainer')
-    <x-dash-item icon="academic-cap" label="My Courses" component="courses" />
-    <x-dash-item icon="users" label="My Students" component="my-students" />
-    <x-dash-item icon="chat" label="Videos" component="videos" />
-    <x-dash-item icon="document-text" label="Create Post" component="create-post" />
-  @else
-    <x-dash-item icon="view-grid" label="Courses" component="courses" />
-    <x-dash-item icon="document-text" label="My Notes" component="notes" />
-    <x-dash-item icon="chat" label="Community" component="community" />
-    <x-dash-item icon="users" label="Profile" component="profile" />
-  @endif
-</nav>
-
-</div>
-
-{{-- small Blade component for menu item --}}
-@once
-@push('blade-components')
-  @php
-    // register inline component for dash-item if not using separate file
-  @endphp
-@endpush
-@endonce
+</aside>

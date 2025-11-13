@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-  <title><?php echo $__env->yieldContent('title', config('app.name')); ?></title>
+  <title><?php echo $__env->yieldContent('title','Welcome'); ?> - <?php echo e(config('app.name')); ?></title>
 
   <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css','resources/js/app.js']); ?>
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
   <?php echo $__env->yieldPushContent('head'); ?>
-</head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
+ </head>
+ 
+ <body class="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
 
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
@@ -35,14 +36,12 @@
 <?php unset($__componentOriginal7cfab914afdd05940201ca0b2cbc009b); ?>
 <?php endif; ?>
 
-  
   <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
-
-
-  <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-    <?php echo $__env->yieldContent('content'); ?>
+  <main class="flex-1 flex items-center justify-center">
+    <div class="w-full max-w-md px-4">
+      <?php echo $__env->yieldContent('content'); ?>
+    </div>
   </main>
 
   <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
@@ -50,16 +49,10 @@
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
 
-  
-  <?php echo $__env->yieldPushContent('scripts'); ?>
-
-
- <?php if(session('success') || session('error')): ?>
-
-
- 
-<?php endif; ?>
+  <?php if(session('success') || session('error')): ?>
+  <?php endif; ?>
 
 </body>
+
 </html>
-<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/guest.blade.php ENDPATH**/ ?>

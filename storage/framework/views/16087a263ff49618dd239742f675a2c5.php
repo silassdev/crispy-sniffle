@@ -19,7 +19,7 @@
     <div class="px-2 mb-4">
       <div class="rounded p-2 <?php echo e($bg); ?>">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center text-sm font-bold">A</div>
+          <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center text-sm font-bold">a</div>
           <div>
             <div class="font-semibold"><?php echo e(strtoupper($role)); ?> console</div>
             <div class="text-xs opacity-80">Quick actions</div>
@@ -30,7 +30,7 @@
 
     
     <nav class="space-y-1">
-      <!--[if BLOCK]><![endif]--><?php if($role === 'admin'): ?>
+      <?php if($role === 'admin'): ?>
         <button wire:click="showSection('students')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             
@@ -134,8 +134,9 @@
           <span class="dash-label">Courses</span>
         </button>
         
-      <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+      <?php endif; ?>
     </nav>
 
   </div>
-</aside><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views\livewire/sidebar.blade.php ENDPATH**/ ?>
+</aside>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>
