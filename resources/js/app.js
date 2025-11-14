@@ -15,7 +15,3 @@ window.APP_TOAST = {
     window.dispatchEvent(event);
   }
 };
-
-window.addEventListener('app-toast', (e) => {
-  
-});

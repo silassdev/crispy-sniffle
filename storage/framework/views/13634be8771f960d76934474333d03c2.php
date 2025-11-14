@@ -8,11 +8,14 @@
   <title><?php echo $__env->yieldContent('title', config('app.name')); ?></title>
 
   <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css','resources/js/app.js']); ?>
+
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
+
   <?php echo $__env->yieldPushContent('head'); ?>
-</head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
+
+ </head>
+ <body class="min-h-screen bg-gray-50 text-gray-800">
 
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
@@ -49,16 +52,41 @@
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
 
+<script>
+(function () {
+  try {
+    window.emitLivewire = function (eventName, payload) {
+      if (window.Livewire && typeof window.Livewire.emit === 'function') {
+        return window.Livewire.emit(eventName, payload);
+      }
+      if (window.livewire && typeof window.livewire.emit === 'function') {
+        return window.livewire.emit(eventName, payload);
+      }
+      document.dispatchEvent(new CustomEvent('emitLivewireFallback', { detail: { eventName, payload } }));
+      console.warn('emitLivewire: Livewire not ready; fallback queued for', eventName);
+    };
+
+    document.addEventListener('livewire:load', function () {
+      document.addEventListener('emitLivewireFallback', function (e) {
+        const { eventName, payload } = e.detail || {};
+        if (window.Livewire && typeof Livewire.emit === 'function') {
+          Livewire.emit(eventName, payload);
+        } else if (window.livewire && typeof window.livewire.emit === 'function') {
+          window.livewire.emit(eventName, payload);
+        }
+      });
+    });
+  } catch (err) {
+    console.error('emitLivewire helper failed to initialize', err);
+  }
+})();
+</script>
+
+
   
   <?php echo $__env->yieldPushContent('scripts'); ?>
 
-
- <?php if(session('success') || session('error')): ?>
-
-
  
-<?php endif; ?>
-
-</body>
+  </body>
 </html>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/app.blade.php ENDPATH**/ ?>

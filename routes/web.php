@@ -8,10 +8,12 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
-use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
 use App\Http\Controllers\Student\DashboardController as StudentDashboard;
 use App\Http\Controllers\Admin\ViewAsController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\TrainerController;
+use App\Http\Controllers\Admin\AdminController;
 
 
 if (file_exists(__DIR__.'/auth.php')) {
@@ -57,21 +59,48 @@ Route::prefix('admin')->group(function () {
     Route::post('login', [AuthController::class, 'login'])->name('admin.login');
     Route::post('register', [AuthController::class, 'register'])->name('admin.register');
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('admin.logout');
+    
+
 
     // Protected admin routes
     Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {
         Route::get('dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
 
         // Trainer management
+        Route::get('trainers', [TrainerController::class, 'index'])->name('admin.trainers');
         Route::get('trainers/{id}', [TrainerController::class, 'show'])->name('admin.trainer.view');
         Route::get('trainers/{id}/edit', [TrainerController::class, 'edit'])->name('admin.trainer.edit');
+
+        // Students management
+    Route::get('students', [StudentController::class, 'index'])->name('admin.students');
+    Route::get('students/{id}', [StudentController::class, 'show'])->name('admin.student.view');
+    Route::get('students/{id}/edit', [StudentController::class, 'edit'])->name('admin.student.edit');
+
+    // Admins management
+    Route::get('admins', [AdminController::class, 'index'])->name('admin.admins');
+    Route::get('admins/{id}', [AdminController::class, 'show'])->name('admin.admin.view');
+    Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admin.admin.edit');
+
+    // Community
+    Route::get('community', fn () => view('admin.community'))->name('admin.community');
+
+    // Comments
+    Route::get('comments', fn () => view('admin.comments'))->name('admin.comments');
+
+    // Posts
+    Route::get('posts', fn () => view('admin.posts'))->name('admin.posts');
+
+    // Feedback
+    Route::get('feedback', fn () => view('admin.feedback'))->name('admin.feedback');
+
+    // Other actions
+    Route::get('other-actions', fn () => view('admin.other-actions'))->name('admin.other-actions');
     });
 
     // Invite accept (public)
     Route::get('invite/accept/{token}', fn ($token) => view('admin.invites.accept', ['token' => $token]))
         ->name('admin.invite.accept');
 });
-
 
 Route::post('admin/view-as', [ViewAsController::class, 'set'])->name('admin.view-as')->middleware(['auth','is_admin']);
 Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])->name('admin.view-as.clear')->middleware(['auth','is_admin']);
@@ -84,17 +113,8 @@ Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])->name('ad
 */
 Route::prefix('trainer')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])->group(function () {
     Route::get('dashboard', [TrainerDashboard::class, 'index'])->name('trainer.dashboard');
+    Route::get('courses', fn () => view('trainer.courses'))->name('trainer.courses');
 });
-
-Route::middleware(['auth','is_admin'])->prefix('admin')->name('admin.')->group(function(){
-    Route::get('trainers', [\App\Http\Controllers\Admin\TrainerController::class,'index'])->name('trainers');
-    Route::get('trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class,'show'])->name('trainer.view');
-
-    Route::get('trainers/{id}/edit', function($id){
-        return view('admin.trainers.edit', ['id' => $id]);
-    })->name('trainer.edit');
-});
-
 
 Route::get('/trainer/pending', fn () => view('trainer.pending', [
     'email' => session('trainer_email'),
@@ -107,4 +127,6 @@ Route::get('/trainer/pending', fn () => view('trainer.pending', [
 */
 Route::prefix('student')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])->group(function () {
     Route::get('dashboard', [StudentDashboard::class, 'index'])->name('student.dashboard');
+
+    Route::get('courses', fn () => view('student.courses'))->name('student.courses');
 });

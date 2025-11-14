@@ -22,7 +22,7 @@
           <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center text-sm font-bold">a</div>
           <div>
             <div class="font-semibold"><?php echo e(strtoupper($role)); ?> console</div>
-            <div class="text-xs opacity-80">Quick actions</div>
+            <div class="text-xs opacity-80">ouick actions</div>
           </div>
         </div>
       </div>
@@ -51,19 +51,23 @@
           <span class="dash-label">Admins</span>
         </button>
 
-        <button wire:click="showSection('trainers')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
-          <span class="inline-block">
-            
-            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l9 5-9 5-9-5 9-5zm0 10v6m-6-8v6a6 6 0 0012 0v-6" />
-            </svg>
-          </span>
-          <span class="dash-label">Trainers</span>
-        </button>
+       <button onclick="emitLivewire('showSection', 'trainers')"
+        data-section="trainers"
+        class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+      <span class="inline-block">
 
-        <button wire:click="showSection('community')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
-          <span class="inline-block">
-            
+      <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l9 5-9 5-9-5 9-5zm0 10v6m-6-8v6a6 6 0 0012 0v-6" />
+       </svg>
+     </span>
+     <span class="dash-label">Trainers</span>
+      </button>
+
+
+        <button onclick="emitLivewire('showSection', 'community')"
+        data-section="community" 
+        class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+         <span class="inline-block">
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4v9z" />
             </svg>
