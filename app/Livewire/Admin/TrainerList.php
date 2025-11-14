@@ -38,11 +38,11 @@ class TrainerList extends Component
     {
         $u = User::find($id);
         if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+            return $this->->dispatch('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
         }
 
         if ($u->approved) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Info','message'=>'Already approved','ttl'=>3000]);
+            return $this->->dispatch('app-toast', ['title'=>'Info','message'=>'Already approved','ttl'=>3000]);
         }
 
         $u->update(['approved' => true, 'rejected_at' => null]);
@@ -55,7 +55,7 @@ class TrainerList extends Component
             try { Mail::to($u->email)->send(new TrainerApprovedMail($u)); } catch (\Throwable $_) {}
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Approved','message'=>"{$u->name} approved.",'ttl'=>4000]);
+        $this->->dispatch('app-toast', ['title'=>'Approved','message'=>"{$u->name} approved.",'ttl'=>4000]);
 
         // refresh data if necessary
         $this->emitSelf('$refresh');
@@ -65,11 +65,11 @@ class TrainerList extends Component
     {
         $u = User::find($id);
         if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+            return $this->->dispatch('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
         }
 
         if ($u->rejected_at) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Info','message'=>'Already rejected','ttl'=>3000]);
+            return $this->->dispatch('app-toast', ['title'=>'Info','message'=>'Already rejected','ttl'=>3000]);
         }
 
         $u->update(['rejected_at' => now(), 'approved' => false]);
@@ -80,7 +80,7 @@ class TrainerList extends Component
             try { Mail::to($u->email)->send(new TrainerRejectedMail($u)); } catch (\Throwable $_) {}
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Rejected','message'=>"{$u->name} rejected.",'ttl'=>5000]);
+        $this->->dispatch('app-toast', ['title'=>'Rejected','message'=>"{$u->name} rejected.",'ttl'=>5000]);
         $this->emitSelf('$refresh');
     }
 
@@ -88,11 +88,11 @@ class TrainerList extends Component
     {
         $u = User::find($id);
         if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+            return $this->->dispatch('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
         }
 
         $u->delete();
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Deleted','message'=>'Trainer deleted.','ttl'=>4000]);
+        $this->->dispatch('app-toast', ['title'=>'Deleted','message'=>'Trainer deleted.','ttl'=>4000]);
         $this->resetPage();
     }
 

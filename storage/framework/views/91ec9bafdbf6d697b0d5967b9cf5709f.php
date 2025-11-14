@@ -10,7 +10,7 @@
     $recentApprovedTrainers = $recentApprovedTrainers ?? collect();
 ?>
 
-<div class="space-y-6">
+<div class="space-y-2">
   <!--[if BLOCK]><![endif]--><?php if($section === 'overview'): ?>
     <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
       <?php if (isset($component)) { $__componentOriginal179d930850cbc0b57567dfb2ba44c92f = $component; } ?>
@@ -95,7 +95,7 @@
 <?php endif; ?>
       <?php if (isset($component)) { $__componentOriginal179d930850cbc0b57567dfb2ba44c92f = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal179d930850cbc0b57567dfb2ba44c92f = $attributes; } ?>
-<?php $component = App\View\Components\StatCard::resolve(['title' => 'Invites','value' => $counters['invites'],'color' => 'amber'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = App\View\Components\StatCard::resolve(['title' => 'Invite','value' => $counters['invites'],'color' => 'amber'] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('stat-card'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
@@ -117,7 +117,7 @@
 
     
     <div class="mt-6 bg-white rounded shadow p-4">
-      <h3 class="font-semibold mb-3">Recent 10 Approved Trainers</h3>
+      <h3 class="font-semibold mb-3">Recently Approved Trainers</h3>
       <div class="space-y-2">
         <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $recentApprovedTrainers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <div class="flex items-center justify-between p-2 border rounded">
@@ -144,7 +144,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('admin.trainer-list', ['perPage' => $perPage]);
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2667555281-0', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-571519098-0', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -161,7 +161,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('admin.student-list', ['perPage' => $perPage]);
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2667555281-1', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-571519098-1', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -178,7 +178,7 @@ $__split = function ($name, $params = []) {
 };
 [$__name, $__params] = $__split('admin.admin-list', ['perPage' => $perPage]);
 
-$__html = app('livewire')->mount($__name, $__params, 'lw-2667555281-2', $__slots ?? [], get_defined_vars());
+$__html = app('livewire')->mount($__name, $__params, 'lw-571519098-2', $__slots ?? [], get_defined_vars());
 
 echo $__html;
 
@@ -191,4 +191,4 @@ if (isset($__slots)) unset($__slots);
   <?php else: ?>
     <div class="bg-white rounded shadow p-6">Section: <?php echo e($section); ?> - add component or content here.</div>
   <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-</div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views\livewire/admin/dashboard-shell.blade.php ENDPATH**/ ?>
+</div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/admin/dashboard-shell.blade.php ENDPATH**/ ?>

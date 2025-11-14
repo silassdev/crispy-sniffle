@@ -17,12 +17,12 @@
       <x-stat-card title="Trainers" :value="$counters['trainers']" color="emerald" />
       <x-stat-card title="Admins" :value="$counters['admins']" color="gray" />
       <x-stat-card title="Posts" :value="$counters['posts']" color="sky" />
-      <x-stat-card title="Invites" :value="$counters['invites']" color="amber" />
+      <x-stat-card title="Invite" :value="$counters['invites']" color="amber" />
     </div>
 
     {{-- recent trainers list --}}
     <div class="mt-6 bg-white rounded shadow p-4">
-      <h3 class="font-semibold mb-3">Recent 10 Approved Trainers</h3>
+      <h3 class="font-semibold mb-3">Recently  Approved Trainers</h3>
       <div class="space-y-2">
         @foreach($recentApprovedTrainers as $t)
           <div class="flex items-center justify-between p-2 border rounded">

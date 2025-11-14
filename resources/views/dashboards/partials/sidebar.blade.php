@@ -22,7 +22,7 @@
           <div class="w-8 h-8 rounded bg-white/20 flex items-center justify-center text-sm font-bold">a</div>
           <div>
             <div class="font-semibold">{{ strtoupper($role) }} console</div>
-            <div class="text-xs opacity-80">ouick actions</div>
+            <div class="text-xs opacity-80">Quick actions</div>
           </div>
         </div>
       </div>
@@ -31,7 +31,9 @@
     {{-- navigation --}}
     <nav class="space-y-1">
       @if($role === 'admin')
-        <button wire:click="showSection('students')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('students', '{{ route('admin.students') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- users (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -41,7 +43,11 @@
           <span class="dash-label">Students</span>
         </button>
 
-        <button wire:click="showSection('admins')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        
+
+        <button
+          onclick="emitShowSection('admins', '{{ route('admin.admins') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- shield-check (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -51,23 +57,23 @@
           <span class="dash-label">Admins</span>
         </button>
 
-       <button onclick="emitLivewire('showSection', 'trainers')"
-        data-section="trainers"
-        class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
-      <span class="inline-block">
+        <button
+          onclick="emitShowSection('trainers', '{{ route('admin.trainers') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- academic-cap (outline) --}}
+            <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l9 5-9 5-9-5 9-5zm0 10v6m-6-8v6a6 6 0 0012 0v-6" />
+            </svg>
+          </span>
+          <span class="dash-label">Trainers</span>
+        </button>
 
-      <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l9 5-9 5-9-5 9-5zm0 10v6m-6-8v6a6 6 0 0012 0v-6" />
-       </svg>
-     </span>
-     <span class="dash-label">Trainers</span>
-      </button>
-
-
-        <button onclick="emitLivewire('showSection', 'community')"
-        data-section="community" 
-        class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
-         <span class="inline-block">
+        <button
+          onclick="emitShowSection('community', '{{ route('admin.community') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+          <span class="inline-block">
+            {{-- chat-bubble (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 15a4 4 0 01-4 4H8l-5 3V6a4 4 0 014-4h10a4 4 0 014 4v9z" />
             </svg>
@@ -75,7 +81,9 @@
           <span class="dash-label">Community</span>
         </button>
 
-        <button wire:click="showSection('comments')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('comments', '{{ route('admin.comments') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- chat-bubble-left-right (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -85,7 +93,9 @@
           <span class="dash-label">Comments</span>
         </button>
 
-        <button wire:click="showSection('posts')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('posts', '{{ route('admin.posts') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- document-text (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -95,7 +105,9 @@
           <span class="dash-label">Posts</span>
         </button>
 
-        <button wire:click="showSection('feedback')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('feedback', '{{ route('admin.feedback') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- chat-bubble (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -105,7 +117,9 @@
           <span class="dash-label">Feedback</span>
         </button>
 
-        <button wire:click="showSection('other-actions')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('other-actions', '{{ route('admin.other-actions') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- view-grid (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -116,7 +130,9 @@
         </button>
 
       @elseif($role === 'trainer')
-        <button wire:click="showSection('courses')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('courses', '{{ route('trainer.courses') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- book-open (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
@@ -128,7 +144,9 @@
         {{-- add more trainer-specific items here --}}
 
       @else
-        <button wire:click="showSection('courses')" class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
+        <button
+          onclick="emitShowSection('courses', '{{ route('student.courses') }}')"
+          class="dash-item w-full text-left p-2 rounded hover:bg-gray-100 flex items-center gap-3">
           <span class="inline-block">
             {{-- book-open (outline) --}}
             <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">

@@ -30,33 +30,43 @@
   @include('layouts.footer')
 
   @livewireScripts
+  
+   <script>
+  console.log('section listener loaded');
 
-<script>
-  // global helper used in some places in your markup: onclick="emitLivewire('showSection', 'trainers')"
-  function emitLivewire(event, payload = null) {
-    if (window.livewire) {
-      // if payload is not null, emit with payload; otherwise emit bare event
-      if (payload !== null) {
-        window.livewire.emit(event, payload);
-      } else {
-        window.livewire.emit(event);
-      }
-      return true;
-    }
-
-    console.warn('Livewire not found — cannot emit event:', event);
-    return false;
-  }
-
-  // Optional: forward keyboard nav to Livewire for accessibility
-  document.addEventListener('click', (e) => {
+  document.addEventListener('click', function (e) {
     const btn = e.target.closest('[data-section]');
     if (!btn) return;
-    // keep UI snappy on non-Livewire-aware elements
-    // emit a document-level event if desired (unused by Livewire)
-    document.dispatchEvent(new CustomEvent('section:clicked', { detail: btn.dataset.section }));
+
+    e.preventDefault();
+    const name = btn.dataset.section;
+    const fallback = btn.dataset.fallback;
+
+    console.log('section click', name, fallback);
+
+    try {
+      // find Livewire root
+      const root = document.querySelector('[wire\\:id]');
+      if (window.Livewire && root) {
+        const id = root.getAttribute('wire:id');
+        const comp = window.Livewire.find(id);
+        if (comp && typeof comp.call === 'function') {
+          comp.call('showSection', name);
+          console.log('called Livewire.showSection', name);
+          return;
+        }
+      }
+    } catch (err) {
+      console.error('Livewire call failed', err);
+    }
+
+    if (fallback) {
+      console.log('navigating to fallback', fallback);
+      window.location.href = fallback;
+    }
   });
 </script>
+
 
 
   

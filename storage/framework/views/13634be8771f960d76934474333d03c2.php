@@ -52,36 +52,6 @@
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
 
-<script>
-(function () {
-  try {
-    window.emitLivewire = function (eventName, payload) {
-      if (window.Livewire && typeof window.Livewire.emit === 'function') {
-        return window.Livewire.emit(eventName, payload);
-      }
-      if (window.livewire && typeof window.livewire.emit === 'function') {
-        return window.livewire.emit(eventName, payload);
-      }
-      document.dispatchEvent(new CustomEvent('emitLivewireFallback', { detail: { eventName, payload } }));
-      console.warn('emitLivewire: Livewire not ready; fallback queued for', eventName);
-    };
-
-    document.addEventListener('livewire:load', function () {
-      document.addEventListener('emitLivewireFallback', function (e) {
-        const { eventName, payload } = e.detail || {};
-        if (window.Livewire && typeof Livewire.emit === 'function') {
-          Livewire.emit(eventName, payload);
-        } else if (window.livewire && typeof window.livewire.emit === 'function') {
-          window.livewire.emit(eventName, payload);
-        }
-      });
-    });
-  } catch (err) {
-    console.error('emitLivewire helper failed to initialize', err);
-  }
-})();
-</script>
-
 
   
   <?php echo $__env->yieldPushContent('scripts'); ?>
