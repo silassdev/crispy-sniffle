@@ -45,7 +45,7 @@ class ResetPassword extends Component
     public function submit()
     {
         if (! $this->valid || ! $this->resetUser) {
-            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Invalid or expired reset link','ttl'=>6000]);
+            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Invalid or expired reset link','ttl'=>6000]);
             return;
         }
 
@@ -67,7 +67,7 @@ class ResetPassword extends Component
         }
 
         // fallback error
-        $this->dispatch('app-toast', ['title'=>'Error','message'=>'Unable to reset password. Try requesting a new reset link.','ttl'=>6000]);
+        $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Unable to reset password. Try requesting a new reset link.','ttl'=>6000]);
         return;
     }
 

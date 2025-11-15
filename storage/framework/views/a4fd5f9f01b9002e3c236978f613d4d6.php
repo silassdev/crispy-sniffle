@@ -39,13 +39,13 @@ unset($__defined_vars, $__key, $__value); ?>
     dir="<?php echo e($direction); ?>"
 >
     <span data-tippy-content="<?php echo e($file); ?>:<?php echo e($line); ?>">
-        <!--[if BLOCK]><![endif]--><?php if(config('app.editor')): ?>
+        <?php if(config('app.editor')): ?>
             <a href="<?php echo e($frame->editorHref()); ?>" @click.stop>
                 <span class="hover:underline decoration-neutral-400"><?php echo e($file); ?></span><span class="text-neutral-500">:<?php echo e($line); ?></span>
             </a>
         <?php else: ?>
             <?php echo e($file); ?><span class="text-neutral-500">:<?php echo e($line); ?></span>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endif; ?>
     </span>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/file-with-line.blade.php ENDPATH**/ ?>

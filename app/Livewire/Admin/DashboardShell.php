@@ -18,13 +18,8 @@ class DashboardShell extends Component
     protected $listeners = [
         'showSection' => 'setSection',
         'refreshDashboardCounters' => 'refreshCounters',
-        'refreshCounters' => 'refreshCounters',
     ];
 
-    public function mount()
-    {
-        $this->refreshCounters();
-    }
 
     public function setSection($name)
 {
@@ -32,10 +27,17 @@ class DashboardShell extends Component
     $this->resetPage();
 
     // notify the frontend Livewire components
-    $this->emit('dashboardSectionChanged', $this->section);
+    $this->dispatch('dashboardSectionChanged', $this->section);
 
     $this->dispatchBrowserEvent('dashboard:section-changed', ['section' => $this->section]);
 }
+
+    public function mount()
+    {
+        $this->refreshCounters();
+
+        $this->dispatch('dashboardSectionChanged', $this->section);
+    }
 
 
     /**
@@ -99,27 +101,12 @@ class DashboardShell extends Component
     }
 
     public function render()
-    {
-        $counters = [
-            'students' => \App\Models\User::where('role', \App\Models\User::ROLE_STUDENT)->count(),
-            'trainers' => (int) DB::table('users')->where('role', \App\Models\User::ROLE_TRAINER)->count(),
-            'admins'   => (int) DB::table('users')->where('role', \App\Models\User::ROLE_ADMIN)->count(),
-            'posts'    => (int) DB::table('posts')->count(),
-            'invites'  => (int) DB::table('admin_invitations')->count(),
-        ];
+{
+    // if you moved the view to resources/views/livewire/sidebar.blade.php
+    return view('livewire.sidebar', [
+        'viewAs' => $this->role,
+        'activeSection' => $this->activeSection,
+    ]);
+}
 
-        Log::debug('dashboard counters', $counters);
-
-        $recentApprovedTrainers = \App\Models\User::where('role', \App\Models\User::ROLE_TRAINER)
-            ->where('approved', true)
-            ->orderByDesc('created_at')
-            ->limit(10)
-            ->get();
-
-        return view('livewire.admin.dashboard-shell', [
-            'counters' => $counters,
-            'recentApprovedTrainers' => $recentApprovedTrainers,
-            'section' => $this->section ?? 'overview',
-        ]);
-    }
 }

@@ -29,7 +29,7 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 
 <div class="grid gap-3 p-4 bg-neutral-50 dark:bg-transparent overflow-x-auto rounded-lg">
-    <!--[if BLOCK]><![endif]--><?php if($frame->previous()): ?>
+    <?php if($frame->previous()): ?>
         <div class="flex">
             <?php if (isset($component)) { $__componentOriginalc33171fb5f34409a0ad661ae1625dcb2 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc33171fb5f34409a0ad661ae1625dcb2 = $attributes; } ?>
@@ -54,7 +54,7 @@ unset($__defined_vars, $__key, $__value); ?>
         </div>
     <?php else: ?>
         <span class="font-mono text-xs leading-3 text-neutral-500">Entrypoint</span>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?>
 
     <?php if (isset($component)) { $__componentOriginalfe2bc8d0a6d110d41fdc8740012cee8d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalfe2bc8d0a6d110d41fdc8740012cee8d = $attributes; } ?>

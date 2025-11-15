@@ -22,51 +22,75 @@
   @include('layouts.navigation')
 
 
-  <main class="pt-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <main class="pt-5 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     @yield('content')
   </main>
 
   @include('layouts.footer')
 
-  @livewireScripts
-  
-   <script>
-  console.log('section listener loaded');
+    @livewireScripts
 
-  document.addEventListener('click', function (e) {
-    const btn = e.target.closest('[data-section]');
-    if (!btn) return;
+        <script>
+  (function () {
+    // a single delegated click handler for the modal controls
+    function delegatedClickHandler(e) {
+      const closeBtn = e.target.closest && e.target.closest('#login-modal-close');
+      if (closeBtn) {
+        const root = document.getElementById('login-modal-root');
+        if (root) root.remove();
+        return;
+      }
 
-    e.preventDefault();
-    const name = btn.dataset.section;
-    const fallback = btn.dataset.fallback;
-
-    console.log('section click', name, fallback);
-
-    try {
-      // find Livewire root
-      const root = document.querySelector('[wire\\:id]');
-      if (window.Livewire && root) {
-        const id = root.getAttribute('wire:id');
-        const comp = window.Livewire.find(id);
-        if (comp && typeof comp.call === 'function') {
-          comp.call('showSection', name);
-          console.log('called Livewire.showSection', name);
-          return;
+      const toggle = e.target.closest && e.target.closest('#toggle-password');
+      if (toggle) {
+        const pwd = document.getElementById('password');
+        if (pwd) {
+          pwd.setAttribute('type', pwd.type === 'password' ? 'text' : 'password');
+          toggle.setAttribute('aria-pressed', String(pwd.type === 'text'));
         }
       }
-    } catch (err) {
-      console.error('Livewire call failed', err);
     }
 
-    if (fallback) {
-      console.log('navigating to fallback', fallback);
-      window.location.href = fallback;
+    // attach once and ensure we re-attach if Livewire re-renders
+    function attachHandlers() {
+      if (!window.__login_modal_handlers_attached) {
+        document.addEventListener('click', delegatedClickHandler);
+        window.__login_modal_handlers_attached = true;
+      }
     }
-  });
-</script>
 
+    attachHandlers();
+
+    // Re-attach (no-op if already attached) after Livewire messages are processed.
+    // Works with Livewire v2+ (hook) and a fallback for older versions that might expose an event.
+    if (window.Livewire && typeof Livewire.hook === 'function') {
+      Livewire.hook('message.processed', () => attachHandlers());
+    } else if (window.Livewire && typeof Livewire.on === 'function') {
+      // some older installs emit this event name - it's harmless even if not used
+      Livewire.on('message.processed', () => attachHandlers());
+    } else {
+      // last resort: re-run attach after short delays (covers edge cases)
+      setTimeout(() => attachHandlers(), 300);
+      setTimeout(() => attachHandlers(), 1000);
+    }
+
+    // Optional: also support the focus-password emitted event (modern Livewire)
+    (function attachFocusListener() {
+      if (window.Livewire && typeof Livewire.on === 'function') {
+        Livewire.on('focus-password', () => {
+          const pwd = document.getElementById('password');
+          pwd?.focus();
+        });
+      } else {
+        // If Livewire can't emit, your fallback inline script already handles focusing
+      }
+    })();
+  })();
+  </script>
+
+
+  @stack('scripts')
 
 
   

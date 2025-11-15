@@ -56,8 +56,8 @@ unset($__defined_vars, $__key, $__value); ?>
     </div>
 
     <div class="flex flex-col gap-1.5">
-        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $exception->frameGroups(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <!--[if BLOCK]><![endif]--><?php if($group['is_vendor']): ?>
+        <?php $__currentLoopData = $exception->frameGroups(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $group): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if($group['is_vendor']): ?>
                 <?php if (isset($component)) { $__componentOriginal449787012edfba29f0e80f325065fad5 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal449787012edfba29f0e80f325065fad5 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.vendor-frames','data' => ['frames' => $group['frames']]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -79,7 +79,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php unset($__componentOriginal449787012edfba29f0e80f325065fad5); ?>
 <?php endif; ?>
             <?php else: ?>
-                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $group['frames']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $frame): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = $group['frames']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $frame): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php if (isset($component)) { $__componentOriginalc7c58c6d16fe849872fb25ad6e9b8407 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc7c58c6d16fe849872fb25ad6e9b8407 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'laravel-exceptions-renderer::components.frame','data' => ['frame' => $frame]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -100,9 +100,9 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginalc7c58c6d16fe849872fb25ad6e9b8407; ?>
 <?php unset($__componentOriginalc7c58c6d16fe849872fb25ad6e9b8407); ?>
 <?php endif; ?>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
-            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/trace.blade.php ENDPATH**/ ?>

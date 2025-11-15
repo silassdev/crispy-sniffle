@@ -13,183 +13,202 @@
     : url('/register?role=trainer');
 
   $loginUrl = Route::has('login') ? route('login') : url('/login');
+
+  $youtubeId = env('HERO_VIDEO_ID', 'dQw4w9WgXcQ');
 @endphp
 
-{{-- HERO --}}
-<section class="pt-8 md:pt-12 lg:pt-16 pb-8 sm:pb-12">
+<section class="pt-10 pb-12 bg-gradient-to-b from-white to-gray-50">
+  <style>
+    /* safe, plain CSS (no @apply) */
+    .blob-float { animation: floatY 6s ease-in-out infinite; }
+    @keyframes floatY { 0%{transform:translateY(0)}50%{transform:translateY(-8px)}100%{transform:translateY(0)} }
+
+    .marquee {
+      display:flex;
+      gap:1rem;
+      align-items:center;
+      will-change:transform;
+      animation: marquee 18s linear infinite;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* keep marquee pausable on hover/focus */
+    .marquee-wrap:hover .marquee,
+    .marquee-wrap:focus-within .marquee { animation-play-state: paused; }
+
+    /* simple svg draw */
+    .stroke-draw { stroke-dasharray: 200; stroke-dashoffset: 200; animation: draw 1s ease forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    /* video thumbnail mask */
+    .video-thumb { background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.22)); }
+    .play-btn {
+      width:56px; height:56px; border-radius:999px; background:white; display:inline-flex; align-items:center; justify-content:center;
+      box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+    }
+  </style>
+
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-      <div class="space-y-4 sm:space-y-6">
-        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
-          Build skills. Teach others. Grow together.
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      {{-- left column: headline + CTA + small media --}}
+      <div class="space-y-6">
+        <div class="inline-flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold">LMS — Live</span>
+          <span class="text-xs text-gray-500">Open • Secure • Collaborative</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+          Teach. Learn. Launch.  
+          <span class="block text-indigo-600 mt-1">Powerful courses made simple.</span>
         </h1>
 
-        <p class="text-gray-600 dark:text-gray-300 text-sm sm:text-base lg:text-lg max-w-xl">
-          A modern, free LMS built with Laravel, Tailwind and Alpine. Create courses, add notes, schedule sessions, and connect with learners — everything you need to run online education.
+        <p class="text-gray-600 max-w-xl">
+          Run live classes, publish resources, and track learner progress — a modern LMS built with web-first design and real-time features. Fast to set up, easy to scale.
         </p>
 
-        <div class="flex flex-col sm:flex-row sm:items-center sm:gap-3 gap-3">
-          <a href="{{ $studentRegisterUrl }}" class="w-full sm:w-auto text-center inline-flex items-center justify-center px-4 py-3 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm text-sm sm:text-base">
-            Get started (Student)
-          </a>
-          <a href="{{ $trainerRegisterUrl }}" class="w-full sm:w-auto text-center inline-flex items-center justify-center px-4 py-3 rounded-md bg-green-600 text-white hover:bg-green-700 shadow-sm text-sm sm:text-base">
-            Apply as Trainer
-          </a>
-          <a href="{{ $loginUrl }}" class="w-full sm:w-auto text-center inline-flex items-center justify-center px-4 py-3 rounded-md border hover:bg-gray-50 dark:hover:bg-white/5 text-sm sm:text-base">
-            Login
-          </a>
+        <div class="flex flex-wrap gap-3">
+          <a href="{{ $studentRegisterUrl }}" class="inline-flex items-center px-5 py-3 rounded-md bg-indigo-600 text-white font-medium shadow">Get started (Student)</a>
+          <a href="{{ $trainerRegisterUrl }}" class="inline-flex items-center px-5 py-3 rounded-md bg-white border border-gray-200 text-gray-700 font-medium shadow-sm">Apply as Trainer</a>
+          <a href="{{ $loginUrl }}" class="inline-flex items-center px-4 py-3 rounded-md text-sm text-gray-600">Login</a>
         </div>
 
-        <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 max-w-md">
-          Trainers require admin approval. You will be notified once approved.
-        </p>
-      </div>
+        {{-- small live preview + video embed control --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+          <div class="rounded-lg border overflow-hidden bg-white shadow-sm p-3 flex items-center gap-3">
+            {{-- live miniature: animated inline SVG "device" --}}
+            <div class="w-20 h-12 rounded-md bg-gradient-to-br from-indigo-50 to-teal-50 flex items-center justify-center blob-float shrink-0">
+              <svg width="56" height="34" viewBox="0 0 56 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="1.5" y="1.5" width="53" height="31" rx="6" stroke="#C7D2FE" stroke-width="2" />
+                <path class="stroke-draw" d="M14 20 C18 14, 38 14, 42 20" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="28" cy="14" r="6" fill="#A78BFA" fill-opacity="0.12" stroke="#7C3AED" stroke-width="1.2"/>
+                <polygon points="26,12 26,16 30,14" fill="#7C3AED" />
+              </svg>
+            </div>
 
-      <div class="space-y-4">
-        <div class="rounded-2xl p-4 sm:p-6 shadow bg-white dark:bg-gray-800 border">
-          <h3 class="font-semibold text-base sm:text-lg">Quick access</h3>
-          <ul class="mt-3 space-y-2 sm:space-y-3">
-            <li>
-              <a href="{{ $studentRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
-                <div>
-                  <div class="font-medium">Register — Student</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Join and enroll in courses</div>
-                </div>
-                <svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a href="{{ $trainerRegisterUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
-                <div>
-                  <div class="font-medium">Apply — Trainer</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Create courses after admin approval</div>
-                </div>
-                <svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a href="{{ $loginUrl }}" class="flex justify-between items-center px-3 py-2 rounded hover:bg-gray-50 dark:hover:bg-white/5">
-                <div>
-                  <div class="font-medium">Login</div>
-                  <div class="text-xs text-gray-500 dark:text-gray-400">Go to your dashboard</div>
-                </div>
-                <svg class="w-5 h-5 text-gray-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
-          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div class="text-lg font-semibold">Trusted by</div>
-            <div class="flex gap-3 items-center justify-start sm:justify-end">
-              <div class="h-8 w-20 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">Logo</div>
-              <div class="h-8 w-20 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">Logo</div>
-              <div class="h-8 w-20 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">Logo</div>
+            <div class="flex-1">
+              <div class="text-sm font-semibold">Live demo</div>
+              <div class="text-xs text-gray-500">Watch a short walk-through of our platform</div>
             </div>
           </div>
+
+          {{-- video: click-to-load iframe (good UX + performance) --}}
+          <div x-data="{ open: false }" class="rounded-lg overflow-hidden bg-black/5 border shadow-sm">
+            <template x-if="!open">
+              <button @click="open = true" class="w-full aspect-[16/9] video-thumb relative flex items-center justify-center focus:outline-none">
+                {{-- lazy thumbnail using YouTube image --}}
+                <img src="https://img.youtube.com/vi/{{ $youtubeId }}/maxresdefault.jpg"
+                     alt="Intro video"
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+                <span class="play-btn" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3v18l15-9L5 3z"/></svg>
+                </span>
+              </button>
+            </template>
+
+            <template x-if="open">
+              <div class="w-full aspect-[16/9]">
+                <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $youtubeId }}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Intro video"></iframe>
+              </div>
+            </template>
+          </div>
+        </div>
+
+      </div>
+
+      {{-- right column: big animated visual + rolling icons + 2 bold write-ups --}}
+      <div class="space-y-6">
+        <div class="rounded-2xl p-6 bg-white shadow-lg border relative overflow-hidden">
+          {{-- large vector "live image" (animated blobs + screen) --}}
+          <div class="w-full h-56 sm:h-64 relative">
+            <svg viewBox="0 0 600 360" class="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <defs>
+                <linearGradient id="A" x1="0" x2="1"><stop offset="0" stop-color="#06b6d4"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
+              </defs>
+
+              <g transform="translate(0,0)">
+                <ellipse cx="320" cy="200" rx="210" ry="100" fill="url(#A)" opacity="0.09" class="blob-float" />
+                <rect x="60" y="40" width="260" height="180" rx="16" fill="white" stroke="#E6E9F2" stroke-width="1.5" />
+                <rect x="340" y="70" width="180" height="120" rx="12" fill="#F8FAFF" stroke="#E6E9F2" />
+                <circle cx="420" cy="130" r="28" fill="#7C3AED" opacity="0.12" />
+                <path d="M90 110 H300" stroke="#E6E9F2" stroke-width="5" stroke-linecap="round" />
+                <path d="M90 140 H240" stroke="#E6E9F2" stroke-width="5" stroke-linecap="round" />
+                <g transform="translate(360,90)">
+                  <path d="M16 6 L46 26 L16 46 V6 Z" fill="#06b6d4" />
+                </g>
+              </g>
+            </svg>
+
+            {{-- small floating badge top-right --}}
+            <div class="absolute top-4 right-4 bg-white/90 px-3 py-1 rounded-full text-xs font-semibold shadow-sm">Live • 3 ongoing</div>
+          </div>
+
+          {{-- rolling icons / images marquee --}}
+          <div class="mt-4 marquee-wrap overflow-hidden">
+            <div class="marquee" aria-hidden="true" style="width:200%">
+              {{-- repeat sequence twice to allow smooth loop --}}
+              @php
+                $items = [
+                  ['type'=>'icon','svg'=> '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 20v-6M12 4v6" /></svg>'],
+                  ['type'=>'icon','svg'=> '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9" stroke-width="2"/></svg>'],
+                  ['type'=>'img','src'=> asset("img/earth.svg")],
+                  ['type'=>'icon','svg'=> '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18M3 12h18M3 17h18" stroke-width="2"/></svg>'],
+                  ['type'=>'img','src'=> asset("img/laptop-technology-streaming-video-learning-education.svg")],
+                  ['type'=>'icon','svg'=> '<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2"/></svg>'],
+                ];
+              @endphp
+
+              @for($r=0;$r<2;$r++)
+                @foreach($items as $it)
+                  <div class="flex-shrink-0 inline-flex items-center gap-3 px-4 py-2">
+                    @if($it['type']==='icon')
+                      <div class="w-12 h-12 rounded bg-white shadow-sm flex items-center justify-center border">
+                        {!! $it['svg'] !!}
+                      </div>
+                    @else
+                      <div class="w-12 h-12 rounded overflow-hidden border shadow-sm">
+                        <img src="{{ $it['src'] }}" alt="sample" class="w-full h-full object-cover">
+                      </div>
+                    @endif
+                  </div>
+                @endforeach
+              @endfor
+            </div>
+          </div>
+
+          {{-- two bold write-up cards below the roll (very bold titles) --}}
+          <div class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <article class="bg-white border rounded-lg p-5 shadow-sm flex gap-4 items-start">
+              <img src="{{ asset('img/wink.svg') }}" alt="Feature 1" class="w-20 h-20 object-cover rounded-md flex-shrink-0">
+              <div>
+                <h3 class="text-lg font-extrabold tracking-tight">Create courses that convert</h3>
+                <p class="text-sm text-gray-600 mt-1">Use rich resources, quizzes and certificates to keep learners engaged and successful.</p>
+              </div>
+            </article>
+
+            <article class="bg-white border rounded-lg p-5 shadow-sm flex gap-4 items-start">
+              <img src="{{ asset('img/programming-process.svg') }}" alt="Feature 2" class="w-20 h-20 object-cover rounded-md flex-shrink-0">
+              <div>
+                <h3 class="text-lg font-extrabold tracking-tight">Host live sessions</h3>
+                <p class="text-sm text-gray-600 mt-1">Schedule live classes with attendance tracking and recordings for replay.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        {{-- small helper CTA row (optional) --}}
+        <div class="flex gap-3">
+          <a href="{{ $studentRegisterUrl }}" class="inline-flex items-center px-4 py-2 rounded-md bg-indigo-600 text-white">Join students</a>
+          <a href="{{ $trainerRegisterUrl }}" class="inline-flex items-center px-4 py-2 rounded-md border">Become trainer</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-{{-- FEATURES --}}
-<section class="py-10 sm:py-12 md:py-16 bg-transparent">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-2xl mx-auto">
-      <h2 class="text-2xl sm:text-3xl font-semibold">Everything you need to run online learning</h2>
-      <p class="mt-2 text-gray-600 dark:text-gray-300 text-sm sm:text-base">Manage courses, students, sessions and content with a clean, focused interface.</p>
-    </div>
 
-    <div class="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-5 sm:p-6 shadow-sm">
-        <div class="h-10 w-10 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center font-semibold">A</div>
-        <h3 class="mt-4 font-medium">Course Builder</h3>
-        <p class="mt-2 text-sm text-gray-500">Create structured lessons with quizzes, resources and attachments.</p>
-      </div>
-
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-5 sm:p-6 shadow-sm">
-        <div class="h-10 w-10 rounded-md bg-green-50 text-green-600 flex items-center justify-center font-semibold">T</div>
-        <h3 class="mt-4 font-medium">Live Sessions</h3>
-        <p class="mt-2 text-sm text-gray-500">Schedule Zoom or streaming sessions and manage attendees.</p>
-      </div>
-
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-5 sm:p-6 shadow-sm">
-        <div class="h-10 w-10 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center font-semibold">R</div>
-        <h3 class="mt-4 font-medium">Reports & Analytics</h3>
-        <p class="mt-2 text-sm text-gray-500">Track student progress and course performance with simple dashboards.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-{{-- STATS / TRUST --}}
-<section class="py-8 sm:py-12">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 items-stretch text-center">
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-6 flex flex-col justify-center">
-        <div class="text-3xl sm:text-4xl font-extrabold">10k+</div>
-        <div class="text-sm text-gray-500">Students</div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-6 flex flex-col justify-center">
-        <div class="text-3xl sm:text-4xl font-extrabold">2k+</div>
-        <div class="text-sm text-gray-500">Courses</div>
-      </div>
-      <div class="bg-white dark:bg-gray-800 border rounded-lg p-6 flex flex-col justify-center">
-        <div class="text-3xl sm:text-4xl font-extrabold">4.9</div>
-        <div class="text-sm text-gray-500">Avg. rating</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-{{-- TESTIMONIALS --}}
-<section class="py-8 sm:py-12 bg-transparent">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-xl sm:">What our community says</h3>
-      <p class="mt-2 text-gray-600 dark:text-gray-300">Real stories from learners and instructors using the platform.</p>
-
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <blockquote class="bg-white dark:bg-gray-800 border rounded-lg p-4 shadow-sm">
-          <p class="text-sm text-gray-700 dark:text-gray-200">"Great platform — I launched my first course in weeks."</p>
-          <footer class="mt-3 text-xs text-gray-500">— Alex, Instructor</footer>
-        </blockquote>
-
-        <blockquote class="bg-white dark:bg-gray-800 border rounded-lg p-4 shadow-sm">
-          <p class="text-sm text-gray-700 dark:text-gray-200">"Students love the simple interface and progress tracking."</p>
-          <footer class="mt-3 text-xs text-gray-500">— Maria, Student</footer>
-        </blockquote>
-
-        <blockquote class="bg-white dark:bg-gray-800 border rounded-lg p-4 shadow-sm">
-          <p class="text-sm text-gray-700 dark:text-gray-200">"Reliable and lightweight — exactly what we needed."</p>
-          <footer class="mt-3 text-xs text-gray-500">— Noah, Trainer</footer>
-        </blockquote>
-      </div>
-    </div>
-  </div>
-</section>
-
-{{-- CALL TO ACTION --}}
-<section class="py-8 sm:py-12">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="rounded-2xl bg-indigo-600 text-white p-6 sm:p-10 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="text-center sm:text-left">
-        <h4 class="text-lg sm:text-xl font-semibold">Ready to start teaching or learning?</h4>
-        <p class="mt-2 text-sm sm:text-base text-indigo-100 max-w-xl mx-auto sm:mx-0">Create your account and join the community — it's free to get started.</p>
-      </div>
-      <div class="flex w-full sm:w-auto gap-3 mt-3 sm:mt-0">
-        <a href="{{ $studentRegisterUrl }}" class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 rounded-md bg-white text-indigo-600 hover:opacity-95 shadow-sm">Get started</a>
-        <a href="{{ $trainerRegisterUrl }}" class="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 rounded-md border border-white/30 text-white hover:bg-white/10">Apply</a>
-      </div>
-    </div>
-  </div>
-</section>
 @endsection

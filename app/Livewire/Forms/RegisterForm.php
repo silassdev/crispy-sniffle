@@ -16,6 +16,9 @@ class RegisterForm extends Component
     public $password_confirmation = '';
     public $role = 'student';
 
+    // fallback payload for older Livewire versions
+    public $toast = null;
+
     protected $rules = [
         'name' => 'required|string|max:190',
         'email' => 'required|email|unique:users,email',
@@ -37,11 +40,21 @@ class RegisterForm extends Component
         try {
             $this->validate();
         } catch (\Illuminate\Validation\ValidationException $e) {
-            $this->dispatch('app-toast', [
+            // repopulate Livewire error bag so @error() works
+            $messages = $e->validator->errors()->getMessages();
+            foreach ($messages as $field => $msgs) {
+                foreach ($msgs as $m) {
+                    $this->addError($field, $m);
+                }
+            }
+
+            $this->sendToast([
                 'title' => 'Validation error',
                 'message' => implode(' - ', $e->validator->errors()->all()),
                 'ttl' => 8000,
+                'type' => 'error',
             ]);
+
             return;
         }
 
@@ -58,22 +71,26 @@ class RegisterForm extends Component
             ]);
         } catch (\Throwable $e) {
             Log::error('RegisterForm::create_failed', ['error' => $e->getMessage()]);
-            $this->dispatch('app-toast', [
+
+            $this->sendToast([
                 'title' => 'Error',
                 'message' => 'Unable to create account. Try again later.',
                 'ttl' => 8000,
+                'type' => 'error',
             ]);
             return;
         }
 
-        // Trainer flow: show toast and stay on page
+        // Trainer flow: show toast and reset the form (stay on page)
         if ($roleVal === User::ROLE_TRAINER) {
-            $this->dispatch('app-toast', [
+            $this->sendToast([
                 'title' => 'Application submitted',
                 'message' => 'An administrator will review your profile.',
                 'ttl' => 8000,
+                'type' => 'success',
             ]);
-            $this->reset();
+
+            $this->reset(); // clear fields & validation
             return;
         }
 
@@ -82,12 +99,33 @@ class RegisterForm extends Component
             Auth::login($user);
         } catch (\Throwable $e) {
             Log::warning('RegisterForm::auto_login_failed', ['error' => $e->getMessage()]);
-            // even if login fails, we'll redirect so user can re-login; keep behavior consistent
+            // Continue: we'll redirect regardless
         }
 
-        // Do NOT dispatch a Livewire toast here — return a server redirect with session flash
         return redirect()->route('student.dashboard')
             ->with('success', 'Account created — welcome!');
+    }
+
+    /**
+     * Try multiple ways to notify the browser:
+     * 1. dispatchBrowserEvent (modern Livewire)
+     * 2. emit (common Livewire)
+     * 3. fallback to setting $this->toast which the blade will output as inline script
+     */
+    protected function sendToast(array $payload)
+    {
+        if (method_exists($this, 'dispatchBrowserEvent')) {
+            $this->dispatchBrowserEvent('app-toast', $payload);
+            return;
+        }
+
+        if (method_exists($this, 'emit')) {
+            $this->emit('app-toast', $payload);
+            return;
+        }
+
+        // fallback: store the payload so the component view can render an inline script
+        $this->toast = $payload;
     }
 
     public function render()

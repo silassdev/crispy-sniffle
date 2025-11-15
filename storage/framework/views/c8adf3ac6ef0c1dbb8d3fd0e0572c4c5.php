@@ -30,7 +30,7 @@ unset($__defined_vars, $__key, $__value); ?>
 
 <div class="flex flex-col gap-3">
     <h2 class="text-lg font-semibold">Routing parameters</h2>
-    <!--[if BLOCK]><![endif]--><?php if($routeParameters): ?>
+    <?php if($routeParameters): ?>
     <div class="bg-white dark:bg-white/[2%] border border-neutral-200 dark:border-neutral-800 rounded-md overflow-x-auto p-5 text-sm font-mono shadow-xs">
         <?php if (isset($component)) { $__componentOriginal12cb286571f553eebcbe98210b217f94 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal12cb286571f553eebcbe98210b217f94 = $attributes; } ?>
@@ -74,6 +74,6 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginal612ffe32146e3bd2ac6ba6076cca9520; ?>
 <?php unset($__componentOriginal612ffe32146e3bd2ac6ba6076cca9520); ?>
 <?php endif; ?>
-    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+    <?php endif; ?>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/routing-parameter.blade.php ENDPATH**/ ?>

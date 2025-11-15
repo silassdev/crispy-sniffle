@@ -132,14 +132,14 @@
       <div class="md:text-right">
         <h3 class="text-white text-lg font-semibold mb-4">About</h3>
         <p class="text-sm text-slate-300 mb-4">Building clean, fast Laravel apps & custom APIs — available for hire.</p>
-        <div class="text-xs text-slate-500">© {{ date('Y') }} All Pilar</div>
+        <div class="text-xs text-slate-500">© {{ date('Y') }} </div>
       </div>
     </div>
 
     {{-- Bottom bar --}}
     <div class="mt-10 border-t border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-6 h-6">
+        <img src="{{ asset('img/igniscode.svg') }}" alt="Logo" class="w-6 h-6">
         <span class="text-sm text-slate-400">{{ config('app.name') }}</span>
       </div>
 

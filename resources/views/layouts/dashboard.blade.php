@@ -25,34 +25,25 @@
     <div class="flex items-center p-4">
       <a href="{{ auth()->check() ? (auth()->user()->isAdmin() ? route('admin.dashboard') : (auth()->user()->isTrainer() ? route('trainer.dashboard') : route('student.dashboard'))) : route('home') }}" 
          class="flex items-center gap-2">
-        <img src="{{ asset('img/icon.jpg') }}" class="w-8 h-8" alt="logo">
+        <img src="{{ asset('img/igniscode.svg') }}" class="w-8 h-8" alt="logo">
       </a>
     </div>
 
-    {{-- menu --}}
-    <div class="flex-1 overflow-auto">
-      @if(auth()->check() && auth()->user()->isAdmin())
-        @include('dashboards.partials.sidebar', ['role' => 'admin', 'open' => true])
-      @elseif(auth()->check() && auth()->user()->isTrainer())
-        @include('dashboards.partials.sidebar', ['role' => 'trainer', 'open' => true])
-      @else
-        @include('dashboards.partials.sidebar', ['role' => 'student', 'open' => true])
-      @endif
-    </div>
+  <div class="flex-1 overflow-auto">
+  @php
+    $role = auth()->check() && method_exists(auth()->user(), 'isAdmin') && auth()->user()->isAdmin()
+        ? 'admin'
+        : (auth()->check() && method_exists(auth()->user(), 'isTrainer') && auth()->user()->isTrainer() ? 'trainer' : 'student');
+  @endphp
+
+  <livewire:sidebar :role="$role" />
+</div>
 
     <div class="p-4 border-t bg-white space-y-2">
-  {{-- logout --}}
-  <a href="{{ route('logout') }}" 
-     class="flex items-center gap-2 p-2 rounded hover:bg-gray-100">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h6a2 2 0 012 2v1" />
-    </svg>
-    <span x-show="open" x-transition>Logout</span>
-  </a>
 
-  {{-- collapse/expand toggle --}}
-  <button @click="open = !open" 
+
+
+   <button @click="open = !open" 
           class="w-full flex items-center justify-center p-2 rounded hover:bg-gray-100">
     <svg x-show="open" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -82,13 +73,5 @@
   </div>
 
   @livewireScripts
-  <script>
-    // keep small helper for toggling sections or livewire events if needed
-    window.addEventListener('app-toast', e => {
-      const d = e.detail ?? e;
-      // implement your toast show logic or use a global toast component
-      console.info('TOAST', d);
-    });
-  </script>
 </body>
 </html>

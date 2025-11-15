@@ -1,61 +1,110 @@
-<div id="login-form-root" class="w-full max-w-md mx-auto">
-  <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden">
-    {{-- top hero --}}
-    <div class="px-6 py-6 sm:px-8 sm:py-8">
+<div id="login-modal-root"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md"
+     role="dialog"
+     aria-modal="true"
+     style="-webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);">
+
+  <div class="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white/90 dark:bg-gray-900/80 grid grid-cols-1 md:grid-cols-2">
+    <!-- Left hero (desktop only) -->
+    <div class="hidden md:flex flex-col justify-center gap-6 p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
       <div class="flex items-center gap-3">
+        <img src="{{ asset('img/igniscode.svg') }}" alt="Logo" class="w-12 h-12">
+        <div>
+          <h3 class="text-xl font-semibold">Welcome back</h3>
+          <p class="text-sm opacity-90">Sign in to continue to your dashboard</p>
+        </div>
+      </div>
+
+      <div class="mt-4 text-sm leading-relaxed opacity-45">
+        <p>Secure access, fast sign in, and social login options.</p>
+      </div>
+
+      <div class="mt-auto">
+        <div class="w-full h-36 rounded-lg bg-white/10 flex items-center justify-center text-white/80">
+          <span class="text-sm">Illustration or marketing message</span>
+        </div>
       </div>
     </div>
 
-    <div class="px-6 pb-6 sm:px-8 sm:pb-8">
-      <form wire:submit.prevent="submit" method="POST">
-       @csrf
+    <!-- Right form -->
+    <div class="p-6 sm:p-10">
+      <button type="button"
+              id="login-modal-close"
+              class="absolute right-4 top-4 md:top-6 text-gray-500 hover:text-gray-700 dark:text-gray-300"
+              aria-label="Close">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+
+      <form wire:submit.prevent="submit" method="POST" id="login-form" novalidate>
+        @csrf
         <div class="space-y-4">
-          {{-- email --}}
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
-            <input id="email" wire:model.defer="email" type="email" required autofocus
-                   class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300"
+          <!-- email -->
+        <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+        <input
+              id="email"
+              name="email"
+              type="email"
+              wire:model.defer="email"
+              required
+              autofocus
+              @keydown.enter.prevent="$wire.call('focusPassword')"
+              class="mt-1 block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+              placeholder="you@example.com"
             />
             @error('email') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
           </div>
-
-          {{-- password + show toggle --}}
-          <div x-data="{ show: false }" class="relative">
+        
+          <!-- password + show toggle -->
+        <div class="relative">
   <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+
   <input
     id="password"
     name="password"
+    type="password"
     wire:model.defer="password"
-    :type="show ? 'text' : 'password'"
-    autocomplete="current-password"             
-    class="mt-1 block w-full rounded-lg border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 pr-10"
+    autocomplete="current-password"
+    class="mt-1 block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-3 pr-12 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+    placeholder="••••••••"
   />
 
-  
+  <button
+    type="button"
+    id="toggle-password"
+    class="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded text-gray-500 hover:text-gray-700 focus:outline-none"
+    aria-label="Show password"
+  >
+    <svg id="icon-show" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <!-- eye icon path here -->
+    </svg>
+  </button>
 
-      @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
-    </div>
-     @if($errors->has('credentials'))
-            <div class="text-sm text-red-600">{{ $errors->first('credentials') }}</div>
-          @endif
-          @if($errors->has('too_many_attempts'))
-            <div class="text-sm text-red-600">{{ $errors->first('too_many_attempts') }}</div>
-          @endif
+  @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+</div>
 
-          {{-- options row --}}
+
+          <!-- options -->
           <div class="flex items-center justify-between">
             <label class="inline-flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <input type="checkbox" wire:model.defer="remember" class="rounded border-gray-200 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500" />
+              <input type="checkbox" name="remember" wire:model.defer="remember" class="rounded border-gray-200 dark:border-gray-700 text-indigo-600 focus:ring-indigo-500" />
               Remember me
             </label>
 
             <a href="{{ route('password.request') }}" class="text-sm text-indigo-600 hover:underline">Forgot password?</a>
           </div>
 
-          {{-- primary actions --}}
+          <!-- actions -->
           <div class="grid grid-cols-1 gap-3">
-            <button type="submit" wire:loading.attr="disabled"
-                    class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+            <button
+              type="submit"
+              id="submit-button"
+              wire:loading.attr="disabled"
+              class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-xl shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            >
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
@@ -64,31 +113,29 @@
             </button>
 
             <div class="flex items-center justify-center gap-3 text-sm text-gray-500">
-              <span class="w-24 h-px bg-gray-200 inline-block"></span>
+              <span class="w-20 h-px bg-gray-200 inline-block"></span>
               <span>Or continue with</span>
-              <span class="w-24 h-px bg-gray-200 inline-block"></span>
+              <span class="w-20 h-px bg-gray-200 inline-block"></span>
             </div>
 
-            {{-- social buttons --}}
+            <!-- social buttons -->
             <div class="grid grid-cols-2 gap-3">
-              <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-white/5">
-                {{-- use icon component: resources/views/components/icons/google.blade.php --}}
+              <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border bg-white hover:bg-gray-50 shadow-sm">
                 @if ( view()->exists('components.icons.google') )
                   @include('components.icons.google', ['class' => 'w-5 h-5'])
                 @else
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"></svg>
                 @endif
                 <span class="text-sm text-gray-700">Google</span>
               </a>
 
-              <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-white/5">
-                {{-- use icon component: resources/views/components/icons/github.blade.php --}}
+              <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border bg-gray-800 hover:bg-gray-900 text-white shadow-sm">
                 @if ( view()->exists('components.icons.github') )
                   @include('components.icons.github', ['class' => 'w-5 h-5'])
                 @else
-                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><!-- fallback --></svg>
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"></svg>
                 @endif
-                <span class="text-sm text-gray-700">GitHub</span>
+                <span class="text-sm">GitHub</span>
               </a>
             </div>
 
@@ -101,5 +148,40 @@
       </form>
     </div>
   </div>
-
 </div>
+
+
+
+@if($toast)
+  @php
+    // Ensure safe JS values
+    $title = addslashes($toast['title'] ?? '');
+    $message = addslashes($toast['message'] ?? '');
+    $ttl = (int) ($toast['ttl'] ?? 5000);
+    $type = addslashes($toast['type'] ?? 'info');
+    $event = $toast['event'] ?? null;
+  @endphp
+
+  <script>
+    (function(){
+      try {
+        // If this is a toast payload, call APP_TOAST
+        @if(isset($toast['title']) || isset($toast['message']))
+          if (window.APP_TOAST && typeof window.APP_TOAST.push === 'function') {
+            window.APP_TOAST.push("{{ $title }}", "{{ $message }}", "{{ $type }}", {{ $ttl }});
+          } else {
+            console.log('TOAST (fallback):', "{{ $title }}", "{{ $message }}", "{{ $type }}", {{ $ttl }});
+          }
+        @endif
+
+        // If the fallback requested a focus-password event, handle it here
+        @if($event === 'focus-password')
+          const pwd = document.getElementById('password');
+          if (pwd) pwd.focus();
+        @endif
+      } catch (err) {
+        console.warn('Fallback toast handler error', err);
+      }
+    })();
+  </script>
+@endif

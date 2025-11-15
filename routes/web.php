@@ -1,23 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Public controllers
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+
+// Admin controllers
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboard;
-use App\Http\Controllers\Trainer\DashboardController as TrainerDashboard;
-use App\Http\Controllers\Student\DashboardController as StudentDashboard;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\ViewAsController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\AdminController;
 
+// Trainer & Student dashboards
+use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
+use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 
-if (file_exists(__DIR__.'/auth.php')) {
-    require __DIR__.'/auth.php';
+if (file_exists(__DIR__ . '/auth.php')) {
+    require __DIR__ . '/auth.php';
 }
 
 /*
@@ -52,81 +57,84 @@ Route::prefix('password')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Auth Routes
+| Admin Auth + Protected Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')->group(function () {
-    Route::post('login', [AuthController::class, 'login'])->name('admin.login');
-    Route::post('register', [AuthController::class, 'register'])->name('admin.register');
-    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('admin.logout');
-    
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Auth (public)
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
+    // Invite accept (public)
+    Route::get('invite/accept/{token}', fn (string $token) => view('admin.invites.accept', ['token' => $token]))
+        ->name('invite.accept');
 
     // Protected admin routes
     Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {
-        Route::get('dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
+        // Dashboard (named admin.dashboard)
+        Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // Trainer management
-        Route::get('trainers', [TrainerController::class, 'index'])->name('admin.trainers');
-        Route::get('trainers/{id}', [TrainerController::class, 'show'])->name('admin.trainer.view');
-        Route::get('trainers/{id}/edit', [TrainerController::class, 'edit'])->name('admin.trainer.edit');
+        Route::get('trainers', [TrainerController::class, 'index'])->name('trainers.index');
+        Route::get('trainers/{id}', [TrainerController::class, 'show'])->name('trainers.show');
+        Route::get('trainers/{id}/edit', [TrainerController::class, 'edit'])->name('trainers.edit');
 
-        // Students management
-    Route::get('students', [StudentController::class, 'index'])->name('admin.students');
-    Route::get('students/{id}', [StudentController::class, 'show'])->name('admin.student.view');
-    Route::get('students/{id}/edit', [StudentController::class, 'edit'])->name('admin.student.edit');
+        // Student management
+        Route::get('students', [StudentController::class, 'index'])->name('students.index');
+        Route::get('students/{id}', [StudentController::class, 'show'])->name('students.show');
+        Route::get('students/{id}/edit', [StudentController::class, 'edit'])->name('students.edit');
 
-    // Admins management
-    Route::get('admins', [AdminController::class, 'index'])->name('admin.admins');
-    Route::get('admins/{id}', [AdminController::class, 'show'])->name('admin.admin.view');
-    Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admin.admin.edit');
+        // Admins management
+        Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
+        Route::get('admins/{id}', [AdminController::class, 'show'])->name('admins.show');
+        Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
 
-    // Community
-    Route::get('community', fn () => view('admin.community'))->name('admin.community');
-
-    // Comments
-    Route::get('comments', fn () => view('admin.comments'))->name('admin.comments');
-
-    // Posts
-    Route::get('posts', fn () => view('admin.posts'))->name('admin.posts');
-
-    // Feedback
-    Route::get('feedback', fn () => view('admin.feedback'))->name('admin.feedback');
-
-    // Other actions
-    Route::get('other-actions', fn () => view('admin.other-actions'))->name('admin.other-actions');
+        // Simple views
+        Route::view('community', 'admin.community')->name('community');
+        Route::view('comments', 'admin.comments')->name('comments');
+        Route::view('posts', 'admin.posts')->name('posts');
+        Route::view('feedback', 'admin.feedback')->name('feedback');
+        Route::view('other-actions', 'admin.other-actions')->name('other-actions');
     });
-
-    // Invite accept (public)
-    Route::get('invite/accept/{token}', fn ($token) => view('admin.invites.accept', ['token' => $token]))
-        ->name('admin.invite.accept');
 });
 
-Route::post('admin/view-as', [ViewAsController::class, 'set'])->name('admin.view-as')->middleware(['auth','is_admin']);
-Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])->name('admin.view-as.clear')->middleware(['auth','is_admin']);
+// Admin “view as” (keep middleware consistent; using EnsureUserIsAdmin if you have it)
+Route::post('admin/view-as', [ViewAsController::class, 'set'])
+    ->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])
+    ->name('admin.view-as');
 
+Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])
+    ->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])
+    ->name('admin.view-as.clear');
 
 /*
 |--------------------------------------------------------------------------
 | Trainer Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('trainer')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])->group(function () {
-    Route::get('dashboard', [TrainerDashboard::class, 'index'])->name('trainer.dashboard');
-    Route::get('courses', fn () => view('trainer.courses'))->name('trainer.courses');
-});
+Route::prefix('trainer')
+    ->name('trainer.')
+    ->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])
+    ->group(function () {
+        Route::get('dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
+        Route::view('courses', 'trainer.courses')->name('courses');
+    });
 
-Route::get('/trainer/pending', fn () => view('trainer.pending', [
+// Pending trainer (fix your middleware name if it’s custom)
+Route::get('trainer/pending', fn () => view('trainer.pending', [
     'email' => session('trainer_email'),
-]))->middleware('pending-')->name('trainer.pending');
+]))->middleware('pending-trainer')->name('trainer.pending');
 
 /*
 |--------------------------------------------------------------------------
 | Student Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('student')->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])->group(function () {
-    Route::get('dashboard', [StudentDashboard::class, 'index'])->name('student.dashboard');
-
-    Route::get('courses', fn () => view('student.courses'))->name('student.courses');
-});
+Route::prefix('student')
+    ->name('student.')
+    ->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
+    ->group(function () {
+        Route::get('dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
+        Route::view('courses', 'student.courses')->name('courses');
+    });

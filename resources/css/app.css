@@ -2,63 +2,9 @@
 @talwind components;
 @tailwind utilities;
 
-.toast {
-  animation: slide-in 0.3s ease, fade-out 0.3s ease-out;
-}
-
-@keyframes slide-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-
-
-/* Hover */
+.dash-item { transition: background-color .12s, color .12s; }
 .dash-item:hover { background-color: rgba(15,23,42,0.04); }
-
-/* Base active style */
-.dash-item.dash-active {
-  color: white !important;
-}
-
-/* Role-specific active backgrounds (tuned to your earlier color choices) */
-aside[data-role="admin"] .dash-item.dash-active {
-  background-color: #4F46E5; /* indigo-600 */
-  color: white;
-}
-aside[data-role="trainer"] .dash-item.dash-active {
-  background-color: #10B981; /* emerald-500 */
-  color: white;
-}
-aside[data-role="student"] .dash-item.dash-active {
-  background-color: #0EA5E9; /* sky-500 */
-  color: white;
-}
-
-/* Ensure SVG icons adopt white color on active */
-aside[data-role="admin"] .dash-item.dash-active svg,
-aside[data-role="trainer"] .dash-item.dash-active svg,
-aside[data-role="student"] .dash-item.dash-active svg {
-  stroke: white;
-  color: white;
-}
-
-/* Keep icon centered when sidebar collapsed (if you use body[data-sidebar-open]) */
-body[data-sidebar-open="false"] .dash-label { display: none !important; }
-body[data-sidebar-open="false"] .dash-item { justify-content: center; }
-
+.dash-item.dash-active { color: white !important; }
+aside[data-role="admin"] .dash-item.dash-active { background-color: #4F46E5; color: white; }
+aside[data-role="trainer"] .dash-item.dash-active { background-color: #10B981; color: white; }
+aside[data-role="student"] .dash-item.dash-active { background-color: #0EA5E9; color: white; }

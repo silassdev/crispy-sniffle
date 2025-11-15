@@ -31,7 +31,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <div class="flex flex-col gap-3">
     <h2 class="text-lg font-semibold">Routing</h2>
     <div class="flex flex-col">
-        <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $routing; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+        <?php $__empty_1 = true; $__currentLoopData = $routing; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
         <div class="flex max-w-full items-baseline gap-2 h-10 text-sm font-mono">
             <div class="uppercase text-neutral-500 dark:text-neutral-400 shrink-0"><?php echo e($key); ?></div>
             <div class="min-w-6 grow h-3 border-b-2 border-dotted border-neutral-300 dark:border-white/20"></div>
@@ -63,7 +63,7 @@ unset($__defined_vars, $__key, $__value); ?>
 <?php $component = $__componentOriginal612ffe32146e3bd2ac6ba6076cca9520; ?>
 <?php unset($__componentOriginal612ffe32146e3bd2ac6ba6076cca9520); ?>
 <?php endif; ?>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endif; ?>
     </div>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\vendor\laravel\framework\src\Illuminate\Foundation\Providers/../resources/exceptions/renderer/components/routing.blade.php ENDPATH**/ ?>
