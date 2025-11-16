@@ -1,10 +1,13 @@
-@extends('layouts.dashboard')
+@extends('layouts.app')
 
-@section('title','Admin Dashboard')
-@section('page-title','welcome admin')
 
 @section('content')
+<div class="flex">
 
- <livewire:sidebar :role="session('view_as') ?? (auth()->user()->role ?? 'student')" />
+ <livewire:sidebar :role="auth()->user()->role" />
+
+ <livewire:admin.dashboard-shell />
+
+ </div>
 
 @endsection

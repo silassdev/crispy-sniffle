@@ -22,17 +22,18 @@ class Sidebar extends Component
     // called when dashboard emits the current section
     public function setActiveSection($section)
     {
-        $this->activeSection = $section ?: 'overview';
+        $section = $section ?: 'overview';
+        if ($this->activeSection === $section) {
+            return;
+        }
+        $this->activeSection = $section;
     }
 
     // called from the sidebar view when an item is clicked
     public function showSection(string $section)
     {
-        // tell the DashboardShell to switch section
+        $this->activeSection = $section;
         $this->emitTo('admin.dashboard-shell', 'showSection', $section);
-
-        // optimistic UI: set local active immediately
-        $this->setActiveSection($section);
     }
 
     public function render()

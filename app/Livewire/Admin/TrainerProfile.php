@@ -81,7 +81,7 @@ class TrainerProfile extends Component
             $this->trainer->update(['avatar' => $path]);
         }
 
-        $this->->dispatchBrowserEvent('app-toast', ['title'=>'Saved','message'=>'Trainer profile updated','ttl'=>4000]);
+        $this->dispatchBrowserEvent('app-toast', ['title'=>'Saved','message'=>'Trainer profile updated','ttl'=>4000]);
         $this->loadTrainer();
     }
 

@@ -13,6 +13,7 @@ class DashboardShell extends Component
 
     public $section = 'overview';
     public $perPage = 10;
+    public $role;
 
     // Listen for events
     protected $listeners = [
@@ -23,17 +24,20 @@ class DashboardShell extends Component
 
     public function setSection($name)
 {
+    $name = $name ?: 'overview';
+
     $this->section = $name ?: 'overview';
     $this->resetPage();
 
     // notify the frontend Livewire components
-    $this->dispatch('dashboardSectionChanged', $this->section);
+    $this->emit('dashboardSectionChanged', $this->section);
 
     $this->dispatchBrowserEvent('dashboard:section-changed', ['section' => $this->section]);
 }
 
     public function mount()
     {
+        $this->role = auth()->user()->role ?? 'admin';
         $this->refreshCounters();
 
         $this->dispatch('dashboardSectionChanged', $this->section);
@@ -101,12 +105,8 @@ class DashboardShell extends Component
     }
 
     public function render()
-{
-    // if you moved the view to resources/views/livewire/sidebar.blade.php
-    return view('livewire.sidebar', [
-        'viewAs' => $this->role,
-        'activeSection' => $this->activeSection,
-    ]);
-}
+    {
+        return view('livewire.admin.dashboard-shell');
+    }
 
 }
