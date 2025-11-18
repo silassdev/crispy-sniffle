@@ -2,9 +2,41 @@
 @talwind components;
 @tailwind utilities;
 
+
+
+/* active item */
 .dash-item { transition: background-color .12s, color .12s; }
-.dash-item:hover { background-color: rgba(15,23,42,0.04); }
-.dash-item.dash-active { color: white !important; }
-aside[data-role="admin"] .dash-item.dash-active { background-color: #4F46E5; color: white; }
-aside[data-role="trainer"] .dash-item.dash-active { background-color: #10B981; color: white; }
-aside[data-role="student"] .dash-item.dash-active { background-color: #0EA5E9; color: white; }
+.dash-item.dash-active, .ajax-link.dash-active { color: white !important; }
+
+/* role-specific active bg */
+aside[data-role="admin"] .ajax-link.dash-active { background-color: #4F46E5; color: #fff; }
+aside[data-role="trainer"] .ajax-link.dash-active { background-color: #10B981; color: #fff; }
+aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; color: #fff; }
+
+
+/* collapsed sidebar behavior */
+#admin-sidebar.collapsed { width: 4rem !important; }
+#admin-sidebar.collapsed .sidebar-label { display: none; }
+#admin-sidebar.collapsed nav a { justify-content: center; }
+
+/* active item (role-color applied server-side to header) */
+.ajax-link.dash-active { background-color: #4F46E5; color: #fff; }
+#admin-sidebar[data-role="trainer"] .ajax-link.dash-active { background-color: #10B981; }
+#admin-sidebar[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; }
+
+/* ensure icons color adapts */
+#admin-sidebar .ajax-link svg { stroke: currentColor; color: inherit; }
+#admin-sidebar .ajax-link.dash-active svg { color: white; }
+
+/* donut loader */
+.loader-donut {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 5px solid rgba(255,255,255,0.15);
+  border-top-color: rgba(255,255,255,1);
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#ajax-loader { display: none; }
+#ajax-loader.flex { display: flex; }

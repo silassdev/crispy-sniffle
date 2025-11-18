@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Models\Student;
 
 class StudentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    
+    public function index(Request $request)
+{
+    $perPage = 10;
+    $trainers = \App\Models\User::where('role', \App\Models\User::ROLE_TRAINER)
+        ->orderByDesc('created_at')
+        ->paginate($perPage)
+        ->withQueryString();
+
+    // AJAX -> return fragment only (no layout)
+    if ($request->ajax()) {
+        return view('admin.students.partials.index', compact('students'));
     }
+
+    // Non-AJAX -> full page wrapper (extends layout) which includes the fragment
+    return view('admin.students.index', compact('students'));
+}
 
     /**
      * Show the form for creating a new resource.

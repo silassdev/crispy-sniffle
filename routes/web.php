@@ -2,6 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
+if (file_exists(__DIR__ . '/auth.php')) {
+    require __DIR__ . '/auth.php';
+}
+
+if (file_exists(__DIR__ . '/admin.php')) {
+    require __DIR__ . '/admin.php';
+}
+
 // Public controllers
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
@@ -21,9 +29,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 
-if (file_exists(__DIR__ . '/auth.php')) {
-    require __DIR__ . '/auth.php';
-}
+
 
 /*
 |--------------------------------------------------------------------------

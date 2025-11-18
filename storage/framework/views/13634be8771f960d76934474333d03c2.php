@@ -52,63 +52,123 @@
     <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::scripts(); ?>
 
 
-        <script>
-  (function () {
-    // a single delegated click handler for the modal controls
-    function delegatedClickHandler(e) {
-      const closeBtn = e.target.closest && e.target.closest('#login-modal-close');
-      if (closeBtn) {
-        const root = document.getElementById('login-modal-root');
-        if (root) root.remove();
+     <script>
+(function(){
+  const contentEl = document.getElementById('admin-content');
+  const loader = document.getElementById('ajax-loader');
+  const sidebar = document.getElementById('admin-sidebar');
+  const countersEl = document.getElementById('admin-counters');
+
+  function showLoader() { loader.classList.remove('hidden'); loader.classList.add('flex'); }
+  function hideLoader() { loader.classList.add('hidden'); loader.classList.remove('flex'); }
+
+  // set active class
+  function setActive(sectionName, linkEl){
+    // remove old
+    document.querySelectorAll('.ajax-link.dash-active').forEach(i => i.classList.remove('dash-active'));
+    if (linkEl) linkEl.classList.add('dash-active');
+
+    // role-specific header color: the sidebar header already has classes
+  }
+
+  // fetch counters and render small summary
+  async function fetchCounters(){
+    try {
+      const res = await fetch("<?php echo e(route('admin.counters')); ?>", { headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+      if (!res.ok) return;
+      const data = await res.json();
+      countersEl.innerHTML = `S:${data.students} • T:${data.trainers} • A:${data.admins}`;
+    } catch(e){
+      // ignore
+    }
+  }
+
+  // load a url into #admin-content
+  async function loadUrl(url, sectionName, linkEl = null, push=true){
+    showLoader();
+    try {
+      const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' }});
+      if (!res.ok){
+        // fallback to full reload
+        window.location.href = url;
         return;
       }
-
-      const toggle = e.target.closest && e.target.closest('#toggle-password');
-      if (toggle) {
-        const pwd = document.getElementById('password');
-        if (pwd) {
-          pwd.setAttribute('type', pwd.type === 'password' ? 'text' : 'password');
-          toggle.setAttribute('aria-pressed', String(pwd.type === 'text'));
-        }
-      }
+      const html = await res.text();
+      contentEl.innerHTML = html;
+      setActive(sectionName, linkEl);
+      if (push) history.pushState({ url, section: sectionName }, '', url);
+      // after map, refresh counters
+      fetchCounters();
+    } catch(err){
+      console.error('AJAX load failed', err);
+      window.location.href = url; // degrade to normal nav
+    } finally {
+      hideLoader();
     }
+  }
 
-    // attach once and ensure we re-attach if Livewire re-renders
-    function attachHandlers() {
-      if (!window.__login_modal_handlers_attached) {
-        document.addEventListener('click', delegatedClickHandler);
-        window.__login_modal_handlers_attached = true;
-      }
-    }
+  // bind sidebar links
+  document.querySelectorAll('.ajax-link').forEach(link => {
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      const url = this.dataset.route || this.href;
+      const section = this.dataset.section || null;
+      loadUrl(url, section, this, true);
+    });
+  });
 
-    attachHandlers();
-
-    // Re-attach (no-op if already attached) after Livewire messages are processed.
-    // Works with Livewire v2+ (hook) and a fallback for older versions that might expose an event.
-    if (window.Livewire && typeof Livewire.hook === 'function') {
-      Livewire.hook('message.processed', () => attachHandlers());
-    } else if (window.Livewire && typeof Livewire.on === 'function') {
-      // some older installs emit this event name - it's harmless even if not used
-      Livewire.on('message.processed', () => attachHandlers());
+  // handle back/forward buttons
+  window.addEventListener('popstate', function(e){
+    const state = e.state;
+    if (state && state.url) {
+      loadUrl(state.url, state.section, null, false);
     } else {
-      // last resort: re-run attach after short delays (covers edge cases)
-      setTimeout(() => attachHandlers(), 300);
-      setTimeout(() => attachHandlers(), 1000);
+      // full reload if no state
+      window.location.reload();
+    }
+  });
+
+  // sidebar collapse toggle
+  const toggle = document.getElementById('sidebar-toggle');
+  if (toggle){
+    toggle.addEventListener('click', function(){
+      sidebar.classList.toggle('collapsed');
+    });
+  }
+
+  // initial counters fetch
+  fetchCounters();
+
+  // optionally preload default section (overview) via AJAX
+  // If you prefer server-side initial HTML in admin-content, skip this.
+  // loadUrl("<?php echo e(route('admin.dashboard')); ?>", 'overview', document.querySelector('[data-section="overview"]'), false);
+
+  })();
+
+  document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.getElementById('admin-sidebar');
+  const toggle = document.getElementById('sidebar-toggle');
+  const openIcon = document.getElementById('toggle-open');
+  const closeIcon = document.getElementById('toggle-close');
+
+  if (!sidebar || !toggle) return;
+
+  toggle.addEventListener('click', () => {
+    const collapsed = sidebar.classList.toggle('collapsed');
+
+    // switch the SVGs
+    if (openIcon && closeIcon) {
+      openIcon.classList.toggle('hidden', collapsed);
+      closeIcon.classList.toggle('hidden', !collapsed);
     }
 
-    // Optional: also support the focus-password emitted event (modern Livewire)
-    (function attachFocusListener() {
-      if (window.Livewire && typeof Livewire.on === 'function') {
-        Livewire.on('focus-password', () => {
-          const pwd = document.getElementById('password');
-          pwd?.focus();
-        });
-      } else {
-        // If Livewire can't emit, your fallback inline script already handles focusing
-      }
-    })();
-  })();
-  </script>
+    // a11y
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+  });
+ });
+
+</script>
+
 
 
   <?php echo $__env->yieldPushContent('scripts'); ?>

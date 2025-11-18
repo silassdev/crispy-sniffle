@@ -21,27 +21,33 @@ class DashboardShell extends Component
         'refreshDashboardCounters' => 'refreshCounters',
     ];
 
+ 
+    public function mount()
+   {
+    $this->refreshCounters();
+    // emit initial active section to sidebar (and other listeners)
+    $this->dispatch('dashboardSectionChanged', $this->section);
+    $this->dispatch('dashboard:section-changed', section: $this->section);
+    }
 
     public function setSection($name)
-{
+ {
     $name = $name ?: 'overview';
 
-    $this->section = $name ?: 'overview';
+    if ($this->section === $name) {
+        return;
+    }
+
+    $this->section = $name;
     $this->resetPage();
 
     // notify the frontend Livewire components
-    $this->emit('dashboardSectionChanged', $this->section);
+    $this->dispatch('dashboardSectionChanged', $this->section);
 
-    $this->dispatchBrowserEvent('dashboard:section-changed', ['section' => $this->section]);
+    $this->dispatch('dashboard:section-changed', section: $this->section);
 }
 
-    public function mount()
-    {
-        $this->role = auth()->user()->role ?? 'admin';
-        $this->refreshCounters();
-
-        $this->dispatch('dashboardSectionChanged', $this->section);
-    }
+    
 
 
     /**

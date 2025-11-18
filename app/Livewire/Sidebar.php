@@ -18,8 +18,14 @@ class Sidebar extends Component
     {
         $this->role = $role ?? session('view_as') ?? (auth()->user()->role ?? 'student');
     }
-
-    // called when dashboard emits the current section
+    
+    // called from the sidebar view when an item is clicked
+    public function showSection(string $section)
+    {
+        $this->activeSection = $section;
+        $this->emitTo('admin.dashboard-shell', 'showSection', $section);
+    }
+       
     public function setActiveSection($section)
     {
         $section = $section ?: 'overview';
@@ -29,12 +35,6 @@ class Sidebar extends Component
         $this->activeSection = $section;
     }
 
-    // called from the sidebar view when an item is clicked
-    public function showSection(string $section)
-    {
-        $this->activeSection = $section;
-        $this->emitTo('admin.dashboard-shell', 'showSection', $section);
-    }
 
     public function render()
     {
