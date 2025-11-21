@@ -3,37 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use App\Models\Post;
-use App\Models\AdminInvitation;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Services\DashboardService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    protected DashboardService $service;
+
+    public function __construct(DashboardService $service)
     {
-        return view('admin.dashboard');
+        $this->service = $service;
     }
 
-    // returns counters as JSON for AJAX updates
-    public function counters(): JsonResponse
+    public function index(Request $request)
     {
-        // Safe grouped counts
-        $counts = DB::table('users')
-            ->select('role', DB::raw('count(*) as total'))
-            ->groupBy('role')
-            ->pluck('total', 'role')
-            ->toArray();
+        $counters = $this->service->computeCounters();
 
-        $counters = [
-            'students' => (int) ($counts['student'] ?? 0),
-            'trainers' => (int) ($counts['trainer'] ?? 0),
-            'admins'   => (int) ($counts['admin'] ?? 0),
-            'posts'    => (int) (Post::count() ?? 0),
-            'invites'  => (int) (AdminInvitation::count() ?? 0),
-        ];
+        if ($request->ajax()) {
+            return view('admin.overview.partials.index', compact('counters'));
+        }
 
-        return response()->json($counters);
+        return view('admin.dashboard', compact('counters'));
+    }
+
+    public function counters()
+    {
+        $counters = $this->service->computeCounters();
+
+        return response()->json($counters)
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 }

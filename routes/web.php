@@ -42,7 +42,7 @@ Route::fallback(fn () => response()->view('errors.404', [], 404));
 
 // Blog
 Route::prefix('blogs')->group(function () {
-    Route::get('/', [BlogController::class, 'index'])->name('blogs.index');
+    Route::get('/', [BlogController::class, 'index'])->name('blogs');
     Route::get('{slug}', [BlogController::class, 'show'])->name('blogs.show');
 });
 

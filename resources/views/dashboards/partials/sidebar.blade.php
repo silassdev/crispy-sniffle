@@ -49,10 +49,10 @@
     <nav class="space-y-1 flex-1 overflow-auto">
       {{-- Overview --}}
       <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('overview') }}"
-         href="{{ route('admin.dashboard') }}" 
+         href="{{ route('admin.dashboard') }}"
          data-section="overview"
          data-route="{{ route('admin.dashboard') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
+          <span class="w-6 text-slate-500"><x-icons.overview class="w-5 h-5" /></span>
           <span class="sidebar-label">Overview</span>
       </a>
 

@@ -49,13 +49,13 @@
     <nav class="space-y-1 flex-1 overflow-auto">
       
       <a class="ajax-link block p-2 rounded flex items-center gap-3 <?php echo e($isActive('overview')); ?>"
-         href="<?php echo e(route('admin.dashboard')); ?>" 
+         href="<?php echo e(route('admin.dashboard')); ?>"
          data-section="overview"
          data-route="<?php echo e(route('admin.dashboard')); ?>">
-          <span class="w-6 text-slate-500"><?php if (isset($component)) { $__componentOriginale4fd98848becbb8e38c75047c87c4c23 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginale4fd98848becbb8e38c75047c87c4c23 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icons.community','data' => ['class' => 'w-5 h-5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icons.community'); ?>
+          <span class="w-6 text-slate-500"><?php if (isset($component)) { $__componentOriginald17eb46a7d3dcd89ea0f1702df50f3bd = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald17eb46a7d3dcd89ea0f1702df50f3bd = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icons.overview','data' => ['class' => 'w-5 h-5']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icons.overview'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -64,13 +64,13 @@
 <?php $component->withAttributes(['class' => 'w-5 h-5']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginale4fd98848becbb8e38c75047c87c4c23)): ?>
-<?php $attributes = $__attributesOriginale4fd98848becbb8e38c75047c87c4c23; ?>
-<?php unset($__attributesOriginale4fd98848becbb8e38c75047c87c4c23); ?>
+<?php if (isset($__attributesOriginald17eb46a7d3dcd89ea0f1702df50f3bd)): ?>
+<?php $attributes = $__attributesOriginald17eb46a7d3dcd89ea0f1702df50f3bd; ?>
+<?php unset($__attributesOriginald17eb46a7d3dcd89ea0f1702df50f3bd); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginale4fd98848becbb8e38c75047c87c4c23)): ?>
-<?php $component = $__componentOriginale4fd98848becbb8e38c75047c87c4c23; ?>
-<?php unset($__componentOriginale4fd98848becbb8e38c75047c87c4c23); ?>
+<?php if (isset($__componentOriginald17eb46a7d3dcd89ea0f1702df50f3bd)): ?>
+<?php $component = $__componentOriginald17eb46a7d3dcd89ea0f1702df50f3bd; ?>
+<?php unset($__componentOriginald17eb46a7d3dcd89ea0f1702df50f3bd); ?>
 <?php endif; ?></span>
           <span class="sidebar-label">Overview</span>
       </a>

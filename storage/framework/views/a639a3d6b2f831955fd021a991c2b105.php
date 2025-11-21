@@ -23,7 +23,7 @@
           </li>
 
           <li>
-            <a href="<?php echo e(route('blogs.index')); ?>"
+            <a href="<?php echo e(route('blogs')); ?>"
                class="<?php echo \Illuminate\Support\Arr::toCssClasses([
                  'flex items-center gap-3 px-2 py-1 rounded transition',
                  'text-white' => request()->routeIs('blogs.*'),

@@ -23,7 +23,7 @@
           </li>
 
           <li>
-            <a href="{{ route('blogs.index') }}"
+            <a href="{{ route('blogs') }}"
                @class([
                  'flex items-center gap-3 px-2 py-1 rounded transition',
                  'text-white' => request()->routeIs('blogs.*'),
