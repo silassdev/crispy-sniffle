@@ -119,13 +119,10 @@ Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])
 | Trainer Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('trainer')
-    ->name('trainer.')
-    ->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':trainer'])
-    ->group(function () {
-        Route::get('dashboard', [TrainerDashboardController::class, 'index'])->name('dashboard');
-        Route::view('courses', 'trainer.courses')->name('courses');
-    });
+Route::middleware(['auth','role:trainer'])->prefix('trainer')->name('trainer.')->group(function(){
+    Route::get('dashboard', [\App\Http\Controllers\Trainer\DashboardController::class, 'index'])->name('dashboard');
+});
+
 
 // Pending trainer (fix your middleware name if it’s custom)
 Route::get('trainer/pending', fn () => view('trainer.pending', [
@@ -137,10 +134,6 @@ Route::get('trainer/pending', fn () => view('trainer.pending', [
 | Student Routes
 |--------------------------------------------------------------------------
 */
-Route::prefix('student')
-    ->name('student.')
-    ->middleware(['auth', \App\Http\Middleware\EnsureRole::class . ':student'])
-    ->group(function () {
-        Route::get('dashboard', [StudentDashboardController::class, 'index'])->name('dashboard');
-        Route::view('courses', 'student.courses')->name('courses');
-    });
+Route::middleware(['auth','role:student'])->prefix('student')->name('student.')->group(function(){
+    Route::get('dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+});

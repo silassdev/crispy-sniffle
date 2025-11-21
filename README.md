@@ -1,216 +1,139 @@
+# Laravel LMS
 
+A comprehensive Learning Management System (LMS) built with Laravel, designed to facilitate online education through role-based access for administrators, trainers, and students. This application leverages modern web technologies to provide a seamless experience for managing courses, blogs, user profiles, and more.
 
----
+## Features
 
-# LMS — README
+- **Role-Based Access Control**: Supports three user roles - Admin, Trainer, and Student - with specific permissions and functionalities.
+- **User Authentication & Social Login**: Secure login with traditional email/password and social media integration via Laravel Socialite.
+- **Trainer Approval System**: Trainers must be approved by admins before gaining access to create and manage courses.
+- **Course Management**: Trainers can create and manage courses; students can enroll and access learning materials.
+- **Blog System**: Integrated blogging feature for sharing educational content, news, and updates.
+- **Admin Dashboard**: Admins can invite new admins, manage trainer applications, view overviews, and oversee the platform.
+- **Email Notifications**: Automated emails for trainer applications, approvals, rejections, and welcome messages for students.
+- **Responsive UI**: Built with Tailwind CSS and Alpine.js for a modern, mobile-friendly interface.
+- **Real-Time Components**: Utilizes Livewire and Volt for reactive, dynamic UI elements without page reloads.
+- **Caching & Queues**: Redis integration for efficient caching and background job processing.
+- **Testing Suite**: Comprehensive tests using PHPUnit for reliability.
 
-A modern **Learning Management System (LMS) MVP** built with **Laravel, Tailwind CSS, Alpine.js, Laravel,  and MySQL**.  
-This README covers setup, authentication (3 roles: student, trainer, admin), dashboards, trainer approval, assets, and troubleshooting.
+## Installation
 
----
+### Prerequisites
 
-##  Table of Contents
-- [Project Summary](#project-summary)  
-- [Requirements](#requirements)  
-- [Quick Setup](#quick-setup)  
-- [Environment Variables](#environment-variables)  
-- [Database & Migrations](#database--migrations)  
-- [Seed an Admin User](#seed-an-admin-user)  
-- [Run the App (Local)](#run-the-app-local)  
-- [Assets (Vite / Tailwind / Alpine)](#assets-vite--tailwind--alpine)  
-- [Routes (Summary)](#routes-summary)  
-- [Views](#views)  
-- [Middleware & Auth](#middleware--auth)  
-- [Trainer Approval Flow](#trainer-approval-flow)  
-- [Troubleshooting](#troubleshooting)  
-- [Useful Artisan Commands](#useful-artisan-commands)  
-- [Deployment Notes](#deployment-notes)  
-- [Tests](#tests)  
-- [Future Improvements](#future-improvements)  
-- [License / Credits](#license--credits)  
+- PHP 8.2 or higher
+- Composer
+- Node.js and npm
+- Docker (optional, for containerized setup)
+- Redis (for caching and queues)
 
----
+### Steps
 
-##  Project Summary
-- Roles: **student**, **trainer** (requires admin approval), **admin**  
-- Auth: Laravel Breeze/Jetstream/Fortify adaptable  
-- Frontend: Tailwind CSS + Alpine.js  
-- Media/jobs: Queue + cloud storage ready (S3/DigitalOcean)  
-- API: Sanctum‑ready scaffold for mobile integration  
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd laravel-lms
+   ```
 
----
+2. **Install PHP Dependencies**:
+   ```bash
+   composer install
+   ```
 
-##  Requirements
-- PHP 8.1+  
-- Composer  
-- Node.js + npm  
-- MySQL (or MariaDB)  
+3. **Install Node Dependencies**:
+   ```bash
+   npm install
+   ```
 
+4. **Environment Setup**:
+   - Copy the example environment file:
+     ```bash
+     cp .env.example .env
+     ```
+   - Generate application key:
+     ```bash
+     php artisan key:generate
+     ```
+   - Configure your database, mail, and social login settings in `.env`.
 
----
+5. **Database Migration & Seeding**:
+   ```bash
+   php artisan migrate --force
+   php artisan db:seed
+   ```
 
-##  Quick Setup
+6. **Build Assets**:
+   ```bash
+   npm run build
+   ```
+
+### Quick Setup Script
+
+You can use the provided setup script for a streamlined installation:
 ```bash
-git clone <repo-url> lms-mvp
-cd lms-mvp
-
-# PHP deps
-composer install
-
-# JS deps
-npm install
-
-# copy env and generate key
-cp .env.example .env
-php artisan key:generate
-
-# configure DB in .env
-
-# run migrations & seed admin
-php artisan migrate
-php artisan db:seed --class=AdminUserSeeder
-
-# build assets
-npm run dev
-
-# serve app
-php artisan serve
+composer run setup
 ```
 
----
+This will handle dependency installation, environment setup, migrations, and asset building.
 
-##  Environment Variables
-Minimum changes in `.env`:
-```env
-APP_NAME="ALLPILAR LMS"
-APP_URL=http://localhost:8000
+## Usage
 
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=lms_mvp
-DB_USERNAME=your_db_user
-DB_PASSWORD=your_db_password
+### Running the Application
 
----
-
-##  Database & Migrations
-Includes migrations for:
-- `users` (role enum + approved flag)  
-- `courses`, `lessons`, `enrollments`, `notes`, `community_posts`, `comments`, `media`, `zoom_links`, `notifications`  
-
-Run:
+Start the development server with all necessary services:
 ```bash
-php artisan migrate
+composer run dev
 ```
 
----
+This command runs:
+- Laravel server (`php artisan serve`)
+- Queue worker (`php artisan queue:listen`)
+- Log tailing (`php artisan pail`)
+- Vite dev server (`npm run dev`)
 
-##  Seed an Admin User
+Access the application at `http://localhost:8000`.
+
+### Key Routes & Functionality
+
+- **Home**: Public landing page with featured blog posts.
+- **Authentication**: Login, register, password reset, and social login.
+- **Admin Panel** (`/admin`): Dashboard for managing trainers, sending invites, and viewing statistics.
+- **Trainer Dashboard**: Course creation and management (after approval).
+- **Student Dashboard**: Course enrollment and progress tracking.
+- **Blog**: Public blog posts and individual post views.
+- **Profile**: User profile management.
+
+### Testing
+
+Run the test suite:
 ```bash
-php artisan db:seed --class=AdminUserSeeder
+composer run test
 ```
 
----
+## Contributing
 
-##  Run the App (Local)
-- Backend: `php artisan serve`  
-- Frontend:  
-  ```bash
-  npm run dev     # development
-  npm run build   # production
-  ```
-- Or use Docker if provided.
+We welcome contributions! Please follow these steps:
 
----
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature-name`.
+3. Make your changes and ensure tests pass.
+4. Commit your changes: `git commit -m 'Add some feature'`.
+5. Push to the branch: `git push origin feature/your-feature-name`.
+6. Open a pull request.
 
-##  Assets (Vite / Tailwind / Alpine)
-- `resources/css/app.css` → Tailwind directives  
-- `resources/js/app.js` → Alpine.js bootstrap  
-- `tailwind.config.js` → purge paths  
+### Code Style
 
-Install & build:
-```bash
-npm install
-npm install alpinejs
-npm run dev
-```
+- Follow PSR-12 coding standards.
+- Use Laravel Pint for code formatting: `vendor/bin/pint`.
+- Write tests for new features.
 
----
+## License
 
-##  Routes (Summary)
-- `/` → Home (`resources/views/home.blade.php`)  
-- Auth: `/register`, `/login`, `/logout`, password reset, verification  
-- Student dashboard: `/dashboard/student`  
-- Trainer dashboard: `/dashboard/trainer` (requires `role:trainer` + `approved.trainer`)  
-- Admin dashboard: `/admin/dashboard`  
-- Trainer pending: `/trainer/pending`  
-- API: `/api/v1/*` (Sanctum ready)  
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, please open an issue on the GitHub repository or contact the maintainers.
 
 ---
 
-##  Views
-- `resources/views/layouts/app.blade.php` — base layout  
-- `resources/views/home.blade.php` — homepage  
-- Dashboards:  
-  - `dashboard/admin.blade.php`  
-  - `dashboard/trainer.blade.php`  
-  - `dashboard/student.blade.php`  
-
----
-
-##  Middleware & Auth
-- `RoleMiddleware` → restrict by role (`role:admin`, `role:trainer,admin`)  
-- `EnsureTrainerApproved` → redirect unapproved trainers to `/trainer/pending`  
-
-Register in `app/Http/Kernel.php`:
-```php
-'role' => \App\Http\Middleware\RoleMiddleware::class,
-'approved.trainer' => \App\Http\Middleware\EnsureTrainerApproved::class,
-```
-
----
-
-##  Trainer Approval Flow
-1. Trainer registers → `approved=false`  
-2. Admin sees pending trainers at `/admin/trainers/pending`  
-3. Admin approves → `approved=true`  
-4. Trainer notified via `TrainerApprovedNotification` (queued)  
-
----
-
-##  Troubleshooting
-- Ensure `.env` exists and run `php artisan key:generate`  
-- Run migrations + seed admin  
-- Clear caches:  
-  ```bash
-  php artisan view:clear
-  php artisan cache:clear
-  php artisan route:clear
-  php artisan config:clear
-  ```
-- Build assets: `npm install && npm run dev`  
-- Check logs: `storage/logs/laravel.log`  
-- Verify routes: `php artisan route:list`  
-
----
-
-##  Deployment Notes
-- Use S3/DigitalOcean Spaces + CDN  
-- Run `php artisan config:cache` and `php artisan route:cache`  
-- Use Redis for queues/cache  
-- Secure admin endpoints (consider 2FA)  
-- Backups: `spatie/laravel-backup`  
-
----
-
-##  Tests
-Start with feature tests for:
-- Registration (student & trainer)  
-- Trainer approval flow  
-- Login redirects to dashboards  
-- Route protection (middleware)  
-
----
-
-
+Built with ❤️ using Laravel, Livewire, and Tailwind CSS.

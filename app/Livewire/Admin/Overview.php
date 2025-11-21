@@ -17,12 +17,15 @@ class Overview extends Component
 
     protected DashboardService $service;
 
-    // Livewire v3 supports this (auto DI)
-    public function boot(DashboardService $service)
+    // Livewire v3: container injection for mount()
+    public function mount(DashboardService $service)
     {
         $this->service = $service;
+        // compute immediately for the server-rendered view
+        $this->counters = $this->service->computeCounters();
     }
 
+    // keep loadCounters if you still want to support wire:init or polling
     public function loadCounters(): void
     {
         $this->counters = $this->service->computeCounters();
