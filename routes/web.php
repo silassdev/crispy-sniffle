@@ -134,6 +134,6 @@ Route::get('trainer/pending', fn () => view('trainer.pending', [
 | Student Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth','role:student'])->prefix('student')->name('student.')->group(function(){
+Route::middleware(['auth'])->prefix('student')->name('student.')->group(function(){
     Route::get('dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
 });

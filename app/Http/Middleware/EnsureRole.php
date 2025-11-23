@@ -1,34 +1,36 @@
 <?php
+
 namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureRole
 {
     /**
-     * Ensure the authenticated user has one of the allowed roles.
-     * Usage: ->middleware(['auth','role:student'])
+     * Usage: ->middleware('role:student') or ->middleware('role:trainer,student')
      */
-    public function handle(Request $request, Closure $next, ...$roles)
-    {   
-        $user = $request->user();
-
-        if (! $user) {
+    public function handle(Request $request, Closure $next, string $roles = null)
+    {
+        if (! $request->user()) {
             return redirect()->route('login');
         }
 
-        $allowed = array_map('strval', $roles);
-
-        if (! in_array($user->role, $allowed, true)) 
-            {
-
-                return response()->view('errors.forbidden_role', [
-                    'userRole' => $user->role,
-                    'requiredRoles' => $allowed,
-                ], 403);
+        if (empty($roles)) {
+            return $next($request);
         }
 
-        return $next($request);
+        $allowed = array_map('trim', explode(',', $roles));
+        $userRole = strtolower((string) ($request->user()->role ?? ''));
+
+        foreach ($allowed as $r) {
+            if ($r === '') continue;
+            if (strtolower($r) === $userRole) {
+                return $next($request);
+            }
+        }
+
+        abort(Response::HTTP_FORBIDDEN, 'Unauthorized');
     }
 }
