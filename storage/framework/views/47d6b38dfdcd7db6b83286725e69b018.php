@@ -1,9 +1,8 @@
 
 
-
 <?php
   $role = $role ?? (auth()->user()->role ?? 'student');
-  $section = $section ?? 'overview';
+  $section = $section ?? 'dashboard';
 ?>
 
 <?php $__env->startSection('content'); ?>

@@ -120,7 +120,11 @@ Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth','role:trainer'])->prefix('trainer')->name('trainer.')->group(function(){
+
     Route::get('dashboard', [\App\Http\Controllers\Trainer\DashboardController::class, 'index'])->name('dashboard');
+    
+    Route::view('community', 'trainer.community')->name('community');
+    Route::view('posts', 'trainer.posts')->name('posts');
 });
 
 
@@ -134,6 +138,8 @@ Route::get('trainer/pending', fn () => view('trainer.pending', [
 | Student Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('student')->name('student.')->group(function(){
+Route::middleware(['auth','role:student'])->prefix('student')->name('student.')->group(function() {
     Route::get('dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+            Route::resource('courses', CourseController::class);
+
 });

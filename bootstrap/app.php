@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        
+
+        $middleware->alias([
+            'role' => \App\Http\Middleware\EnsureRole::class,
+            'validate.token'=> \App\Http\Middleware\ValidateToken::class,
+            'is_admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+            // Note: 'auth' is usually registered by default in L11, 
+            // but you can override it here if needed.
+        ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

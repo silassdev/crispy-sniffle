@@ -1,317 +1,110 @@
 @php
-    use Illuminate\Support\Facades\Route;
-
-    $role = $role ?? session('view_as') ?? (auth()->check() ? auth()->user()->role : 'student');
-
+    $user = auth()->user();
+    // Default to student if role is missing, strictly lowercase for route matching
+    $role = strtolower($role ?? ($user->role ?? 'student')); 
+    
     $colors = [
         'admin'   => 'bg-indigo-600 text-white',
         'trainer' => 'bg-emerald-600 text-white',
         'student' => 'bg-sky-600 text-white',
     ];
-    $bg = $colors[$role] ?? 'bg-gray-700 text-white';
+    $themeClass = $colors[$role] ?? 'bg-gray-700 text-white';
+    
+    $currentRoute = Route::currentRouteName();
+    $activeSection = request('section') ?? 'overview';
+    
+    $isActive = fn($key, $route) => 
+        ($activeSection === $key || $currentRoute === $route) 
+        ? $themeClass 
+        : 'text-slate-500 hover:bg-slate-50';
 
-    // derive default active from current route name if none provided
-    $current = $currentSection ?? null;
-    if (!$current) {
-        $r = optional(Route::current())->getName();
-        $current = 'overview';
-        if ($r) {
-            if (Str::startsWith($r, 'admin.students')) $current = 'students';
-            elseif (Str::startsWith($r, 'admin.trainers')) $current = 'trainers';
-            elseif (Str::startsWith($r, 'admin.admins')) $current = 'admins';
-            elseif (Str::startsWith($r, 'admin.community')) $current = 'community';
-            elseif (Str::startsWith($r, 'admin.comments')) $current = 'comments';
-            elseif (Str::startsWith($r, 'admin.posts')) $current = 'posts';
-            elseif (Str::startsWith($r, 'admin.feedback')) $current = 'feedback';
-            elseif (Str::startsWith($r, 'admin.other-actions')) $current = 'other-actions';
-            else $current = 'overview';
-        }
-    }
-
-    $isActive = function($name) use ($current) { return $current === $name ? 'dash-active' : ''; };
+  if ($role === 'admin') {
+    $menuItems = [
+        ['key' => 'overview',      'label' => 'Overview',             'icon' => 'overview',      'route_suffix' => 'dashboard'],
+        ['key' => 'students',      'label' => 'Students',             'icon' => 'students',      'route_suffix' => 'students.index'],
+        ['key' => 'trainers',      'label' => 'Trainers',             'icon' => 'trainers',      'route_suffix' => 'trainers.index'],
+        ['key' => 'admins',        'label' => 'Admins',               'icon' => 'admins',        'route_suffix' => 'admins.index'],
+        ['key' => 'community',     'label' => 'Community',            'icon' => 'community',     'route_suffix' => 'community'],
+        ['key' => 'comments',      'label' => 'Comments',             'icon' => 'comments',      'route_suffix' => 'comments'],
+        ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
+        ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
+        ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
+        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+    ];
+    } elseif ($role === 'trainer') {
+     $menuItems = [
+        ['key' => 'overview',      'label' => 'Overview',             'icon' => 'overview',      'route_suffix' => 'dashboard'],
+        ['key' => 'students',      'label' => 'Students',             'icon' => 'students',      'route_suffix' => 'students.index'],
+        ['key' => 'trainers',      'label' => 'Trainers',             'icon' => 'trainers',      'route_suffix' => 'trainers.index'],
+        ['key' => 'admins',        'label' => 'Admins',               'icon' => 'admins',        'route_suffix' => 'admins.index'],
+        ['key' => 'community',     'label' => 'Community',            'icon' => 'community',     'route_suffix' => 'community'],
+        ['key' => 'comments',      'label' => 'Comments',             'icon' => 'comments',      'route_suffix' => 'comments'],
+        ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
+        ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
+        ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
+        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+    ];
+    } elseif ($role === 'student') {
+    $menuItems = [
+        ['key' => 'overview',      'label' => 'Overview',             'icon' => 'overview',      'route_suffix' => 'dashboard'],
+        ['key' => 'courses',       'label' => 'Courses',              'icon' => 'courses',       'route_suffix' => 'courses.index'],
+        ['key' => 'trainers',      'label' => 'Trainers',             'icon' => 'trainers',      'route_suffix' => 'trainers.index'],
+        ['key' => 'admins',        'label' => 'Admins',               'icon' => 'admins',        'route_suffix' => 'admins.index'],
+        ['key' => 'community',     'label' => 'Community',            'icon' => 'community',     'route_suffix' => 'community'],
+        ['key' => 'comments',      'label' => 'Comments',             'icon' => 'comments',      'route_suffix' => 'comments'],
+        ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
+        ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
+        ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
+        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+    ];
+ }
 @endphp
 
-<aside id="admin-sidebar" class="w-64 min-h-screen bg-white border-r" data-role="{{ $role }}">
-  <div class="p-4 flex flex-col h-full">
+<aside id="admin-sidebar" class="w-64 min-h-screen bg-white border-r transition-all duration-300" data-role="{{ $role }}">
+    <div class="p-4 flex flex-col h-full">
 
-  
-    <div class="px-2 mb-4">
-      <div class="rounded p-2 {{ $bg }} flex items-center gap-3">
-        <div class="sidebar-label">
-          <div class="font-semibold">{{ strtolower($role) }} </div>
+        {{-- Header / Role Label --}}
+        <div class="px-2 mb-4">
+            <div class="rounded p-2 {{ $themeClass }} flex items-center gap-3 shadow-sm">
+                <div class="sidebar-label font-semibold capitalize">{{ $role }} Console</div>
+            </div>
         </div>
-      </div>
+
+        {{-- Dynamic Navigation --}}
+        <nav class="space-y-1 flex-1 overflow-auto">
+            @foreach($menuItems as $item)
+                @php
+                    // Construct the expected route name: e.g., "admin.students.index"
+                    $targetRoute = $role . '.' . $item['route_suffix'];
+                @endphp
+
+                {{-- CRITICAL: Only render if the route actually exists in web.php --}}
+                @if(Route::has($targetRoute))
+                    <a class="ajax-link block p-2 rounded flex items-center gap-3 transition-colors {{ $isActive($item['key'], $targetRoute) }}"
+                       href="{{ route($targetRoute) }}"
+                       data-section="{{ $item['key'] }}"
+                       data-route="{{ route($targetRoute) }}">
+                        
+                        {{-- Icon Wrapper --}}
+                        <span class="w-6 {{ $activeSection === $item['key'] ? 'text-white' : 'text-slate-500' }}">
+                            {{-- Requires components like <x-icons.overview /> --}}
+                            <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5" />
+                        </span>
+                        
+                        <span class="sidebar-label">{{ $item['label'] }}</span>
+                    </a>
+                @endif
+            @endforeach
+        </nav>
+
+        {{-- Footer Toggle --}}
+        <div class="pt-3 border-t mt-4">
+            <button id="sidebar-toggle" aria-expanded="true" aria-controls="admin-sidebar" class="flex items-center gap-2 text-sm px-2 py-1 border rounded w-full hover:bg-gray-50 text-slate-500">
+                <span id="toggle-open"><x-icons.toggle-open class="w-5 h-5" /></span>
+                <span id="toggle-close" class="hidden"><x-icons.toggle-close class="w-5 h-5" /></span>
+                <span class="sidebar-label">Hide sidebar</span>
+            </button>
+        </div>
+
     </div>
-   
-  @switch($role)
-  @case('admin')
-
-    <nav class="space-y-1 flex-1 overflow-auto">
-      {{-- Overview --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('overview') }}"
-         href="{{ route('admin.dashboard') }}"
-         data-section="overview"
-         data-route="{{ route('admin.dashboard') }}">
-          <span class="w-6 text-slate-500"><x-icons.overview class="w-5 h-5" /></span>
-          <span class="sidebar-label">Overview</span>
-      </a>
-
-      {{-- Students --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('students') }}"
-         href="{{ route('admin.students.index') }}" data-section="students" data-route="{{ route('admin.students.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.students class="w-5 h-5" /></span>
-          <span class="sidebar-label">Students</span>
-      </a>
-
-      {{-- Trainers --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('trainers') }}"
-         href="{{ route('admin.trainers.index') }}" data-section="trainers" data-route="{{ route('admin.trainers.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.trainers class="w-5 h-5" /></span>
-          <span class="sidebar-label">Trainers</span>
-      </a>
-
-      {{-- Admins --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('admins') }}"
-         href="{{ route('admin.admins.index') }}" data-section="admins" data-route="{{ route('admin.admins.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.admins class="w-5 h-5" /></span>
-          <span class="sidebar-label">Admins</span>
-      </a>
-
-      {{-- Community --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('community') }}"
-         href="{{ route('admin.community') }}" data-section="community" data-route="{{ route('admin.community') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
-          <span class="sidebar-label">Community</span>
-      </a>
-
-      {{-- Comments --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('comments') }}"
-         href="{{ route('admin.comments') }}" data-section="comments" data-route="{{ route('admin.comments') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Comments</span>
-      </a>
-
-      {{-- Posts --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Posts</span>
-      </a>
-
-      {{-- Feedback --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('feedback') }}"
-         href="{{ route('admin.feedback') }}" data-section="feedback" data-route="{{ route('admin.feedback') }}">
-          <span class="w-6 text-slate-500"><x-icons.feedback class="w-5 h-5" /></span>
-          <span class="sidebar-label">Feedback</span>
-      </a>
-
-      {{-- Other Actions --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('other-actions') }}"
-         href="{{ route('admin.other-actions') }}" data-section="other-actions" data-route="{{ route('admin.other-actions') }}">
-          <span class="w-6 text-slate-500"><x-icons.others class="w-5 h-5" /></span>
-          <span class="sidebar-label">Other Actions</span>
-      </a>
-
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Certify & Achivement</span>
-      </a>
-       
-        <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Newsletter</span>
-      </a>
-
-       <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Profile</span>
-      </a>
-
-    @break
-
-     @case('trainer')
-        <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('overview') }}"
-         href="{{ route('admin.dashboard') }}" data-section="overview" data-route="{{ route('admin.dashboard') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
-          <span class="sidebar-label">Overview</span>
-      </a>
-
-      {{-- Students --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('students') }}"
-         href="{{ route('admin.students.index') }}" data-section="students" data-route="{{ route('admin.students.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.students class="w-5 h-5" /></span>
-          <span class="sidebar-label">Students</span>
-      </a>
-
-      {{-- Trainers --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('trainers') }}"
-         href="{{ route('admin.trainers.index') }}" data-section="trainers" data-route="{{ route('admin.trainers.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.trainers class="w-5 h-5" /></span>
-          <span class="sidebar-label">Trainers</span>
-      </a>
-
-      {{-- Admins --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('admins') }}"
-         href="{{ route('admin.admins.index') }}" data-section="admins" data-route="{{ route('admin.admins.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.admins class="w-5 h-5" /></span>
-          <span class="sidebar-label">Admins</span>
-      </a>
-
-      {{-- Community --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('community') }}"
-         href="{{ route('admin.community') }}" data-section="community" data-route="{{ route('admin.community') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
-          <span class="sidebar-label">Community</span>
-      </a>
-
-      {{-- Comments --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('comments') }}"
-         href="{{ route('admin.comments') }}" data-section="comments" data-route="{{ route('admin.comments') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Comments</span>
-      </a>
-
-      {{-- Posts --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Posts</span>
-      </a>
-
-      {{-- Feedback --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('feedback') }}"
-         href="{{ route('admin.feedback') }}" data-section="feedback" data-route="{{ route('admin.feedback') }}">
-          <span class="w-6 text-slate-500"><x-icons.feedback class="w-5 h-5" /></span>
-          <span class="sidebar-label">Feedback</span>
-      </a>
-
-      {{-- Other Actions --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('other-actions') }}"
-         href="{{ route('admin.other-actions') }}" data-section="other-actions" data-route="{{ route('admin.other-actions') }}">
-          <span class="w-6 text-slate-500"><x-icons.others class="w-5 h-5" /></span>
-          <span class="sidebar-label">Other Actions</span>
-      </a>
-
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Certify & Achivement</span>
-      </a>
-       
-        <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Newsletter</span>
-      </a>
-
-       <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Profile</span>
-      </a>
-
-  @break
-
-     @default
-   
-
-        <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('overview') }}"
-         href="{{ route('admin.dashboard') }}" data-section="overview" data-route="{{ route('admin.dashboard') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
-          <span class="sidebar-label">Overview</span>
-      </a>
-
-      {{-- Students --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('students') }}"
-         href="{{ route('admin.students.index') }}" data-section="students" data-route="{{ route('admin.students.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.students class="w-5 h-5" /></span>
-          <span class="sidebar-label">Students</span>
-      </a>
-
-      {{-- Trainers --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('trainers') }}"
-         href="{{ route('admin.trainers.index') }}" data-section="trainers" data-route="{{ route('admin.trainers.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.trainers class="w-5 h-5" /></span>
-          <span class="sidebar-label">Trainers</span>
-      </a>
-
-      {{-- Admins --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('admins') }}"
-         href="{{ route('admin.admins.index') }}" data-section="admins" data-route="{{ route('admin.admins.index') }}">
-          <span class="w-6 text-slate-500"><x-icons.admins class="w-5 h-5" /></span>
-          <span class="sidebar-label">Admins</span>
-      </a>
-
-      {{-- Community --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('community') }}"
-         href="{{ route('admin.community') }}" data-section="community" data-route="{{ route('admin.community') }}">
-          <span class="w-6 text-slate-500"><x-icons.community class="w-5 h-5" /></span>
-          <span class="sidebar-label">Community</span>
-      </a>
-
-      {{-- Comments --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('comments') }}"
-         href="{{ route('admin.comments') }}" data-section="comments" data-route="{{ route('admin.comments') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Comments</span>
-      </a>
-
-      {{-- Posts --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Posts</span>
-      </a>
-
-      {{-- Feedback --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('feedback') }}"
-         href="{{ route('admin.feedback') }}" data-section="feedback" data-route="{{ route('admin.feedback') }}">
-          <span class="w-6 text-slate-500"><x-icons.feedback class="w-5 h-5" /></span>
-          <span class="sidebar-label">Feedback</span>
-      </a>
-
-      {{-- Other Actions --}}
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('other-actions') }}"
-         href="{{ route('admin.other-actions') }}" data-section="other-actions" data-route="{{ route('admin.other-actions') }}">
-          <span class="w-6 text-slate-500"><x-icons.others class="w-5 h-5" /></span>
-          <span class="sidebar-label">Other Actions</span>
-      </a>
-
-      <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Certify & Achivement</span>
-      </a>
-       
-        <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Newsletter</span>
-      </a>
-
-       <a class="ajax-link block p-2 rounded flex items-center gap-3 {{ $isActive('posts') }}"
-         href="{{ route('admin.posts') }}" data-section="posts" data-route="{{ route('admin.posts') }}">
-          <span class="w-6 text-slate-500"><x-icons.comments class="w-5 h-5" /></span>
-          <span class="sidebar-label">Profile</span>
-      </a>
-
-  @break
-@endswitch
-
-    </nav>
-
-    <div class="pt-3 border-t mt-4">
-      <div class="flex items-center gap-2 justify-between">
-        <!-- toggle -->
-       <button id="sidebar-toggle" aria-expanded="true" aria-controls="admin-sidebar" class="flex items-center gap-2 text-sm px-2 py-1 border rounded">
-       <span id="toggle-open"><x-icons.toggle-open class="w-5 h-5" /></span>
-       <span id="toggle-close" class="hidden"><x-icons.toggle-close class="w-5 h-5" /></span>
-       <span class="sidebar-label">Hide sidebar</span>
-       </button>
-      </div>
-    </div>
-  </div>
 </aside>

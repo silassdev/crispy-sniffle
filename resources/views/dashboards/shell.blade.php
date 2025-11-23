@@ -1,9 +1,8 @@
-{{-- dashboards/shell.blade.php --}}
 @extends('layouts.app')
 
 @php
   $role = $role ?? (auth()->user()->role ?? 'student');
-  $section = $section ?? 'overview';
+  $section = $section ?? 'dashboard';
 @endphp
 
 @section('content')

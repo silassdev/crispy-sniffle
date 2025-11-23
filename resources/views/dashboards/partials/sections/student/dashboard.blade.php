@@ -1,8 +1,4 @@
-@extends('layouts.app')
 
-@section('title','Student Dashboard')
-
-@section('content')
 <div class="p-6 max-w-4xl mx-auto">
   <h1 class="text-2xl font-bold mb-4">Student dashboard</h1>
   <p class="text-gray-700">Welcome, {{ auth()->user()->name }}. This is your student area.</p>
@@ -13,4 +9,3 @@
     <div class="p-4 bg-white rounded shadow">Recent activity</div>
   </div>
 </div>
-@endsection

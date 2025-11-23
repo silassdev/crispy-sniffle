@@ -144,10 +144,7 @@
       fetchCounters();
     });
 
-    // 4. Ensure counter is refreshed
-    setTimeout(() => {
-    try { fetchCounters(); } catch(e) { console.warn('fetchCounters failed on initial attempt', e); }
-    }, 500);
+   
 
   </script>
 
