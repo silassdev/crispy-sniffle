@@ -15,42 +15,81 @@ class TrainerList extends Component
 
     public int $perPage = 10;
     public string $search = '';
-    public ?int $selected = null; // for confirm modal
+
+    // modal / confirm state managed by Livewire properties
+    public ?int $viewingId = null; // when set -> viewingTrainer loaded
+    public ?User $viewingTrainer = null;
+    public ?int $confirmDeleteId = null;
 
     protected $listeners = ['refreshTrainers' => '$refresh'];
+    protected $paginationTheme = 'tailwind';
 
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    protected function getPendingQuery()
+    {
+        return User::query()
+            ->where('role', User::ROLE_TRAINER)
+            ->where('approved', false)
+            ->where('rejected', false)
+            ->when($this->search, fn($q) => $q->where(fn($s) =>
+                $s->where('name', 'like', '%'.$this->search.'%')
+                  ->orWhere('email', 'like', '%'.$this->search.'%')
+            ))
+            ->orderByDesc('created_at');
+    }
+
+    protected function getApprovedQuery()
+    {
+        return User::query()
+            ->where('role', User::ROLE_TRAINER)
+            ->where('approved', true)
+            ->when($this->search, fn($q) => $q->where(fn($s) =>
+                $s->where('name', 'like', '%'.$this->search.'%')
+                  ->orWhere('email', 'like', '%'.$this->search.'%')
+            ))
+            ->orderByDesc('created_at');
+    }
+
+    // Livewire will call this automatically when viewingId changes
+    public function updatedViewingId($value)
+    {
+        if ($value) {
+            $this->viewingTrainer = User::find($value);
+        } else {
+            $this->viewingTrainer = null;
+        }
+    }
+
     public function approve(int $id)
     {
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
             return;
         }
 
         $trainer->approve(auth()->id());
 
-        // send email (silently fail-safe)
         try {
             Mail::to($trainer->email)->send(new TrainerApprovedMail($trainer));
         } catch (\Throwable $e) {
             \Log::error('Trainer approval mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Approved','message' => $trainer->name.' approved','ttl' => 4000]);
-        $this->emit('refreshDashboardCounters'); // earlier dashboard listens to this
-        $this->emitSelf('$refresh');
+        $this->dispatchBrowserEvent('app-toast', ['title'=>'Approved','message'=> $trainer->name.' approved','ttl'=>4000]);
+        $this->emit('refreshDashboardCounters');
+        $this->resetPage();
     }
 
     public function reject(int $id)
     {
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
             return;
         }
 
@@ -62,39 +101,50 @@ class TrainerList extends Component
             \Log::error('Trainer rejected mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Rejected','message' => $trainer->name.' rejected','ttl' => 4000]);
+        $this->dispatchBrowserEvent('app-toast', ['title'=>'Rejected','message'=> $trainer->name.' rejected','ttl'=>4000]);
         $this->emit('refreshDashboardCounters');
-        $this->emitSelf('$refresh');
+        $this->resetPage();
     }
 
-    public function destroy(int $id)
+    public function confirmDelete(int $id)
     {
+        $this->confirmDeleteId = $id;
+    }
+
+    public function destroyConfirmed()
+    {
+        $id = $this->confirmDeleteId;
+        if (! $id) return;
+
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
+            $this->confirmDeleteId = null;
             return;
         }
 
         $trainer->delete();
 
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Deleted','message' => 'Trainer removed','ttl' => 4000]);
+        $this->dispatchBrowserEvent('app-toast', ['title'=>'Deleted','message'=>'Trainer removed','ttl'=>4000]);
+        $this->confirmDeleteId = null;
         $this->emit('refreshDashboardCounters');
-        $this->emitSelf('$refresh');
+        $this->resetPage();
+    }
+
+    public function closeModal()
+    {
+        $this->viewingId = null;
+        $this->viewingTrainer = null;
     }
 
     public function render()
     {
-        $q = User::trainers()
-            ->when($this->search, fn($q) => $q->where(function($s) {
-                $s->where('name','like','%'.$this->search.'%')
-                  ->orWhere('email','like','%'.$this->search.'%');
-            }))
-            ->orderByDesc('created_at');
-
-        $trainers = $q->paginate($this->perPage);
+        $pending = $this->getPendingQuery()->limit(10)->get();
+        $approved = $this->getApprovedQuery()->paginate($this->perPage);
 
         return view('livewire.admin.trainer-list', [
-            'trainers' => $trainers
+            'pending' => $pending,
+            'approved' => $approved,
         ]);
     }
 }

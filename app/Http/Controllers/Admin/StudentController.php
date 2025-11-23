@@ -11,11 +11,7 @@ class StudentController extends Controller
     
     public function index(Request $request)
 {
-    $perPage = 10;
-    $trainers = \App\Models\User::where('role', \App\Models\User::ROLE_TRAINER)
-        ->orderByDesc('created_at')
-        ->paginate($perPage)
-        ->withQueryString();
+   
 
     // AJAX -> return fragment only (no layout)
     if ($request->ajax()) {

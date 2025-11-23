@@ -29,7 +29,7 @@
         ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
         ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
         ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
-        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], 
     ];
     } elseif ($role === 'trainer') {
      $menuItems = [

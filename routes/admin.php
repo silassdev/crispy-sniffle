@@ -21,7 +21,9 @@ Route::middleware(['auth', 'role:admin'])
         // Counters endpoint for AJAX or dashboard widgets
         Route::get('/counters', [DashboardController::class, 'counters'])->name('counters');
 
-        Route::get('/students', [StudentController::class, 'index'])->name('students');
+        Route::get('students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students.index');
+        Route::get('students/{id}', [\App\Http\Controllers\Admin\StudentController::class, 'show'])->name('students.show');
+
 
         Route::get('/trainers', [\App\Http\Controllers\Admin\TrainerController::class, 'index'])->name('trainers.index');
         Route::get('/trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class, 'show'])->name('trainers.show');

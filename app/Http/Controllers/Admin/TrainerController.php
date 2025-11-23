@@ -8,23 +8,29 @@ class TrainerController extends Controller
 {
     public function index(Request $request)
     {   
-        $perPage = 10;
-        $trainers = \App\Models\User::where('role', \App\Models\User::ROLE_TRAINER)
-        ->orderByDesc('created_at')
-        ->paginate($perPage)
-        ->withQueryString();
-
-        if ($request->ajax()) {
-            return view('admin.trainers.partials.index',
-            compact('trainers'));
-        }
-        return view('admin.trainers.index',
-        compact('trainers')); 
+       
+        return view('admin.trainers.index');
         }
 
-    public function show($id)
+    public function show(int $id)
     {
         $trainer = User::where('role', \App\Models\User::ROLE_TRAINER)->findOrFail($id);
         return view('admin.trainers.show', compact('trainer'));
+    }
+
+    public function approve(Request $request, int $id)
+    {
+        $trainer = User::where('role', User::ROLE_TRAINER)->findOrFail($id);
+        $trainer->approve(auth()->id());
+
+        return redirect()->back()->with('status', 'Trainer Approved');
+    }
+
+    public function destroy(Request $request, int $id)
+    {
+        $trainer = User::where('role', User::ROLE_TRAINER)->findOrFail($id);
+        $trainer->delete();
+
+        return redirect()->route('admin.trainers.index')->with('status', 'Trainer Deleted');
     }
 }

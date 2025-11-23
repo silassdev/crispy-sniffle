@@ -15,12 +15,14 @@ class Overview extends Component
         'invites'  => 0,
     ];
 
-    protected DashboardService $service;
+    // make nullable to avoid "accessed before initialization" errors
+    protected ?DashboardService $service = null;
 
     // Livewire v3: container injection for mount()
     public function mount(DashboardService $service)
     {
         $this->service = $service;
+
         // compute immediately for the server-rendered view
         $this->counters = $this->service->computeCounters();
     }
@@ -28,6 +30,11 @@ class Overview extends Component
     // keep loadCounters if you still want to support wire:init or polling
     public function loadCounters(): void
     {
+        // lazy-init the service if for some lifecycle reason mount hasn't set it
+        if ($this->service === null) {
+            $this->service = app(DashboardService::class);
+        }
+
         $this->counters = $this->service->computeCounters();
     }
 

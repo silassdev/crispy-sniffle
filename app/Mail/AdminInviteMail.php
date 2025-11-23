@@ -1,5 +1,4 @@
 <?php
-// app/Mail/AdminInviteMail.php
 
 namespace App\Mail;
 
