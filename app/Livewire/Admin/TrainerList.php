@@ -13,102 +13,88 @@ class TrainerList extends Component
 {
     use WithPagination;
 
-    public $q = '';
-    public $perPage = 10;
-    public $sort = 'created_at';
-    public $dir = 'desc';
+    public int $perPage = 10;
+    public string $search = '';
+    public ?int $selected = null; // for confirm modal
 
-    protected $listeners = ['deleteTrainer' => 'delete', 'showSection' => 'noop'];
+    protected $listeners = ['refreshTrainers' => '$refresh'];
 
-    public function updatingQ() { $this->resetPage(); }
-    public function updatingPerPage() { $this->resetPage(); }
-
-    public function setSort($column)
+    public function updatingSearch()
     {
-        if ($this->sort === $column) {
-            $this->dir = $this->dir === 'desc' ? 'asc' : 'desc';
-        } else {
-            $this->sort = $column;
-            $this->dir = 'desc';
-        }
         $this->resetPage();
     }
 
-    public function approve($id)
+    public function approve(int $id)
     {
-        $u = User::find($id);
-        if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+        $trainer = User::findOrFail($id);
+        if (! $trainer->isTrainer()) {
+            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            return;
         }
 
-        if ($u->approved) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Info','message'=>'Already approved','ttl'=>3000]);
-        }
+        $trainer->approve(auth()->id());
 
-        $u->update(['approved' => true, 'rejected_at' => null]);
-
-        // queue approval email (queue requires queue worker; fallback will send sync if configured)
+        // send email (silently fail-safe)
         try {
-            Mail::to($u->email)->queue(new TrainerApprovedMail($u));
+            Mail::to($trainer->email)->send(new TrainerApprovedMail($trainer));
         } catch (\Throwable $e) {
-            // if queue fails, fall back to synchronous send but keep user updated
-            try { Mail::to($u->email)->send(new TrainerApprovedMail($u)); } catch (\Throwable $_) {}
+            \Log::error('Trainer approval mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Approved','message'=>"{$u->name} approved.",'ttl'=>4000]);
-
-        // refresh data if necessary
+        $this->dispatchBrowserEvent('app-toast', ['title' => 'Approved','message' => $trainer->name.' approved','ttl' => 4000]);
+        $this->emit('refreshDashboardCounters'); // earlier dashboard listens to this
         $this->emitSelf('$refresh');
     }
 
-    public function reject($id)
+    public function reject(int $id)
     {
-        $u = User::find($id);
-        if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+        $trainer = User::findOrFail($id);
+        if (! $trainer->isTrainer()) {
+            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            return;
         }
 
-        if ($u->rejected_at) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Info','message'=>'Already rejected','ttl'=>3000]);
-        }
-
-        $u->update(['rejected_at' => now(), 'approved' => false]);
+        $trainer->reject(auth()->id());
 
         try {
-            Mail::to($u->email)->queue(new TrainerRejectedMail($u));
+            Mail::to($trainer->email)->send(new TrainerRejectedMail($trainer));
         } catch (\Throwable $e) {
-            try { Mail::to($u->email)->send(new TrainerRejectedMail($u)); } catch (\Throwable $_) {}
+            \Log::error('Trainer rejected mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Rejected','message'=>"{$u->name} rejected.",'ttl'=>5000]);
+        $this->dispatchBrowserEvent('app-toast', ['title' => 'Rejected','message' => $trainer->name.' rejected','ttl' => 4000]);
+        $this->emit('refreshDashboardCounters');
         $this->emitSelf('$refresh');
     }
 
-    public function delete($id)
+    public function destroy(int $id)
     {
-        $u = User::find($id);
-        if (! $u || $u->role !== User::ROLE_TRAINER) {
-            return $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User not found','ttl'=>4000]);
+        $trainer = User::findOrFail($id);
+        if (! $trainer->isTrainer()) {
+            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error','message' => 'User is not a trainer', 'ttl' => 4000]);
+            return;
         }
 
-        $u->delete();
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Deleted','message'=>'Trainer deleted.','ttl'=>4000]);
-        $this->resetPage();
-    }
+        $trainer->delete();
 
-    public function view($id)
-    {
-        return redirect()->route('admin.trainer.view', $id);
+        $this->dispatchBrowserEvent('app-toast', ['title' => 'Deleted','message' => 'Trainer removed','ttl' => 4000]);
+        $this->emit('refreshDashboardCounters');
+        $this->emitSelf('$refresh');
     }
 
     public function render()
     {
-        $query = User::where('role', User::ROLE_TRAINER)
-            ->when($this->q, fn($q)=> $q->where(fn($w)=> $w->where('name','like',"%{$this->q}%")->orWhere('email','like',"%{$this->q}%")))
-            ->orderBy($this->sort, $this->dir);
+        $q = User::trainers()
+            ->when($this->search, fn($q) => $q->where(function($s) {
+                $s->where('name','like','%'.$this->search.'%')
+                  ->orWhere('email','like','%'.$this->search.'%');
+            }))
+            ->orderByDesc('created_at');
 
-        $trainers = $query->paginate($this->perPage);
+        $trainers = $q->paginate($this->perPage);
 
-        return view('livewire.admin.trainer-list', ['trainers' => $trainers]);
+        return view('livewire.admin.trainer-list', [
+            'trainers' => $trainers
+        ]);
     }
 }

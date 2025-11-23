@@ -23,7 +23,11 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/students', [StudentController::class, 'index'])->name('students');
 
-        Route::get('/trainers', [TrainerController::class, 'index'])->name('trainers');
+        Route::get('/trainers', [\App\Http\Controllers\Admin\TrainerController::class, 'index'])->name('trainers.index');
+        Route::get('/trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class, 'show'])->name('trainers.show');
+        Route::post('/trainers/{id}/approve', [\App\Http\Controllers\Admin\TrainerController::class, 'approve'])->name('trainers.approve');
+        Route::delete('/trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class, 'destroy'])->name('trainers.destroy');
+
 
         Route::get('/admins', [AdminUserController::class, 'index'])->name('admins');
         Route::get('/admins/{id}', [AdminUserController::class, 'show'])->name('admins.show');
@@ -37,4 +41,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback');
 
         Route::get('/other-actions', [OtherActionsController::class, 'index'])->name('other-actions');
+
+        //Trainre
+
+        
     });
