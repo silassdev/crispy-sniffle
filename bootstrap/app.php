@@ -17,8 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\EnsureRole::class,
             'validate.token'=> \App\Http\Middleware\ValidateToken::class,
             'is_admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
-            'fragment.redirect' => \App\Http\Middleware\ConvertRedirectForFragment::class,
-
         ]);
 
     })

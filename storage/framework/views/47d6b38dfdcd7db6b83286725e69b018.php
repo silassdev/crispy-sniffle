@@ -8,11 +8,25 @@
 <?php $__env->startSection('content'); ?>
   <div class="flex min-h-[80vh]">
     
-    <?php echo $__env->make('dashboards.partials.sidebar', ['role' => $role, 'activeSection' => $section], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('sidebar', ['role' => $role,'activeSection' => $section]);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-3631665400-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
 
     
     <main id="role-content" class="flex-1 p-6">
-      
       <?php if(View::exists("livewire.{$role}.{$section}")): ?>
         <livewire:<?php echo e($role); ?>.<?php echo e($section); ?> />
       <?php elseif(View::exists("dashboards.partials.sections.{$role}.{$section}")): ?>

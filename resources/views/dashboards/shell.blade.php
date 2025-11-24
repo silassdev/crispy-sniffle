@@ -7,13 +7,11 @@
 
 @section('content')
   <div class="flex min-h-[80vh]">
-    {{-- Sidebar partial (same partial used for admin/trainer/student) --}}
-    @include('dashboards.partials.sidebar', ['role' => $role, 'activeSection' => $section])
+    {{-- Sidebar rendered as Livewire so it is bootstrapped correctly --}}
+    <livewire:sidebar :role="$role" :active-section="$section" />
 
     {{-- Main content area --}}
     <main id="role-content" class="flex-1 p-6">
-      {{-- If the section is implemented as a Livewire component, prefer the Livewire tag.
-          Otherwise include the server-rendered fragment partial. --}}
       @if(View::exists("livewire.{$role}.{$section}"))
         <livewire:{{ $role }}.{{ $section }} />
       @elseif(View::exists("dashboards.partials.sections.{$role}.{$section}"))

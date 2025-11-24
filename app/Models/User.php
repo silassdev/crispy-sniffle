@@ -89,6 +89,14 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\SocialAccount::class);
     }
 
+     public function approvedByAdmin(int $adminId =null): void
+    {
+        $trainer->approved = true;
+        $trainer->rejected = false;
+        $trainer->approved_at = now();
+        $trainer->approved_by = auth()->id();
+        $trainer->save();
+    }
     /* --------------------------------------------------
        Helper: find or create user from Socialite response
        -------------------------------------------------- */

@@ -68,11 +68,15 @@ class TrainerList extends Component
     {
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
+            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error',
+            'message'=>'User is not a trainer','ttl'=>4000]);
             return;
         }
 
-        $trainer->approve = 1;
+        $trainer->approved = true;
+        $trainer->rejected = false;
+        $trainer->approved_at = now();
+        $trainer->approved_by = auth()->id();
         $trainer->save();
 
         try {
