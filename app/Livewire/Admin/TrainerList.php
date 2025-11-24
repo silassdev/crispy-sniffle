@@ -72,7 +72,8 @@ class TrainerList extends Component
             return;
         }
 
-        $trainer->approve(auth()->id());
+        $trainer->approve = 1;
+        $trainer->save();
 
         try {
             Mail::to($trainer->email)->send(new TrainerApprovedMail($trainer));
@@ -82,7 +83,7 @@ class TrainerList extends Component
 
         $this->dispatchBrowserEvent('app-toast', ['title'=>'Approved','message'=> $trainer->name.' approved','ttl'=>4000]);
         $this->emit('refreshDashboardCounters');
-        $this->resetPage();
+        $this->emitSelf($refresh);
     }
 
     public function reject(int $id)

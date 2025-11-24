@@ -144,7 +144,37 @@
       fetchCounters();
     });
 
-   
+      async function loadFragment(url) {
+      showLoader();
+      try {
+        const fragmentUrl = url.includes('?') ? url + '&fragment=1' : url + '?fragment=1';
+        const res = await fetch(fragmentUrl, {
+          headers: {'X-Requested-With': 'XMLHttpRequest','Accept':'text/html,application/json'},
+          credentials: 'same-origin'
+        });
+
+        // If server returned JSON (redirect conversion), handle it
+        const contentType = res.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const payload = await res.json();
+          if (payload.redirect) {
+            await loadFragment(payload.redirect.replace('?fragment=1',''));
+            if (payload.message) dispatchAppToast('Success', payload.message);
+          }
+          return;
+        }
+
+        if (!res.ok) throw new Error(res.statusText);
+        const html = await res.text();
+        document.getElementById('dashboard-main-content').innerHTML = html;
+        history.replaceState({}, '', url);
+      } catch (err) {
+        console.error('loadFragment error', err);
+        dispatchAppToast('Error', 'Unable to load section');
+      } finally {
+        hideLoader();
+      }
+    }
 
   </script>
 

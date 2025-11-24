@@ -8,18 +8,13 @@ use App\Models\User;
 
 class AdminController extends Controller
 {
-    public function index()
+     public function index(Request $request)
     {
-        // list all admins
-        $admins = User::where('role', 'admin')->latest()->paginate(20);
 
-        return view('admin.admins.index', compact('admins'));
-    }
+        if ($request->ajax() || $request->query('fragment') == 1) {
+            return view('admin.admins.index-fragment');
+        }
 
-    public function show($id)
-    {
-        $admin = User::findOrFail($id);
-
-        return view('admin.admins.show', compact('admin'));
+        return view('admin.admins.index-shell');
     }
 }

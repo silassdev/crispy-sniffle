@@ -30,7 +30,7 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-      {{-- generic card class used for each metric --}}
+
       @php
         $cards = [
           ['label'=>'Students','key'=>'students','from'=>'indigo-500','to'=>'emerald-400','trend'=>'+3.4%','trendColor'=>'text-green-600','trendNote'=>'since last week'],

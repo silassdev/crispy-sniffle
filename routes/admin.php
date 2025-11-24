@@ -11,13 +11,12 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\OtherActionsController;
 
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
 
+
+        Route::middleware(['auth', 'role:admin', 'fragment.redirect'])
+        ->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
+        
         // Counters endpoint for AJAX or dashboard widgets
         Route::get('/counters', [DashboardController::class, 'counters'])->name('counters');
 
@@ -44,7 +43,8 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/other-actions', [OtherActionsController::class, 'index'])->name('other-actions');
 
-        //Trainre
+});
+
 
         
-    });
+

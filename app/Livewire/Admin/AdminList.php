@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminInviteMail;
 use App\Models\AdminInvitation; // optional if you use an invitation model
 
-class AdminUserList extends Component
+class AdminList extends Component
 {
     use WithPagination;
 
