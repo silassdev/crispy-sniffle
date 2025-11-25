@@ -10,20 +10,21 @@ class TrainerController extends Controller
 {
     public function index(Request $request)
     {
-        // If requested via AJAX or explicit fragment=1, return fragment only
         if ($request->ajax() || $request->query('fragment') == 1) {
-            // fragment view must contain only the Livewire mount (no layout)
             return view('admin.trainers.index-fragment');
         }
 
-        // full shell (layout + sidebar) that includes the fragment
         return view('admin.trainers.index-shell');
     }
 
-    public function show(int $id)
+    public function show($id)
     {
         $trainer = User::where('role', User::ROLE_TRAINER)->findOrFail($id);
-        return view('admin.trainers.show', compact('trainer'));
+
+        return view('admin.trainers.show', [ 
+            'user'=> $trainer,
+            'role'=> 'trainer'
+        ]);
     }
 
     public function approve(Request $request, int $id)

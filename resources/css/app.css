@@ -41,20 +41,3 @@ aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; c
 #ajax-loader { display: none; }
 #ajax-loader.flex { display: flex; }
 
-/* resources/css/app.css (or your primary CSS file) */
-
-/* loader */
-.loader {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: rgba(255,255,255,1);
-  border-radius: 50%;
-  display: inline-block;
-  animation: spin .9s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-

@@ -68,8 +68,7 @@ class TrainerList extends Component
     {
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error',
-            'message'=>'User is not a trainer','ttl'=>4000]);
+            $this->dispatch('app-toast', type: 'error', message: 'User is not a trainer');
             return;
         }
 
@@ -85,16 +84,21 @@ class TrainerList extends Component
             \Log::error('Trainer approval mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Approved','message'=> $trainer->name.' approved','ttl'=>4000]);
-        $this->emit('refreshDashboardCounters');
-        $this->emitSelf($refresh);
+        // notify the browser
+        $this->dispatch('app-toast', type: 'success', message: 'Trainer Approved');
+
+        // notify other components (server side event)
+        $this->dispatch('refreshDashboardCounters');
+
+        // trigger a refresh on this component instance (v3 style)
+        $this->dispatch('$refresh')->self();
     }
 
     public function reject(int $id)
     {
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
+            $this->dispatch('app-toast', type: 'error', message: 'User not a trainer');
             return;
         }
 
@@ -106,8 +110,8 @@ class TrainerList extends Component
             \Log::error('Trainer rejected mail failed: '.$e->getMessage());
         }
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Rejected','message'=> $trainer->name.' rejected','ttl'=>4000]);
-        $this->emit('refreshDashboardCounters');
+        $this->dispatch('app-toast', type: 'rejected', message: 'Trainer Rejected');
+        $this->dispatch('refreshDashboardCounters');
         $this->resetPage();
     }
 
@@ -123,16 +127,21 @@ class TrainerList extends Component
 
         $trainer = User::findOrFail($id);
         if (! $trainer->isTrainer()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'User is not a trainer','ttl'=>4000]);
+            $this->dispatch('app-toast', type: 'error', message: 'User is not a trainer');
             $this->confirmDeleteId = null;
             return;
         }
 
         $trainer->delete();
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Deleted','message'=>'Trainer removed','ttl'=>4000]);
+        // client toast
+        $this->dispatch('app-toast', type: 'success', message: 'Trainer removed');
+
         $this->confirmDeleteId = null;
-        $this->emit('refreshDashboardCounters');
+
+        // notify dashboard counters
+        $this->dispatch('refreshDashboardCounters');
+
         $this->resetPage();
     }
 

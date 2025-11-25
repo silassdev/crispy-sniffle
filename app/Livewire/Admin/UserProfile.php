@@ -7,35 +7,91 @@ use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Mail\TrainerApprovedMail;
 use App\Mail\TrainerRejectedMail;
 
 class UserProfile extends Component
 {
-    public int $userId;
+    public User $userId;
     public ?User $user = null;
     public ?string $role = null;
 
     // editable fields
-    public $name;
-    public $email;
-    public $phone;
-    public $bio;
-    public $location;
-    public $additional_info; // json/string
-    public $badges; // array or comma-separated
-
+    public array $form = [
+        'name' => '',
+        'email' => '',
+        'phone' => '',
+        'bio' => '',
+        'location' => '',
+        'additional_info' => '',
+        'badges' => '',
+    ];
     // confirm/delete state
-    public ?int $confirmDeleteId = null;
+    public bool $confirmDelete = false;
 
-    protected $rules = [];
+    protected $listeners = [
+        'refreshUser' => '$refresh',
+    ];
 
-    public function mount(int $userId, ?string $role = null)
+
+
+    public function mount(User $user, $role = null)
     {
-        $this->userId = $userId;
-        $this->role = $role;
-        $this->loadUser();
+        $this->user = $user;
+        $this->role = $role ?? $user->role;
+        $this->form = array_merge($this->form, [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->phone ?? null,
+            'bio' => $user->bio ?? null,
+            'location' => $user->location ?? null,
+            'additional_info' => $user->additional_info ?? null,
+            'badges' => $user->badges ?? null,
+        ]);
     }
+
+    protected function rules(): array
+    {
+        return [
+            'form.name' => ['required', 'string', 'max:255'],
+            'form.email' => ['required','email','max:255', Rule::unique('users','email')->ignore($this->user->id)],
+            'form.phone' => ['nullable','string','max:50'],
+            'form.bio' => ['nullable','string','max:2000'],
+            'form.location' => ['nullable','string','max:255'],
+            'form.additional_info' => ['nullable'],
+            'form.badges' => ['nullable','string'],
+        ];
+    }
+
+    public function updateProfile()
+    {
+        $this->validate();
+
+        try {
+         $this->user->fill([
+            'name' => $this->form['name'],
+            'email' => $this->form['email'],
+            'phone' => $this->form['phone'],
+            'bio' => $this->form['bio'],
+            'location' => $this->form['location'],
+            'additional_info' => $this->form['additional_info'],
+            'badges' => $this->form['badges'],
+            ]);
+            $this->user->save();
+            $this->dispatch('app-toast', type: 'error', message: 'Failed to approve');
+            $this->emit('refreshUser');
+            $this->emit('refreshDashboardCounters');
+        } catch (\Throwable $e) {
+            Log::error('UserProfile update failed:'.$e->getMessage());
+            $this->dispatch('app-toast', type: 'error', message: 'Failed to save profile');
+        }
+    }
+
+
+
+
+
 
     public function loadUser()
     {
@@ -50,61 +106,67 @@ class UserProfile extends Component
         $this->badges = is_array($this->user->badges) ? implode(',', $this->user->badges) : ($this->user->badges ?? '');
     }
 
-    protected function rules()
+    public function approve()
     {
-        return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required','email','max:255', Rule::unique('users','email')->ignore($this->user->id)],
-            'phone' => ['nullable','string','max:50'],
-            'bio' => ['nullable','string','max:2000'],
-            'location' => ['nullable','string','max:255'],
-            'additional_info' => ['nullable'],
-            'badges' => ['nullable','string'],
-        ];
-    }
+        if (! auth()->user()?->isAdmin()) {
+            abort(403);
+        };
+        try {
+            Mail::to($this->user->email)->send(new TrainerApprovedMail($this->user));
+        } catch (\Throwable $e) {
+            \Log::error('Trainer approval mail: '.$e->getMessage());
+        }
 
-    public function updated($prop)
-    {
-        // optional: real-time validation per-field
-        $this->validateOnly($prop, $this->rules());
-    }
-
-    public function save()
-    {
-        $validated = $this->validate($this->rules());
-
-        $this->user->name = $validated['name'];
-        $this->user->email = $validated['email'];
-        $this->user->phone = $validated['phone'] ?? null;
-        $this->user->bio = $validated['bio'] ?? null;
-        $this->user->location = $validated['location'] ?? null;
-        $this->user->additional_info = $validated['additional_info'] ?? null;
-        // badges: store as JSON array
-        $this->user->badges = $validated['badges'] ? array_map('trim', explode(',', $validated['badges'])) : null;
-
+        $this->user->approved = true;
+        $this->user->rejected = false;
+        $this->user->approved_at = now();
+        $this->user->approved_by = auth()->id();
         $this->user->save();
 
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Saved', 'message' => 'Profile saved', 'ttl' => 4000]);
-        $this->loadUser(); // refresh model
+        $this->dispatch('app-toast', type: 'success', message: 'Trainer approved');
+        $this->loadUser();
         $this->emit('refreshDashboardCounters');
+        $this->emitSelf('$refresh');
+     } catch (\Throwable $e) {
+        Log::error('UserProfile approve failed:'.$e->getMessage());
+        $this->dispatch('app-toast', type: 'success', message: 'Trainer Rejected');
+     }
     }
 
     public function confirmDelete()
     {
-        $this->confirmDeleteId = $this->user->id;
+        if (! auth()->user()?->isAdmin()) {
+            abort(403);
+        }
+        $this->confirmDelete = true;
     }
 
-    public function destroyConfirmed()
+     public function destroy()
     {
-        $id = $this->confirmDeleteId;
-        if (! $id) return;
-        $u = User::findOrFail($id);
-        $u->delete();
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Deleted', 'message' => 'User removed', 'ttl' => 4000]);
-        $this->confirmDeleteId = null;
-        // after delete redirect to admin list
-        return redirect()->route('admin.' . ($this->role === 'trainer' ? 'trainers' : ($this->role === 'student' ? 'students' : 'admins')));
-    }
+        if (! auth()->user()?->isAdmin()) {
+            abort(403);
+        }
+        try {
+            $name = $this->user->name;
+            $this->user->delete();
+            $this->dispatch('app-toast', type: 'success', message: 'Deleted');
+        }
+        if ($this->role === User::ROLE_TRAINER)
+        {
+         return 
+         redirect()->route('admin.trainers');
+        }
+        if ($this->role === User::ROLE_STUDENT)
+            return
+         redirect()->route('admin.students');
+       return
+          redirect()->route('admin.admins');
+    } catch (\Throwable $e) {
+        Log::error('UserProfile delete failed:'.$e->getMessage());
+        $this->dispatch('app-toast', type: 'success', message: 'Failed to Delete');
+    
+
+   
 
     public function sendPasswordReset()
     {
@@ -117,34 +179,8 @@ class UserProfile extends Component
         }
     }
 
-    // trainer-specific actions
-    public function approveTrainer()
-    {
-        if (! $this->user || $this->user->role !== User::ROLE_TRAINER) return;
-        $this->user->approve(auth()->id());
-        try {
-            Mail::to($this->user->email)->send(new TrainerApprovedMail($this->user));
-        } catch (\Throwable $e) {
-            \Log::error('Trainer approval mail: '.$e->getMessage());
-        }
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Approved', 'message' => 'Trainer approved', 'ttl' => 4000]);
-        $this->loadUser();
-        $this->emit('refreshDashboardCounters');
-    }
-
-    public function rejectTrainer()
-    {
-        if (! $this->user || $this->user->role !== User::ROLE_TRAINER) return;
-        $this->user->reject(auth()->id());
-        try {
-            Mail::to($this->user->email)->send(new TrainerRejectedMail($this->user));
-        } catch (\Throwable $e) {
-            \Log::error('Trainer rejected mail: '.$e->getMessage());
-        }
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Rejected', 'message' => 'Trainer rejected', 'ttl' => 4000]);
-        $this->loadUser();
-        $this->emit('refreshDashboardCounters');
-    }
+    
+   
 
     public function exportJson()
     {

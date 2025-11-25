@@ -2,7 +2,7 @@
   <div wire:loading wire:target="loadCounters" class="space-y-4">
     <div class="animate-pulse grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
       <!--[if BLOCK]><![endif]--><?php for($i = 0; $i < 5; $i++): ?>
-        <div class="h-28 rounded-2xl bg-gradient-to-br from-slate-100 to-white dark:from-slate-800 dark:to-slate-900 p-4">
+        <div class="h-28 rounded-2xl bg-gradient-to-br from-slate-100 to-white dark:from-slate-800 dark:to-slate-200 p-4">
           <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-3"></div>
           <div class="h-8 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
         </div>
@@ -10,12 +10,11 @@
     </div>
   </div>
 
-  
   <div wire:loading.remove wire:target="loadCounters">
     <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
       <div>
-        <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight text-slate-900 dark:text-white">Overview</h2>
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-300">Key metrics for your application — updated in real time.</p>
+        <h2 class="text-2xl sm:text-3xl font-bold leading-tight text-slate-900 dark:text-black">Overview</h2>
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-600">Key metrics for your application — updated in real time.</p>
       </div>
 
       <div class="flex items-center gap-3">
@@ -24,12 +23,12 @@
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6"/>
           </svg>
-          <span class="text-xs text-slate-700 dark:text-slate-200">Refresh</span>
+          <span class="text-xs text-slate-300 dark:text-slate-900">Refresh</span>
         </button>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
 
       <?php
         $cards = [
@@ -42,7 +41,7 @@
       ?>
 
       <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $cards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $card): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <div class="relative overflow-visible rounded-2xl p-5 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow hover:shadow-lg transition transform hover:-translate-y-1 min-h-[88px]">
+      <div class="relative overflow-visible rounded-2xl p-5 bg-blue-500 bg-slate-900 border border-slate-100 dark:border-slate-800 shadow hover:shadow-lg transition transform hover:-translate-y-1 min-h-[88px]">
         <div class="flex items-start justify-between gap-3">
           <div class="flex items-center gap-3 min-w-0">
             <div class="relative flex-shrink-0">
