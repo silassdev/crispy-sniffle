@@ -15,7 +15,6 @@ class Overview extends Component
         'invites'  => 0,
     ];
 
-    // make nullable to avoid "accessed before initialization" errors
     protected ?DashboardService $service = null;
 
     // Livewire v3: container injection for mount()
@@ -23,7 +22,6 @@ class Overview extends Component
     {
         $this->service = $service;
 
-        // compute immediately for the server-rendered view
         $this->counters = $this->service->computeCounters();
     }
 

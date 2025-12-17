@@ -29,7 +29,7 @@
         ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
         ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
         ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
-        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], 
+        ['key' => 'certify',       'label' => 'Certificates',         'icon' => 'comments',      'route_suffix' => 'certify'], 
     ];
     } elseif ($role === 'trainer') {
      $menuItems = [
@@ -42,7 +42,7 @@
         ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
         ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
         ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
-        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+        ['key' => 'certify',       'label' => 'Certificates',         'icon' => 'comments',      'route_suffix' => 'certify'],
     ];
     } elseif ($role === 'student') {
     $menuItems = [
@@ -55,7 +55,7 @@
         ['key' => 'posts',         'label' => 'Posts',                'icon' => 'comments',      'route_suffix' => 'posts'],
         ['key' => 'feedback',      'label' => 'Feedback',             'icon' => 'feedback',      'route_suffix' => 'feedback'],
         ['key' => 'other-actions', 'label' => 'Other Actions',        'icon' => 'others',        'route_suffix' => 'other-actions'],
-        ['key' => 'certify',       'label' => 'Certify & Achievement','icon' => 'comments',      'route_suffix' => 'certify'], // Example
+        ['key' => 'certify',       'label' => 'Certificate',          'icon' => 'comments',      'route_suffix' => 'certify'],
     ];
  }
 ?>
@@ -74,7 +74,7 @@
         <nav class="space-y-1 flex-1 overflow-auto">
             <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <?php
-                    // Construct the expected route name: e.g., "admin.students.index"
+
                     $targetRoute = $role . '.' . $item['route_suffix'];
                 ?>
 
