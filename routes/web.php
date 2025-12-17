@@ -41,10 +41,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 
 // Blog
-Route::prefix('blogs')->group(function () {
-    Route::get('/', [BlogController::class, 'index'])->name('blogs');
-    Route::get('{slug}', [BlogController::class, 'show'])->name('blogs.show');
-});
+Route::get('blogs', [\App\Http\Controllers\PostController::class,'index'])->name('blogs.index');
+Route::get('blogs/{slug}', [\App\Http\Controllers\PostController::class,'show'])->name('blogs.show');
+Route::post('blogs/{post}/comments', [\App\Http\Controllers\CommentController::class,'store'])->middleware('auth')->name('blogs.comments.store');
+Route::post('blogs/{post}/reactions', [\App\Http\Controllers\ReactionController::class,'store'])->middleware('auth')->name('blogs.reactions.store');
+Route::post('blogs/{post}/report', [\App\Http\Controllers\PostReportController::class,'store'])->middleware('auth')->name('blogs.report');
+
 
 // Contact
 Route::controller(ContactController::class)->group(function () {
