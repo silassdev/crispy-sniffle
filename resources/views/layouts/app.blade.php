@@ -22,7 +22,9 @@
     @yield('content')
   </main>
 
-  @include('layouts.footer')
+  @if(!auth()->check() || !str_contains(Route::currentRouteName(), 'dashboard'))
+    @include('layouts.footer')
+  @endif
 
   @livewireScripts
 
