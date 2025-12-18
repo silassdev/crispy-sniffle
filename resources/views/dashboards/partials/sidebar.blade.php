@@ -14,9 +14,9 @@
         'admin' => [
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
             ['key' => 'trainers', 'label' => 'Trainers', 'icon' => 'trainers', 'route_suffix' => 'trainers.index'],
-            ['key' => 'admins', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'Community', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'admins', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
+            ['key' => 'admins', 'label' =>   'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
+            ['key' => 'community', 'label' => 'Community', 'icon' => 'admins', 'route_suffix' => 'community'],
+            ['key' => 'admins', 'label' =>    'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
             ['key' => 'Newsletter', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
         ],
         'trainer' => [

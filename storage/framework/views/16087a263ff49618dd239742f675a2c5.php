@@ -14,9 +14,9 @@
         'admin' => [
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
             ['key' => 'trainers', 'label' => 'Trainers', 'icon' => 'trainers', 'route_suffix' => 'trainers.index'],
-            ['key' => 'admins', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'Community', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'admins', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
+            ['key' => 'admins', 'label' =>   'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
+            ['key' => 'community', 'label' => 'Community', 'icon' => 'admins', 'route_suffix' => 'community'],
+            ['key' => 'admins', 'label' =>    'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
             ['key' => 'Newsletter', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
         ],
         'trainer' => [
@@ -32,9 +32,9 @@
 ?>
 
 <div id="user-grid" class="grid grid-cols-3 gap-4 p-4 bg-white shadow-md rounded-md">
-    <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>
-        <!--[if BLOCK]><![endif]--><?php if(Route::has($targetRoute)): ?>
+        <?php if(Route::has($targetRoute)): ?>
             <a href="<?php echo e(route($targetRoute)); ?>" class="block p-4 rounded-md text-center transition-colors text-slate-500 hover:bg-slate-50">
                 <?php if (isset($component)) { $__componentOriginal511d4862ff04963c3c16115c05a86a9d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal511d4862ff04963c3c16115c05a86a9d = $attributes; } ?>
@@ -58,6 +58,6 @@
 <?php endif; ?>
                 <span class="text-sm font-medium"><?php echo e($item['label']); ?></span>
             </a>
-        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endif; ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 </div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>
