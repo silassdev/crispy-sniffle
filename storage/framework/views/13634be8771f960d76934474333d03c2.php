@@ -42,7 +42,7 @@
     <?php echo $__env->yieldContent('content'); ?>
   </main>
 
-  <?php if(!auth()->check() || !str_contains(Route::currentRouteName(), 'dashboard')): ?>
+  <?php if(!isset($hideFooter) || !$hideFooter): ?>
     <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   <?php endif; ?>
 

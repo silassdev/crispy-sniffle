@@ -24,7 +24,9 @@
     </div>
   </main>
 
-  @include('layouts.footer')
+  @if(!isset($hideFooter) || !$hideFooter)
+    @include('layouts.footer')
+  @endif
 
   @livewireScripts
 

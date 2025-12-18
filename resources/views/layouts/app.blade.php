@@ -22,7 +22,7 @@
     @yield('content')
   </main>
 
-  @if(!auth()->check() || !str_contains(Route::currentRouteName(), 'dashboard'))
+  @if(!isset($hideFooter) || !$hideFooter)
     @include('layouts.footer')
   @endif
 
