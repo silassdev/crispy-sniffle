@@ -25,6 +25,7 @@
   </main>
 
   @if(!isset($hideFooter) || !$hideFooter)
+    @include('layouts.links')
     @include('layouts.footer')
   @endif
 

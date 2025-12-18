@@ -8,12 +8,15 @@
   <title><?php echo $__env->yieldContent('title', config('app.name')); ?></title>
 
   <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css','resources/js/app.js']); ?>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
   <?php echo \Livewire\Mechanisms\FrontendAssets\FrontendAssets::styles(); ?>
 
   <?php echo $__env->yieldPushContent('head'); ?>
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-gray-50 text-gray-800 font-['Outfit']">
 
   <?php if (isset($component)) { $__componentOriginal7cfab914afdd05940201ca0b2cbc009b = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal7cfab914afdd05940201ca0b2cbc009b = $attributes; } ?>
@@ -43,6 +46,7 @@
   </main>
 
   <?php if(!isset($hideFooter) || !$hideFooter): ?>
+    <?php echo $__env->make('layouts.links', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   <?php endif; ?>
 

@@ -13,21 +13,24 @@ class HomeController extends Controller
      * @return \Illuminate\View\View
      */
     public function index()
-{
-      $posts = \App\Models\Post::latest()->take(8)->get();
+    {
+        $posts = \App\Models\Post::latest()->take(8)->get();
 
         if (! auth()->check()) {
-        return view('home.guest', compact('posts'));
+            return view('home.guest', compact('posts'));
+        }
+
+        $user = auth()->user();
+
+        if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
+            return view('home.auth.admin', compact('posts'));
+        }
+        
+        return view('home.auth.user', compact('posts', 'user'));
     }
 
-    $user = auth()->user();
- 
-
-    if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
-        return view('home.auth.admin', compact('posts'));
-          }
-          return view('home.auth.user', compact('posts', 'user'));
+    public function about()
+    {
+        return view('about');
     }
-
-   
 }

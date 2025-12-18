@@ -8,11 +8,14 @@
   <title>@yield('title', config('app.name'))</title>
 
   @vite(['resources/css/app.css','resources/js/app.js'])
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
   @livewireStyles
   @stack('head')
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800">
+<body class="min-h-screen bg-gray-50 text-gray-800 font-['Outfit']">
 
   <x-toast />
 
@@ -23,6 +26,7 @@
   </main>
 
   @if(!isset($hideFooter) || !$hideFooter)
+    @include('layouts.links')
     @include('layouts.footer')
   @endif
 

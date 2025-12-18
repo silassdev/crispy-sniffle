@@ -29,6 +29,7 @@ use App\Http\Controllers\Admin\AdminController;
 // Trainer & Student dashboards
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
+use App\Http\Controllers\Student\CourseController;
 
 
 
@@ -40,6 +41,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/about', [HomeController::class, 'about'])->name('about');
 
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 

@@ -5,45 +5,88 @@
 
 
 /* active item */
-.dash-item { transition: background-color .12s, color .12s; }
-.dash-item.dash-active, .ajax-link.dash-active { color: white !important; }
+.dash-item {
+  transition: background-color .12s, color .12s;
+}
+
+.dash-item.dash-active,
+.ajax-link.dash-active {
+  color: white !important;
+}
 
 /* role-specific active bg */
-aside[data-role="admin"] .ajax-link.dash-active { background-color: #4F46E5; color: #fff; }
-aside[data-role="trainer"] .ajax-link.dash-active { background-color: #10B981; color: #fff; }
-aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; color: #fff; }
+aside[data-role="admin"] .ajax-link.dash-active {
+  background-color: #4F46E5;
+  color: #fff;
+}
+
+aside[data-role="trainer"] .ajax-link.dash-active {
+  background-color: #10B981;
+  color: #fff;
+}
+
+aside[data-role="student"] .ajax-link.dash-active {
+  background-color: #0EA5E9;
+  color: #fff;
+}
 
 
 
 
 /* active item (role-color applied server-side to header) */
-.ajax-link.dash-active { background-color: #4F46E5; color: #fff; }
-#admin-sidebar[data-role="trainer"] .ajax-link.dash-active { background-color: #10B981; }
-#admin-sidebar[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; }
+.ajax-link.dash-active {
+  background-color: #4F46E5;
+  color: #fff;
+}
+
+#admin-sidebar[data-role="trainer"] .ajax-link.dash-active {
+  background-color: #10B981;
+}
+
+#admin-sidebar[data-role="student"] .ajax-link.dash-active {
+  background-color: #0EA5E9;
+}
 
 /* ensure icons color adapts */
-#admin-sidebar .ajax-link svg { stroke: currentColor; color: inherit; }
-#admin-sidebar .ajax-link.dash-active svg { color: white; }
+#admin-sidebar .ajax-link svg {
+  stroke: currentColor;
+  color: inherit;
+}
+
+#admin-sidebar .ajax-link.dash-active svg {
+  color: white;
+}
 
 /* donut loader */
 .loader-donut {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 5px solid rgba(255,255,255,0.15);
-  border-top-color: rgba(255,255,255,1);
+  border: 5px solid rgba(255, 255, 255, 0.15);
+  border-top-color: rgba(255, 255, 255, 1);
   animation: spin 1s linear infinite;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-#ajax-loader { display: none; }
-#ajax-loader.flex { display: flex; }
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#ajax-loader {
+  display: none;
+}
+
+#ajax-loader.flex {
+  display: flex;
+}
 
 
 
 .hero-card {
   position: relative;
   overflow: hidden;
-  min-height: 300px; 
+  min-height: 300px;
 }
 
 /* soft fading gradient on the right — blends the hero color into the card */
@@ -56,12 +99,10 @@ aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; c
   width: 55%;
   pointer-events: none;
   z-index: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(var(--hero-rgb), 0.35) 0%,
-    rgba(var(--hero-rgb), 0.25) 30%,
-    rgba(255,255,255,0) 75%
-  );
+  background: linear-gradient(90deg,
+      rgba(var(--hero-rgb), 0.35) 0%,
+      rgba(var(--hero-rgb), 0.25) 30%,
+      rgba(255, 255, 255, 0) 75%);
   mix-blend-mode: multiply;
   transition: opacity .2s ease;
 }
@@ -69,12 +110,10 @@ aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; c
 /* tweak gradient for dark mode */
 @media (prefers-color-scheme: dark) {
   .hero-card::before {
-    background: linear-gradient(
-      90deg,
-      rgba(var(--hero-rgb), 0.25) 0%,
-      rgba(var(--hero-rgb), 0.15) 30%,
-      rgba(10,10,12,0) 75%
-    );
+    background: linear-gradient(90deg,
+        rgba(var(--hero-rgb), 0.25) 0%,
+        rgba(var(--hero-rgb), 0.15) 30%,
+        rgba(10, 10, 12, 0) 75%);
     mix-blend-mode: screen;
   }
 }
@@ -94,48 +133,88 @@ aside[data-role="student"] .ajax-link.dash-active { background-color: #0EA5E9; c
   transform: translateZ(0);
 }
 
-.hero-card > .relative { z-index: 2; }
+.hero-card>.relative {
+  z-index: 2;
+}
 
 /* responsive tweaks */
 @media (max-width: 640px) {
-  .hero-svg { right: -6%; max-width: 360px; opacity: .9; }
-  .hero-card::before { width: 65%; }
+  .hero-svg {
+    right: -6%;
+    max-width: 360px;
+    opacity: .9;
+  }
+
+  .hero-card::before {
+    width: 65%;
+  }
 }
+
 @media (min-width: 1024px) {
-  .hero-card { min-height: 360px; }
-  .hero-card::before { width: 50%; }
+  .hero-card {
+    min-height: 360px;
+  }
+
+  .hero-card::before {
+    width: 50%;
+  }
 }
 
 .hero-yellow {
-  --hero-color: #D4AF37;  
-  --hero-rgb: 212,175,55;  
+  --hero-color: #D4AF37;
+  --hero-rgb: 212, 175, 55;
 }
 
 
 .clearfix::after {
-      content: "";
-      display: table;
-      clear: both;
-    }
+  content: "";
+  display: table;
+  clear: both;
+}
 
-    @media (min-width: 1024px) {
-      .prose-img-left {
-        float: left;
-        margin-right: 1rem; 
-        margin-bottom: 1rem;
-        max-width: 48%;   
-      }
-      .prose-img-right {
-        float: right;
-        margin-left: 1rem;
-        margin-bottom: 1rem;
-        max-width: 48%;
-      }
-    }
+@media (min-width: 1024px) {
+  .prose-img-left {
+    float: left;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    max-width: 48%;
+  }
 
-    .prose-img-left,
-    .prose-img-right {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+  .prose-img-right {
+    float: right;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    max-width: 48%;
+  }
+}
+
+.prose-img-left,
+.prose-img-right {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1.1) translateX(3rem);
+  }
+
+  50% {
+    transform: translateY(-30px) scale(1.1) translateX(3rem);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.hero-blend {
+  opacity: 0.9;
+}
+
+.dark .hero-blend {
+  opacity: 0.8;
+}
