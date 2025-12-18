@@ -9,12 +9,15 @@ use App\Models\Tag;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\ResizePostImage;
+use App\Jobs\GenerateWebP;
 
 class PostEditor extends Component
 {
     use WithFileUploads;
 
-    public ?Post $post = null; // null => create mode
+    public ?Post $post = null;
     public array $form = [
         'title' => '',
         'excerpt' => '',
@@ -140,8 +143,16 @@ class PostEditor extends Component
     {
         if (! $this->post?->feature_image) return;
         Storage::disk('public')->delete($this->post->feature_image);
+
+        $oldMeta = is_array($this->post->meta) ? $this->post->meta : ($this->post->meta ? (array)$this->post->meta : []);
+        foreach (['feature_thumbnail','feature_small','feature_webp'] as $k) {
+            if (!empty($oldMeta[$k])) Storage::disk('public')->delete($oldMeta[$k]);
+        }
+
         $this->post->feature_image = null;
+        $this->post->meta = array_filter($oldMeta, fn($v,$k) => !in_array($k,['feature_thumbnail','feature_small','feature_webp']), ARRAY_FILTER_USE_BOTH);
         $this->post->save();
+
         $this->dispatchBrowserEvent('app-toast', ['title' => 'Removed', 'message' => 'Feature image removed', 'ttl' => 3000]);
     }
 

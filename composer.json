@@ -88,10 +88,11 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "repositories": {
-        "packagist": {
+    "repositories": [
+        {
+            "name": "packagist",
             "type": "composer",
             "url": "https://repo.packagist.org"
         }
-    }
+    ]
 }
