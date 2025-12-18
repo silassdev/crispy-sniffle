@@ -114,18 +114,7 @@ class RegisterForm extends Component
      */
     protected function sendToast(array $payload)
     {
-        if (method_exists($this, 'dispatchBrowserEvent')) {
-            $this->dispatchBrowserEvent('app-toast', $payload);
-            return;
-        }
-
-        if (method_exists($this, 'emit')) {
-            $this->emit('app-toast', $payload);
-            return;
-        }
-
-        // fallback: store the payload so the component view can render an inline script
-        $this->toast = $payload;
+        $this->dispatch('app-toast', ...$payload);
     }
 
     public function render()

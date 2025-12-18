@@ -155,20 +155,7 @@ class LoginForm extends Component
      */
     protected function sendToast(array $payload)
     {
-        // prefer dispatchBrowserEvent if it exists
-        if (method_exists($this, 'dispatchBrowserEvent')) {
-            $this->dispatchBrowserEvent('app-toast', $payload);
-            return;
-        }
-
-        // then try emit (some versions)
-        if (method_exists($this, 'emit')) {
-            $this->emit('app-toast', $payload);
-            return;
-        }
-
-        // fallback: store the payload; the blade view will render an inline script that triggers APP_TOAST
-        $this->toast = $payload;
+        $this->dispatch('app-toast', ...$payload);
     }
 
     protected function throttleKey()
@@ -178,33 +165,9 @@ class LoginForm extends Component
 
     public function focusPassword()
     {
-        // Try same approach for focus-password
-        if (method_exists($this, 'dispatchBrowserEvent')) {
-            $this->dispatchBrowserEvent('focus-password');
-            return;
-        }
-
-        if (method_exists($this, 'emit')) {
-            $this->emit('focus-password');
-            return;
-        }
-
-        $this->toast = $this->toast ?? null; // no-op, we won't use toast for focus; instead we let view handle if needed
-        // fallback: we can instruct client to focus by rendering a marker — handled in Blade below
-        $this->dispatchBrowserFallbackEvent('focus-password');
+        $this->dispatch('focus-password');
     }
 
-    /**
-     * Optional helper to set a fallback browser event marker for the view to pick up.
-     * We'll store it in a public property as a small array. (Livewire will re-render the component,
-     * the Blade will output a script that picks this up).
-     */
-    protected function dispatchBrowserFallbackEvent(string $name, $payload = null)
-    {
-        // store the fallback events in a simple structure the view can render
-        $existing = $this->toast ?? null;
-        $this->toast = $payload ? array_merge(['event' => $name], (array) $payload) : ['event' => $name];
-    }
 
     public function render()
     {

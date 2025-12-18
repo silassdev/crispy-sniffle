@@ -5,7 +5,6 @@
     <h1 class="text-2xl font-semibold">Admin Home</h1>
     <p class="text-sm text-gray-500">Quick links and metrics — this is not the admin dashboard</p>
 
-    {{-- Admin quick links: go to /admin/dashboard or other admin tools --}}
     <div class="mt-4">
       <a href="{{ route('admin.dashboard') }}" class="btn">Go to admin dashboard</a>
     </div>

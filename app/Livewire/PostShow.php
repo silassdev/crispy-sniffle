@@ -34,7 +34,7 @@ class PostShow extends Component
     public function toggleReaction($type)
     {
         if (! auth()->check()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Login','message'=>'Please login to react','ttl'=>4000]);
+            $this->dispatch('app-toast', title: 'Login', message: 'Please login to react', ttl: 4000);
             return;
         }
 
@@ -54,13 +54,13 @@ class PostShow extends Component
             $this->userReaction = $type;
         }
 
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
 
     public function report($reason = null)
     {
         if (! auth()->check()) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Login','message'=>'Please login to report','ttl'=>4000]);
+            $this->dispatch('app-toast', title: 'Login', message: 'Please login to report', ttl: 4000);
             return;
         }
 
@@ -69,10 +69,10 @@ class PostShow extends Component
                 'user_id' => auth()->id(),
                 'reason' => $reason ?? null,
             ]);
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Reported','message'=>'Post reported to admins','ttl'=>4000]);
+            $this->dispatch('app-toast', title: 'Reported', message: 'Post reported to admins', ttl: 4000);
         } catch (\Throwable $e) {
             \Log::error('Post report failed: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Report failed','ttl'=>4000]);
+            $this->dispatch('app-toast', title: 'Error', message: 'Report failed', ttl: 4000);
         }
     }
 

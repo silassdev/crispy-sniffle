@@ -23,7 +23,7 @@ class Sidebar extends Component
     public function showSection(string $section)
     {
         $this->activeSection = $section;
-        $this->emitTo('admin.dashboard-shell', 'showSection', $section);
+        $this->dispatch('showSection', section: $section)->to('admin.dashboard-shell');
     }
        
     public function setActiveSection($section)

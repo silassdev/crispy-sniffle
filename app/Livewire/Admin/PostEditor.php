@@ -141,11 +141,11 @@ class PostEditor extends Component
             }
             $this->post->tags()->sync($tagIds);
 
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Saved', 'message' => 'Post saved', 'ttl' => 3000]);
-            $this->emit('post:refresh');
+            $this->dispatch('app-toast', title: 'Saved', message: 'Post saved', ttl: 3000);
+            $this->dispatch('post:refresh');
         } catch (\Throwable $e) {
             \Log::error('PostEditor save error: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error', 'message' => 'Unable to save post', 'ttl' => 6000]);
+            $this->dispatch('app-toast', title: 'Error', message: 'Unable to save post', ttl: 6000);
         } finally {
             $this->isSaving = false;
         }
@@ -165,7 +165,7 @@ class PostEditor extends Component
         $this->post->meta = array_filter($oldMeta, fn($v,$k) => !in_array($k,['feature_thumbnail','feature_small','feature_webp']), ARRAY_FILTER_USE_BOTH);
         $this->post->save();
 
-        $this->dispatchBrowserEvent('app-toast', ['title' => 'Removed', 'message' => 'Feature image removed', 'ttl' => 3000]);
+        $this->dispatch('app-toast', title: 'Removed', message: 'Feature image removed', ttl: 3000);
     }
 
     public function render()

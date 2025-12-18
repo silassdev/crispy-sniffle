@@ -79,9 +79,9 @@ class UserProfile extends Component
             'badges' => $this->form['badges'],
             ]);
             $this->user->save();
-            $this->dispatch('app-toast', type: 'error', message: 'Failed to approve');
-            $this->emit('refreshUser');
-            $this->emit('refreshDashboardCounters');
+            $this->dispatch('refreshUser');
+            $this->dispatch('refreshDashboardCounters');
+            $this->dispatch('app-toast', title: 'Success', message: 'Profile updated');
         } catch (\Throwable $e) {
             Log::error('UserProfile update failed:'.$e->getMessage());
             $this->dispatch('app-toast', type: 'error', message: 'Failed to save profile');
@@ -123,22 +123,10 @@ class UserProfile extends Component
         $this->user->approved_by = auth()->id();
         $this->user->save();
 
-        $this->dispatch('app-toast', type: 'success', message: 'Trainer approved');
+        $this->dispatch('app-toast', title: 'Success', message: 'Trainer approved');
         $this->loadUser();
-        $this->emit('refreshDashboardCounters');
-        $this->emitSelf('$refresh');
-     } catch (\Throwable $e) {
-        Log::error('UserProfile approve failed:'.$e->getMessage());
-        $this->dispatch('app-toast', type: 'success', message: 'Trainer Rejected');
-     }
-    }
-
-    public function confirmDelete()
-    {
-        if (! auth()->user()?->isAdmin()) {
-            abort(403);
-        }
-        $this->confirmDelete = true;
+        $this->dispatch('refreshDashboardCounters');
+        $this->dispatch('$refresh');
     }
 
      public function destroy()
@@ -149,21 +137,20 @@ class UserProfile extends Component
         try {
             $name = $this->user->name;
             $this->user->delete();
-            $this->dispatch('app-toast', type: 'success', message: 'Deleted');
+            $this->dispatch('app-toast', title: 'Deleted', message: "User $name deleted");
+
+            if ($this->role === User::ROLE_TRAINER) {
+                return redirect()->route('admin.trainers');
+            }
+            if ($this->role === User::ROLE_STUDENT) {
+                return redirect()->route('admin.students');
+            }
+            return redirect()->route('admin.admins');
+        } catch (\Throwable $e) {
+            Log::error('UserProfile delete failed:'.$e->getMessage());
+            $this->dispatch('app-toast', title: 'Error', message: 'Failed to Delete');
         }
-        if ($this->role === User::ROLE_TRAINER)
-        {
-         return 
-         redirect()->route('admin.trainers');
-        }
-        if ($this->role === User::ROLE_STUDENT)
-            return
-         redirect()->route('admin.students');
-       return
-          redirect()->route('admin.admins');
-    } catch (\Throwable $e) {
-        Log::error('UserProfile delete failed:'.$e->getMessage());
-        $this->dispatch('app-toast', type: 'success', message: 'Failed to Delete');
+    }
     
 
    
@@ -173,9 +160,9 @@ class UserProfile extends Component
         if (! $this->user) return;
         $status = Password::sendResetLink(['email' => $this->user->email]);
         if ($status === Password::RESET_LINK_SENT) {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Sent', 'message' => 'Password reset email sent', 'ttl' => 4000]);
+            $this->dispatch('app-toast', title: 'Sent', message: 'Password reset email sent', ttl: 4000);
         } else {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Error', 'message' => 'Unable to send reset link', 'ttl' => 6000]);
+            $this->dispatch('app-toast', title: 'Error', message: 'Unable to send reset link', ttl: 6000);
         }
     }
 
@@ -187,13 +174,13 @@ class UserProfile extends Component
         if (! $this->user) return;
         $payload = $this->user->toArray();
         $filename = strtolower('user-' . $this->user->id . '.json');
-        $this->dispatchBrowserEvent('download-user-json', ['filename' => $filename, 'data' => json_encode($payload, JSON_PRETTY_PRINT)]);
+        $this->dispatch('download-user-json', filename: $filename, data: json_encode($payload, JSON_PRETTY_PRINT));
     }
 
     public function printProfile()
     {
         // trigger client-side print routine
-        $this->dispatchBrowserEvent('print-user');
+        $this->dispatch('print-user');
     }
 
     public function render()
