@@ -54,7 +54,11 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
         Route::get('/other-actions', [OtherActionsController::class, 'index'])->name('other-actions');
 
+        Route::view('/courses', 'admin.courses')->name('courses');
+        Route::view('/newsletter', 'admin.newsletter')->name('newsletter');
+
 });
+
 
 
         

@@ -28,8 +28,7 @@ foreach ($attributes->all() as $__key => $__value) {
 
 unset($__defined_vars, $__key, $__value); ?>
 <svg <?php echo e($attributes->merge(['class' => $class, 'viewBox' => '0 0 24 24', 'fill' => 'none', 'stroke' => 'currentColor', 'stroke-width' => '2', 'stroke-linecap' => 'round', 'stroke-linejoin' => 'round'])); ?> xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path d="M22 10L12 5L2 10l10 5l10-5z" />
-  <path d="M6 12.5V16a6 6 0 0 0 12 0v-3.5" />
+  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
 </svg>
-
-<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/components/icons/students.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/components/icons/courses.blade.php ENDPATH**/ ?>

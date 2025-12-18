@@ -15,10 +15,10 @@
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
             ['key' => 'trainers', 'label' => 'Trainers', 'icon' => 'trainers', 'route_suffix' => 'trainers.index'],
             ['key' => 'admins', 'label' =>   'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'community', 'label' => 'Community', 'icon' => 'admins', 'route_suffix' => 'community'],
-            ['key' => 'admins', 'label' =>    'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-            ['key' => 'Newsletter', 'label' => 'Admins', 'icon' => 'admins', 'route_suffix' => 'admins.index'],
-        ],
+            ['key' => 'community', 'label' => 'Community', 'icon' => 'community', 'route_suffix' => 'community'],
+            ['key' => 'courses', 'label' =>    'Courses', 'icon' => 'courses', 'route_suffix' => 'courses'],
+            ['key' => 'newsletter', 'label' => 'Newsletter', 'icon' => 'newsletter', 'route_suffix' => 'newsletter'],
+        ],  
         'trainer' => [
             ['key' => 'overview', 'label' => 'Overview', 'icon' => 'overview', 'route_suffix' => 'dashboard'],
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
@@ -35,10 +35,11 @@
     @foreach($menuItems as $item)
         @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp
         @if(Route::has($targetRoute))
-            <a href="{{ route($targetRoute) }}" class="block p-4 rounded-md text-center transition-colors text-slate-500 hover:bg-slate-50">
+            <a href="{{ route($targetRoute) }}" class="group block p-4 rounded-md text-center transition-colors text-slate-500 hover:bg-slate-50">
                 <x-dynamic-component :component="'icons.'.$item['icon']" class="w-8 h-8 mx-auto mb-2" />
                 <span class="text-sm font-medium">{{ $item['label'] }}</span>
             </a>
         @endif
+
     @endforeach
 </div>

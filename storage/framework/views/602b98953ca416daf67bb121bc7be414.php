@@ -40,13 +40,13 @@
           </li>
 
           <li>
-            <a href="#pricing" class="block px-2 py-1 text-slate-300 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="#pricing" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
               Pricing
             </a>
           </li>
 
           <li>
-            <a href="#docs" class="block px-2 py-1 text-slate-300 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="#docs" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
               Docs
             </a>
           </li>
