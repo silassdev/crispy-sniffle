@@ -69,7 +69,7 @@
     <div class="flex items-center justify-between h-16">
       {{-- left: logo + primary nav (desktop guests) --}}
       <div class="flex items-center nav-left-gap">
-        <a href="{{ route($dashboardRoute) }}" class="flex items-center gap-3">
+        <a href="{{ route('home') }}" class="flex items-center gap-3">
           <img src="{{ asset('img/igniscode.svg') }}" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-extrabold text-lg leading-none">{{ config('app.name') }}</span>
         </a>

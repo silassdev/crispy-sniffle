@@ -69,7 +69,7 @@
     <div class="flex items-center justify-between h-16">
       
       <div class="flex items-center nav-left-gap">
-        <a href="<?php echo e(route($dashboardRoute)); ?>" class="flex items-center gap-3">
+        <a href="<?php echo e(route('home')); ?>" class="flex items-center gap-3">
           <img src="<?php echo e(asset('img/igniscode.svg')); ?>" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-extrabold text-lg leading-none"><?php echo e(config('app.name')); ?></span>
         </a>
