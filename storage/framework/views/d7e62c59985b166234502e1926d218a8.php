@@ -9,7 +9,7 @@
     <!-- Left hero (desktop) -->
     <div class="hidden md:flex flex-col justify-center gap-6 p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
       <div class="flex items-center gap-3">
-        <img src="{{ asset('img/igniscode.svg') }}" alt="Logo" class="w-12 h-12">
+        <img src="<?php echo e(asset('img/igniscode.svg')); ?>" alt="Logo" class="w-12 h-12">
         <div>
           <h3 class="text-xl font-semibold">Create your account</h3>
           <p class="text-sm opacity-90">Join now and get access to your dashboard</p>
@@ -38,14 +38,22 @@
       </button>
 
       <form wire:submit.prevent="submit" id="register-form" autocomplete="off" novalidate>
-        @csrf
+        <?php echo csrf_field(); ?>
         <div class="space-y-4">
           <!-- role display -->
           <div>
             <div class="mt-2 text-sm text-gray-700 dark:text-gray-200">
-              {{ $role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') ) }}
+              <?php echo e($role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') )); ?>
+
             </div>
-            @error('role') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['role'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
           <!-- name -->
@@ -59,7 +67,14 @@
               class="mt-1 block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
               placeholder="Your full name"
             />
-            @error('name') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
           <!-- email -->
@@ -74,7 +89,14 @@
               class="mt-1 block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
               placeholder="you@example.com"
             />
-            @error('email') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
           <!-- password and confirmation -->
@@ -95,7 +117,14 @@
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><!-- eye icon --></svg>
                 </button>
               </div>
-              @error('password') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
+              <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-500 mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
             </div>
 
             <div>
@@ -113,9 +142,9 @@
           </div>
 
           <!-- global errors -->
-          @if($errors->has('registration'))
-            <div class="text-sm text-red-600">{{ $errors->first('registration') }}</div>
-          @endif
+          <!--[if BLOCK]><![endif]--><?php if($errors->has('registration')): ?>
+            <div class="text-sm text-red-600"><?php echo e($errors->first('registration')); ?></div>
+          <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
           <!-- primary actions -->
           <div class="grid grid-cols-1 gap-3">
@@ -138,28 +167,28 @@
 
             <!-- social buttons -->
             <div class="grid grid-cols-2 gap-3">
-              <a href="{{ route('social.redirect', ['provider' => 'google']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white hover:bg-gray-50 shadow-sm">
-                @if ( view()->exists('components.icons.google') )
-                  @include('components.icons.google', ['class' => 'w-5 h-5'])
-                @else
+              <a href="<?php echo e(route('social.redirect', ['provider' => 'google'])); ?>?role=<?php echo e($role); ?>" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white hover:bg-gray-50 shadow-sm">
+                <!--[if BLOCK]><![endif]--><?php if( view()->exists('components.icons.google') ): ?>
+                  <?php echo $__env->make('components.icons.google', ['class' => 'w-5 h-5'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php else: ?>
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"></svg>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <span class="text-sm text-gray-700 dark:text-gray-200">Google</span>
               </a>
 
-              <a href="{{ route('social.redirect', ['provider' => 'github']) }}?role={{ $role }}" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white hover:bg-gray-50 shadow-sm">
-                @if ( view()->exists('components.icons.github') )
-                  @include('components.icons.github', ['class' => 'w-5 h-5'])
-                @else
+              <a href="<?php echo e(route('social.redirect', ['provider' => 'github'])); ?>?role=<?php echo e($role); ?>" class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white hover:bg-gray-50 shadow-sm">
+                <?php if( view()->exists('components.icons.github') ): ?>
+                  <?php echo $__env->make('components.icons.github', ['class' => 'w-5 h-5'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+                <?php else: ?>
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"></svg>
-                @endif
+                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 <span class="text-sm text-gray-700 dark:text-gray-200">GitHub</span>
               </a>
             </div>
 
             <p class="text-center text-xs text-gray-500 dark:text-gray-300">
               Already have an account?
-              <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Sign in</a>
+              <a href="<?php echo e(route('login')); ?>" class="text-indigo-600 hover:underline">Sign in</a>
             </p>
           </div>
         </div>
@@ -168,29 +197,29 @@
   </div>
 </div>
 
-{{-- Fallback inline toast script: this runs when your component sets $this->toast --}}
-@if($toast)
-  @php
+
+<!--[if BLOCK]><![endif]--><?php if($toast): ?>
+  <?php
     $title = addslashes($toast['title'] ?? '');
     $message = addslashes($toast['message'] ?? '');
     $ttl = (int) ($toast['ttl'] ?? 5000);
     $type = addslashes($toast['type'] ?? 'info');
-  @endphp
+  ?>
 
   <script>
     (function(){
       try {
         if (window.APP_TOAST && typeof window.APP_TOAST.push === 'function') {
-          window.APP_TOAST.push("{{ $title }}", "{{ $message }}", "{{ $type }}", {{ $ttl }});
+          window.APP_TOAST.push("<?php echo e($title); ?>", "<?php echo e($message); ?>", "<?php echo e($type); ?>", <?php echo e($ttl); ?>);
         } else {
-          console.log('TOAST (fallback):', "{{ $title }}", "{{ $message }}", "{{ $type }}", {{ $ttl }});
+          console.log('TOAST (fallback):', "<?php echo e($title); ?>", "<?php echo e($message); ?>", "<?php echo e($type); ?>", <?php echo e($ttl); ?>);
         }
       } catch (err) {
         console.warn('Fallback toast handler error', err);
       }
     })();
   </script>
-@endif
+<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
 <!-- Small vanilla JS: validation, delegated handlers, re-attach hooks -->
 <script>
@@ -323,3 +352,4 @@
 
 })();
 </script>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/forms/register-form.blade.php ENDPATH**/ ?>

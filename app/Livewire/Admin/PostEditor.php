@@ -23,7 +23,7 @@ class PostEditor extends Component
         'excerpt' => '',
         'body' => '',
         'status' => 'draft', // draft|published
-        'tags' => '', // comma separated string
+        'tags' => '',
     ];
 
     /** @var \Livewire\TemporaryUploadedFile|null */
@@ -116,6 +116,10 @@ class PostEditor extends Component
                 }
                 $path = $this->featureImage->store('posts', 'public');
                 $this->post->feature_image = $path;
+
+                // Dispatch jobs to process the image
+                dispatch(new ResizePostImage($path));
+                dispatch(new GenerateWebP($path));
             }
 
             $this->post->save();

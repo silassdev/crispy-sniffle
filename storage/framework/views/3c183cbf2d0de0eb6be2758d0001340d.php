@@ -1,10 +1,9 @@
 <div id="login-modal-root"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
      role="dialog"
-     aria-modal="true"
-     style="-webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);">
+     aria-modal="true">
 
-  <div class="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white/90 dark:bg-gray-900/80 grid grid-cols-1 md:grid-cols-2">
+  <div class="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900 grid grid-cols-1 md:grid-cols-2">
     <!-- Left hero (desktop only) -->
     <div class="hidden md:flex flex-col justify-center gap-6 p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
       <div class="flex items-center gap-3">
@@ -28,15 +27,15 @@
 
     <!-- Right form -->
     <div class="p-6 sm:p-10">
-              <button type="button"
-                      id="login-modal-close"
-                      class="absolute right-4 top-4 md:top-6 text-gray-500 hover:text-gray-700 dark:text-gray-300"
-                      aria-label="Close">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-
+      <button type="button"
+              id="login-modal-close"
+              class="absolute right-4 top-4 md:top-6 text-gray-500 hover:text-gray-700 dark:text-gray-300"
+              aria-label="Close"
+              onclick="document.getElementById('login-modal-root').remove(); window.location.href = '/';">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
 
       <form wire:submit.prevent="submit" method="POST" id="login-form" novalidate>
         <?php echo csrf_field(); ?>
