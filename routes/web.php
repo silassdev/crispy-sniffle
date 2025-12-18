@@ -11,6 +11,7 @@ if (file_exists(__DIR__ . '/admin.php')) {
 }
 
 // Public controllers
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
@@ -31,6 +32,8 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -40,13 +43,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 
-// Blog
-Route::get('blogs', [\App\Http\Controllers\PostController::class,'index'])->name('blogs');
-Route::get('blogs/{slug}', [\App\Http\Controllers\PostController::class,'show'])->name('blogs.show');
-Route::post('blogs/{post}/comments', [\App\Http\Controllers\CommentController::class,'store'])->middleware('auth')->name('blogs.comments.store');
-Route::post('blogs/{post}/reactions', [\App\Http\Controllers\ReactionController::class,'store'])->middleware('auth')->name('blogs.reactions.store');
-Route::post('blogs/{post}/report', [\App\Http\Controllers\PostReportController::class,'store'])->middleware('auth')->name('blogs.report');
+//Post Routes
 
+
+// Blog
+Route::get('/blogs', [PostController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{slug}', [PostController::class, 'show'])->name('blogs.show');
 
 // Contact
 Route::controller(ContactController::class)->group(function () {

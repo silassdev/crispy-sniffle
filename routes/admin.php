@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\OtherActionsController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+
 
 
 
@@ -38,12 +40,13 @@ use App\Http\Controllers\Admin\OtherActionsController;
         Route::get('/comments', [CommentController::class, 'index'])->name('comments');
 
         // Admin post management (create/draft/publish)
-        Route::get('posts', \App\Http\Controllers\Admin\PostController::class.'@index')->name('posts');
-        Route::get('posts/create', \App\Http\Controllers\Admin\PostController::class.'@create')->name('posts.create');
-        Route::post('posts', \App\Http\Controllers\Admin\PostController::class.'@store')->name('posts.store');
-        Route::get('posts/{post}/edit', \App\Http\Controllers\Admin\PostController::class.'@edit')->name('posts.edit');
-        Route::put('posts/{post}', \App\Http\Controllers\Admin\PostController::class.'@update')->name('posts.update');
-        Route::delete('posts/{post}', \App\Http\Controllers\Admin\PostController::class.'@destroy')->name('posts.destroy');
+        Route::get('/posts', [AdminPostController::class, 'index'])->name('posts');
+        Route::get('/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
+        Route::post('/posts', [AdminPostController::class, 'store'])->name('posts.store');
+        Route::get('/posts/{post}/edit', [AdminPostController::class, 'edit'])->name('posts.edit');
+        Route::put('/posts/{post}', [AdminPostController::class, 'update'])->name('posts.update');
+        Route::delete('/posts/{post}', [AdminPostController::class, 'destroy'])->name('posts.destroy');
+        Route::get('/posts/{post}', [AdminPostController::class, 'show'])->name('posts.show');
 
 
 

@@ -22,7 +22,7 @@ class PostEditor extends Component
         'title' => '',
         'excerpt' => '',
         'body' => '',
-        'status' => 'draft', // draft|published
+        'status' => 'draft',
         'tags' => '',
     ];
 
@@ -108,9 +108,8 @@ class PostEditor extends Component
                 $this->post->slug = $slug;
             }
 
-            // handle uploaded feature image
+            // handle uploaded feature image using Spatie medialibrary
             if ($this->featureImage) {
-                // remove old file if exists
                 if ($this->post->feature_image) {
                     Storage::disk('public')->delete($this->post->feature_image);
                 }
@@ -123,6 +122,15 @@ class PostEditor extends Component
             }
 
             $this->post->save();
+            $tmpPath = $this->featureImage->store('uploads/posts_raw', 'public'); // returns path like uploads/posts_raw/xxxxx.jpg
+            $absolute = storage_path('app/public/'.$tmpPath);
+
+             // attach to media library (this copies the file to media disk / media table)
+            $this->post->addMedia($absolute)
+           ->usingFileName(Str::slug(pathinfo($tmpPath, PATHINFO_FILENAME)) . '-' . Str::random(6) .'.'.pathinfo($tmpPath, PATHINFO_EXTENSION))
+           ->toMediaCollection('feature_images');
+
+            Storage::disk('public')->delete($tmpPath);
 
             // tags handling
             $tags = $this->parseTags($this->form['tags']);
