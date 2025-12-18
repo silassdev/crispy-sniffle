@@ -41,11 +41,19 @@
       <form wire:submit.prevent="submit" id="register-form" autocomplete="off" novalidate>
         @csrf
         <div class="space-y-4">
-          <!-- role display -->
+          <!-- role selection -->
           <div>
-            <div class="mt-2 text-sm text-gray-700 dark:text-gray-200">
-              {{ $role === 'trainer' ? 'Trainer (requires approval)' : ( $role === 'student' ? 'Student' : ucfirst($role ?? 'student') ) }}
-            </div>
+            <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Register as</label>
+            <select
+              id="role"
+              name="role"
+              wire:model.defer="role"
+              required
+              class="mt-1 block w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
+            >
+              <option value="student">Student</option>
+              <option value="trainer">Trainer</option>
+            </select>
             @error('role') <div class="text-xs text-red-500 mt-1">{{ $message }}</div> @enderror
           </div>
 
@@ -188,6 +196,23 @@
         }
       } catch (err) {
         console.warn('Fallback toast handler error', err);
+      }
+    })();
+  </script>
+@endif
+
+@if(session('status'))
+  <script>
+    (function(){
+      const status = @json(session('status'));
+      const message = status.role === 'trainer' 
+        ? (status.success ? 'Registration successful! Your account is pending approval.' : 'Registration failed. Please try again.')
+        : (status.success ? 'Registration successful! Welcome aboard.' : 'Registration failed. Please try again.');
+
+      if (window.APP_TOAST && typeof window.APP_TOAST.push === 'function') {
+        window.APP_TOAST.push('Registration Status', message, status.success ? 'success' : 'error', 5000);
+      } else {
+        console.log('TOAST:', 'Registration Status', message, status.success ? 'success' : 'error');
       }
     })();
   </script>

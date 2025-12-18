@@ -189,6 +189,88 @@ Home — {{ config('app.name') }}
   </div>
 </section>
 
+<div class="hero bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20 relative">
+    <div class="container mx-auto text-center">
+        <h1 class="text-5xl font-bold">Welcome to the Ultra-Modern LMS</h1>
+        <p class="mt-4 text-lg">Empowering developers, vibecoders, and tutors to achieve their goals.</p>
+        <div class="mt-6">
+            <a href="/courses" class="bg-white text-blue-600 px-6 py-3 rounded-full shadow-md hover:bg-gray-100">Explore Courses</a>
+            <a href="/join" class="bg-purple-600 text-white px-6 py-3 rounded-full shadow-md hover:bg-purple-700">Join as Tutor</a>
+        </div>
+    </div>
+    <img src="/img/hero-right.svg" alt="Decorative SVG" class="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:block opacity-50">
+</div>
+
+<div class="mission py-20 bg-gray-100">
+    <div class="container mx-auto flex flex-col lg:flex-row items-center">
+        <img src="/img/mission-left.svg" alt="Mission SVG" class="w-1/2 lg:w-1/3 mb-6 lg:mb-0">
+        <div class="text-center lg:text-left lg:ml-10">
+            <h2 class="text-3xl font-bold mb-4">Our Mission</h2>
+            <p class="text-lg mb-6">We are dedicated to revolutionizing the digital world through cutting-edge web and app solutions.</p>
+            <ul class="list-disc list-inside text-left">
+                <li><strong>Expert Team:</strong> Skilled professionals with years of experience in web and app development</li>
+                <li><strong>Tailored Solutions:</strong> We create customized strategies that align with your business goals.</li>
+                <li><strong>Seamless Experience:</strong> From consultation to launch, we ensure a smooth journey for your project.</li>
+                <li><strong>Commitment to Excellence:</strong> Delivering top-notch solutions that exceed expectations.</li>
+            </ul>
+            <p class="mt-6">Join us on this journey to transform your digital presence and turn your ideas into reality. Together, let's build something extraordinary!</p>
+        </div>
+    </div>
+</div>
+
+<div class="counters py-20 bg-white">
+    <div class="container mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-10">Our Achievements</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div>
+                <h3 class="text-5xl font-bold text-blue-600 counter" data-target="187">0</h3>
+                <p class="mt-2 text-lg">Clients</p>
+            </div>
+            <div>
+                <h3 class="text-5xl font-bold text-blue-600 counter" data-target="450">0</h3>
+                <p class="mt-2 text-lg">Projects</p>
+            </div>
+            <div>
+                <h3 class="text-5xl font-bold text-blue-600 counter" data-target="1042">0</h3>
+                <p class="mt-2 text-lg">Hours of Support</p>
+            </div>
+            <div>
+                <h3 class="text-5xl font-bold text-blue-600 counter" data-target="32">0</h3>
+                <p class="mt-2 text-lg">Workers</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const updateCount = () => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = target / 200;
+
+                if (count < target) {
+                    counter.innerText = Math.ceil(count + increment);
+                    setTimeout(updateCount, 10);
+                } else {
+                    counter.innerText = target;
+                }
+            };
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        updateCount();
+                        observer.unobserve(counter);
+                    }
+                });
+            });
+            observer.observe(counter);
+        });
+    });
+</script>
+
 {{-- BLOG / FEED SECTION (Inline) --}}
 <section class="py-12 bg-white border-t border-gray-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
