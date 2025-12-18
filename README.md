@@ -22,42 +22,13 @@ This Learning Management System (LMS) is designed to provide an ultra-modern, dy
   - Fully optimized for mobile, tablet, and desktop.
 
 ## Tech Stack
-- **Frontend**: Tailwind CSS, Vue.js/React.js
+- **Frontend**: Tailwind CSS, Livewire Blade
 - **Backend**: Laravel
 - **Database**: MySQL
 - **Other Tools**: Docker, Composer, Vite
 
-## Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/laravel-lms.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd laravel-lms
-   ```
-3. Install dependencies:
-   ```bash
-   composer install
-   npm install
-   ```
-4. Set up the environment file:
-   ```bash
-   cp .env.example .env
-   php artisan key:generate
-   ```
-5. Run migrations:
-   ```bash
-   php artisan migrate
-   ```
-6. Start the development server:
-   ```bash
-   php artisan serve
-   npm run dev
-   ```
+
 
 ## Contribution
 We welcome contributions from the community! Feel free to submit issues and pull requests.
 
-## License
-This project is licensed under the MIT License.
