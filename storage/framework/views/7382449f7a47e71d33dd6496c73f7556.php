@@ -1,10 +1,10 @@
-@extends('layouts.app')
 
-@section('content')
+
+<?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
 
-  {{-- HERO --}}
+  
   <section class="grid gap-6 lg:grid-cols-3 items-center mb-10">
   <div class="lg:col-span-2">
     <div class="hero-card hero-yellow bg-white dark:bg-slate-900 rounded-lg shadow-md p-8 relative overflow-hidden">
@@ -20,11 +20,11 @@
         </p>
 
         <div class="flex flex-wrap gap-3">
-          <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">
+          <a href="<?php echo e(route('register')); ?>" class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">
             Get started
           </a>
 
-          <a href="{{ route('home') }}#explore" class="inline-flex items-center gap-2 px-4 py-2 border rounded hover:bg-gray-50 transition">
+          <a href="<?php echo e(route('home')); ?>#explore" class="inline-flex items-center gap-2 px-4 py-2 border rounded hover:bg-gray-50 transition">
             Explore posts
           </a>
         </div>
@@ -49,12 +49,12 @@
       </div>
     </div>
 
-    {{-- Suggested courses (sidebar) --}}
+    
     <aside class="hidden lg:block">
       <div class="sticky top-6 space-y-4">
         <div class="p-4 bg-white rounded-lg shadow-sm">
           <h3 class="font-semibold mb-3">Suggested courses</h3>
-          @includeIf('partials.suggested-courses', ['courses' => $courses ?? null])
+          <?php if ($__env->exists('partials.suggested-courses', ['courses' => $courses ?? null])) echo $__env->make('partials.suggested-courses', ['courses' => $courses ?? null], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         </div>
 
         <div class="p-4 bg-white rounded-lg shadow-sm text-sm">
@@ -65,7 +65,7 @@
     </aside>
   </section>
 
-  {{-- COUNTERS SECTION --}}
+  
   <section class="mt-12 bg-gray-50 py-12 rounded-lg">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
       <div>
@@ -87,23 +87,23 @@
     </div>
   </section>
 
-  {{-- EXPLORE / FEED + RIGHT SIDEBAR --}}
+  
   <section id="explore" class="grid gap-8 lg:grid-cols-3">
     <main class="lg:col-span-2 space-y-6">
 
-      {{-- trending posts header --}}
+      
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold">Latest posts</h2>
-        <a href="{{ route('blogs.index') ?? '#' }}" class="text-sm text-indigo-600 hover:underline">View all</a>
+        <a href="<?php echo e(route('blogs.index') ?? '#'); ?>" class="text-sm text-indigo-600 hover:underline">View all</a>
       </div>
 
       <div class="space-y-4">
-        @include('partials.feed', ['posts' => $posts ?? null])
+        <?php echo $__env->make('partials.feed', ['posts' => $posts ?? null], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
       </div>
 
     </main>
 
-    {{-- right column: small widgets --}}
+    
     <aside class="space-y-6">
       <div class="p-4 bg-white rounded-lg shadow-sm">
         <h4 class="font-semibold mb-2">Trending tags</h4>
@@ -130,21 +130,21 @@
     </aside>
   </section>
 
-  {{-- testimonials strip --}}
+  
   <section class="mt-12">
-    @includeIf('partials.testimonials')
+    <?php if ($__env->exists('partials.testimonials')) echo $__env->make('partials.testimonials', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </section>
 
-  {{-- CTA footer --}}
+  
   <section class="mt-12 p-6 bg-gradient-to-r from-indigo-50 to-white rounded-lg text-center">
     <h3 class="text-lg font-semibold mb-2">Ready to start learning?</h3>
-    <a href="{{ route('register') }}" class="inline-block px-5 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">
+    <a href="<?php echo e(route('register')); ?>" class="inline-block px-5 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">
       Create a free account
     </a>
   </section>
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const revealEls = document.querySelectorAll('[data-reveal]');
@@ -198,6 +198,8 @@ document.addEventListener('DOMContentLoaded', function () {
   counters.forEach(counter => counterIo.observe(counter));
 });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/home/guest.blade.php ENDPATH**/ ?>

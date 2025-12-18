@@ -48,22 +48,32 @@
   </div>
 
   {{-- confirmation modal --}}
-  <div x-data="{ open:false }"
-       x-on:open-confirm-modal.window="open=true"
-       x-show="open"
-       x-cloak
-       class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-    <div class="bg-white rounded p-6 w-full max-w-md">
-      <h4 class="font-semibold mb-2">Confirm</h4>
-      <p class="text-sm text-gray-700 mb-4">
-        Are you sure you want to {{ $confirmAction === 'publish' ? 'publish' : ($confirmAction === 'save-draft' ? 'save as draft' : ($confirmAction === 'delete-post' ? 'delete this post' : ($confirmAction === 'ban-user' ? 'ban this user' : 'perform this action')) ) }}?
-      </p>
-      <div class="flex justify-end gap-3">
-        <button @click="open=false; Livewire.emit('cancelConfirm')" class="px-3 py-2 border rounded">Cancel</button>
-        <button @click="open=false; Livewire.emit('runConfirmedAction')" class="px-3 py-2 bg-indigo-600 text-white rounded">Yes</button>
-      </div>
+<div x-data="{ open:false }"
+     x-on:open-confirm-modal.window="open=true"
+     x-show="open"
+     x-cloak
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+  <div class="bg-white rounded p-6 w-full max-w-md">
+    <h4 class="font-semibold mb-2">Confirm</h4>
+    <p class="text-sm text-gray-700 mb-4">
+      Are you sure you want to
+      @if($confirmAction === 'publish') publish
+      @elseif($confirmAction === 'save-draft') save as draft
+      @elseif($confirmAction === 'delete-post') delete this post
+      @elseif($confirmAction === 'ban-user') ban this user
+      @elseif($confirmAction === 'unban-user') unban this user
+      @elseif($confirmAction === 'abandon') abandon changes
+      @else perform this action
+      @endif
+      ?
+    </p>
+    <div class="flex justify-end gap-3">
+      <button @click="open=false; $wire.cancelConfirm()" class="px-3 py-2 border rounded">Cancel</button>
+      <button @click="open=false; $wire.runConfirmedAction()" class="px-3 py-2 bg-indigo-600 text-white rounded">Yes</button>
     </div>
   </div>
+</div>
+
 
   {{-- Posts list (lazy loaded) --}}
   <div wire:init="loadPosts" class="space-y-4">

@@ -16,7 +16,6 @@ class CommunityManager extends Component
     use WithPagination, WithFileUploads;
 
     public bool $readyToLoad = false;
-
     public int $perPage = 10;
 
     // new post form
@@ -24,12 +23,12 @@ class CommunityManager extends Component
         'title' => '',
         'body' => '',
         'tags' => '',
-        'status' => 'draft',
+        'status' => 'draft', // draft|published
     ];
 
-    public $featureImage = null;
+    public $featureImage = null; // Livewire file upload
 
-    public $confirmAction = null;
+    public $confirmAction = null; // 'publish'|'save-draft'|'delete-post'|'ban-user'|'unban-user'|'abandon'
     public $confirmPayload = null;
 
     protected $listeners = ['refreshCommunity' => '$refresh'];
@@ -54,11 +53,38 @@ class CommunityManager extends Component
         ];
     }
 
+    /**
+     * Safe notification helper: uses $this->dispatch (Livewire v3) if available,
+     * otherwise falls back to dispatchBrowserEvent.
+     */
+    protected function notify(string $title, string $message, int $ttl = 3000): void
+    {
+        $payload = ['title' => $title, 'message' => $message, 'ttl' => $ttl];
+        if (method_exists($this, 'dispatch')) {
+            $this->dispatch('app-toast', $payload);
+        } else {
+            $this->dispatchBrowserEvent('app-toast', $payload);
+        }
+    }
+
+    /**
+     * Safe trigger for generic client events (like opening confirm modal).
+     */
+    protected function trigger(string $name, array $payload = []): void
+    {
+        if (method_exists($this, 'dispatch')) {
+            $this->dispatch($name, $payload);
+        } else {
+            $this->dispatchBrowserEvent($name, $payload);
+        }
+    }
+
     public function confirm(string $type, $payload = null)
     {
         $this->confirmAction = $type;
         $this->confirmPayload = $payload;
-        $this->dispatchBrowserEvent('open-confirm-modal');
+        // open confirm modal on client
+        $this->trigger('open-confirm-modal');
     }
 
     public function cancelConfirm()
@@ -74,24 +100,29 @@ class CommunityManager extends Component
         $payload = $this->confirmPayload;
         $this->cancelConfirm();
 
-        if ($type === 'publish' || $type === 'save-draft') {
-            $this->savePost($type === 'publish' ? 'published' : 'draft');
-            return;
-        }
-
-        if ($type === 'delete-post') {
-            $this->deletePost($payload);
-            return;
-        }
-
-        if ($type === 'ban-user') {
-            $this->toggleBan((int)$payload, true);
-            return;
-        }
-
-        if ($type === 'unban-user') {
-            $this->toggleBan((int)$payload, false);
-            return;
+        switch ($type) {
+            case 'publish':
+                $this->savePost('published');
+                return;
+            case 'save-draft':
+                $this->savePost('draft');
+                return;
+            case 'delete-post':
+                if ($payload) $this->deletePost((int)$payload);
+                return;
+            case 'ban-user':
+                if ($payload) $this->toggleBan((int)$payload, true);
+                return;
+            case 'unban-user':
+                if ($payload) $this->toggleBan((int)$payload, false);
+                return;
+            case 'abandon':
+                $this->resetForm();
+                return;
+            default:
+                // unknown action
+                $this->notify('Error', 'Unknown action', 4000);
+                return;
         }
     }
 
@@ -112,7 +143,7 @@ class CommunityManager extends Component
             if ($this->featureImage) {
                 $path = $this->featureImage->store('community', 'public');
                 $post->feature_image = $path;
-                // optionally dispatch resize job as you did in PostEditor
+                // if you use medialibrary, replace above with addMedia flow
             }
 
             // ensure slug
@@ -132,18 +163,24 @@ class CommunityManager extends Component
             }
 
             $this->resetForm();
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Saved','message'=>'Post created','ttl'=>3500]);
+            $this->notify('Saved', 'Post created', 3500);
             $this->emit('refreshCommunity');
         } catch (\Throwable $e) {
             \Log::error('Community savePost failed: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Unable to save post','ttl'=>6000]);
+            $this->notify('Error', 'Unable to save post', 6000);
         }
     }
 
     protected function resetForm()
     {
         $this->form = ['title'=>'','body'=>'','tags'=>'','status'=>'draft'];
+        // clear file input
         $this->featureImage = null;
+        // clear validation errors
+        $this->resetValidation();
+        // emit refresh so lists update
+        $this->emit('refreshCommunity');
+        $this->notify('Reset', 'Form cleared', 1500);
     }
 
     public function deletePost(int $postId)
@@ -151,21 +188,21 @@ class CommunityManager extends Component
         try {
             $p = Post::findOrFail($postId);
             $p->delete();
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Deleted','message'=>'Post deleted','ttl'=>3500]);
+            $this->notify('Deleted', 'Post deleted', 3500);
             $this->emit('refreshCommunity');
         } catch (\Throwable $e) {
             \Log::error('Community deletePost failed: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Unable to delete','ttl'=>6000]);
+            $this->notify('Error', 'Unable to delete', 6000);
         }
     }
 
     /**
-     * Toggle a banned flag on users. If `banned` column missing, show instructive toast.
+     * Toggle a banned flag on users. If `banned` column missing, notify instructive message.
      */
     public function toggleBan(int $userId, bool $ban = true)
     {
         if (! Schema::hasColumn('users', 'banned')) {
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Missing column','message'=>'Add boolean users.banned column to enable ban/unban','ttl'=>8000]);
+            $this->notify('Missing column', 'Add boolean users.banned column to enable ban/unban', 8000);
             return;
         }
 
@@ -173,11 +210,11 @@ class CommunityManager extends Component
             $user = User::findOrFail($userId);
             $user->banned = $ban ? 1 : 0;
             $user->save();
-            $this->dispatchBrowserEvent('app-toast', ['title'=> $ban ? 'Banned' : 'Unbanned','message'=>$user->name,'ttl'=>3000]);
+            $this->notify($ban ? 'Banned' : 'Unbanned', $user->name, 3000);
             $this->emit('refreshCommunity');
         } catch (\Throwable $e) {
             \Log::error('Community toggleBan failed: '.$e->getMessage());
-            $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Unable to update user','ttl'=>6000]);
+            $this->notify('Error', 'Unable to update user', 6000);
         }
     }
 

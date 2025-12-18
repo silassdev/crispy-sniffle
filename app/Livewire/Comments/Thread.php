@@ -31,7 +31,7 @@ class Thread extends Component
     public function add()
     {
         if (! auth()->check()) {
-            $this->dispatchBrowserEvent('app-toast', ['title' => 'Login', 'message' => 'Please login to comment', 'ttl'=>4000]);
+            $this->emit('app-toast', ['title' => 'Login', 'message' => 'Please login to comment', 'ttl'=>4000]);
             return;
         }
 
@@ -48,7 +48,7 @@ class Thread extends Component
         $this->body = '';
         $this->replyTo = null;
 
-        $this->dispatchBrowserEvent('app-toast', ['title'=>'Posted','message'=>'Comment added','ttl'=>3000]);
+        $this->emit('app-toast', ['title'=>'Posted','message'=>'Comment added','ttl'=>3000]);
         $this->emitUp('comments:added');
         $this->resetPage();
     }
@@ -56,7 +56,7 @@ class Thread extends Component
     public function startReply($commentId)
     {
         $this->replyTo = $commentId;
-        $this->dispatchBrowserEvent('focus-comment-input');
+        $this->emit('focus-comment-input');
     }
 
     public function cancelReply()
