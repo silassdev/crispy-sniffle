@@ -5,5 +5,5 @@ Home — {{ config('app.name') }}
 @endsection
 
 @section('content')
-<!-- Content moved to guest.blade.php -->
+
 @endsection
