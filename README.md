@@ -26,9 +26,3 @@ This Learning Management System (LMS) is designed to provide an ultra-modern, dy
 - **Backend**: Laravel
 - **Database**: MySQL
 - **Other Tools**: Docker, Composer, Vite
-
-
-
-## Contribution
-We welcome contributions from the community! Feel free to submit issues and pull requests.
-
