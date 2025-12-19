@@ -40,14 +40,24 @@
           </li>
 
           <li>
-            <a href="#pricing" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="<?php echo e(route('pricing')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+                 'block px-2 py-1 rounded transition w-fit',
+                 'text-white bg-slate-800' => request()->routeIs('pricing'),
+                 'text-slate-600 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('pricing')
+               ]); ?>">
               Pricing
             </a>
           </li>
 
           <li>
-            <a href="#docs" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
-              Docs
+            <a href="<?php echo e(route('contribution')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+                 'block px-2 py-1 rounded transition w-fit',
+                 'text-white bg-slate-800' => request()->routeIs('contribution'),
+                 'text-slate-600 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('contribution')
+               ]); ?>">
+              Contribution
             </a>
           </li>
         </ul>

@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Contribution'); ?>
 
-@section('title', 'Contribution')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 text-white py-24 mb-16">
         <div class="absolute inset-0 opacity-20">
@@ -99,7 +97,7 @@
         <div class="bg-blue-600 rounded-3xl p-12 text-center text-white shadow-2xl shadow-blue-200">
             <h2 class="text-3xl md:text-4xl font-bold mb-6 italic">Have a unique idea?</h2>
             <p class="text-blue-100 mb-8 max-w-2xl mx-auto">We are open to partnerships and new project ideas. Let's discuss how we can work together.</p>
-            <a href="{{ route('contact.show') }}" class="inline-block px-10 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition duration-300 shadow-lg hover:-translate-y-1 transform">Contact the Team</a>
+            <a href="<?php echo e(route('contact.show')); ?>" class="inline-block px-10 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition duration-300 shadow-lg hover:-translate-y-1 transform">Contact the Team</a>
         </div>
     </div>
 </div>
@@ -113,4 +111,6 @@
         animation: fade-in-up 0.8s ease-out forwards;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/contribution.blade.php ENDPATH**/ ?>

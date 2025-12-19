@@ -40,13 +40,23 @@
           </li>
 
           <li>
-            <a href="{{ route('pricing') }}" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="{{ route('pricing') }}"
+               @class([
+                 'block px-2 py-1 rounded transition w-fit',
+                 'text-white bg-slate-800' => request()->routeIs('pricing'),
+                 'text-slate-600 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('pricing')
+               ])>
               Pricing
             </a>
           </li>
 
           <li>
-            <a href="#{{ route('contribution') }}" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="{{ route('contribution') }}"
+               @class([
+                 'block px-2 py-1 rounded transition w-fit',
+                 'text-white bg-slate-800' => request()->routeIs('contribution'),
+                 'text-slate-600 hover:text-white hover:bg-slate-800/60' => ! request()->routeIs('contribution')
+               ])>
               Contribution
             </a>
           </li>

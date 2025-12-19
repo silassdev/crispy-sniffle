@@ -42,6 +42,8 @@ use App\Http\Controllers\Student\CourseController;
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/pricing', [HomeController::class, 'pricing'])->name('pricing');
+Route::get('/contribution', [HomeController::class, 'contribution'])->name('contribution');
 
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 
