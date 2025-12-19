@@ -40,14 +40,14 @@
           </li>
 
           <li>
-            <a href="#pricing" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+            <a href="{{ route('pricing') }}" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
               Pricing
             </a>
           </li>
 
           <li>
-            <a href="#docs" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
-              Docs
+            <a href="#{{ route('contribution') }}" class="block px-2 py-1 text-slate-600 hover:text-white hover:bg-slate-800/60 rounded transition w-fit">
+              Contribution
             </a>
           </li>
         </ul>
