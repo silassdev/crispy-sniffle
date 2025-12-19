@@ -33,7 +33,7 @@ aside[data-role="student"] .ajax-link.dash-active {
 
 
 
-/* active item (role-color applied server-side to header) */
+
 .ajax-link.dash-active {
   background-color: #4F46E5;
   color: #fff;
@@ -47,7 +47,7 @@ aside[data-role="student"] .ajax-link.dash-active {
   background-color: #0EA5E9;
 }
 
-/* ensure icons color adapts */
+
 #admin-sidebar .ajax-link svg {
   stroke: currentColor;
   color: inherit;
@@ -89,7 +89,7 @@ aside[data-role="student"] .ajax-link.dash-active {
   min-height: 300px;
 }
 
-/* soft fading gradient on the right — blends the hero color into the card */
+
 .hero-card::before {
   content: "";
   position: absolute;
