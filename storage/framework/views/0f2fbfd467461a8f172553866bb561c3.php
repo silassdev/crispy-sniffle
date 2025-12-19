@@ -163,7 +163,7 @@ if (isset($__slots)) unset($__slots);
         <a @click="mobile = false" href="<?php echo e(route('home')); ?>" class="block py-2 text-gray-700">Home</a>
         <a @click="mobile = false" href="<?php echo e(route('blogs.index')); ?>" class="block py-2 text-gray-700">Blog</a>
         <a @click="mobile = false" href="<?php echo e(route('contact.show')); ?>" class="block py-2 text-gray-700">Contact</a>
-        <a @click="mobile = false" href="#" class="block py-2 text-gray-700">About</a>
+        <a @click="mobile = false" href="<?php echo e(route('about')); ?>" class="block py-2 text-gray-700">About</a>
 
         <div class="pt-3 border-t">
           <a href="<?php echo e(route('login')); ?>" class="block py-2">Login</a>
