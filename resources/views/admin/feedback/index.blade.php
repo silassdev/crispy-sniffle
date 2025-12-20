@@ -1,5 +1,5 @@
 @extends('dashboards.shell', ['section' => 'feedback', 'role' => 'admin'])
 
-@section('content')
+@section('dashboard-content')
     @include('admin.feedback.index-fragment')
 @endsection

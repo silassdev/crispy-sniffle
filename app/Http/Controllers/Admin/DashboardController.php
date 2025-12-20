@@ -21,7 +21,7 @@ class DashboardController extends Controller
         $counters = $this->service->computeCounters();
 
         if ($request->ajax()) {
-            return view('admin.overview.partials.index', compact('counters'));
+            return view('admin.overview-fragment', compact('counters'));
         }
 
         return view('admin.dashboard', compact('counters'));

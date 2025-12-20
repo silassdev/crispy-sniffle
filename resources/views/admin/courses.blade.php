@@ -1,5 +1,5 @@
 @extends('dashboards.shell', ['section' => 'courses', 'role' => 'admin'])
 
-@section('content')
+@section('dashboard-content')
   @include('admin.courses-fragment')
 @endsection

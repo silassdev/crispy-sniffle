@@ -1,6 +1,6 @@
 @extends('dashboards.shell', ['section' => 'jobs', 'role' => 'admin'])
 
-@section('content')
+@section('dashboard-content')
   @include('admin.jobs.index-fragment')
 @endsection
 

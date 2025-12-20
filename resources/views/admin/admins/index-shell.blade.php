@@ -1,8 +1,6 @@
-@extends('dashboards.shell')
+@extends('dashboards.shell', ['section' => 'admins', 'role' => 'admin'])
 
-@section('content')
-  <div class="p-6">
-    <h1 class="text-2xl mb-4">Students</h1>
+@section('dashboard-content')
+    <h1 class="text-2xl mb-4">Admins</h1>
     @include('admin.admins.index-fragment')
-  </div>
 @endsection
