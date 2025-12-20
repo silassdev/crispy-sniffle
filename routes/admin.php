@@ -1,18 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StudentController;
 use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\AdminUserController;
-use App\Http\Controllers\Admin\CommunityController;
-use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\FeedbackController;
-use App\Http\Controllers\Admin\OtherActionsController;
-use App\Http\Controllers\Admin\JobAdminController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
-use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 
 
 
@@ -37,9 +32,7 @@ use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController
         Route::get('/admins', [AdminUserController::class, 'index'])->name('admins');
         Route::get('/admins/{id}', [AdminUserController::class, 'show'])->name('admins.show');
 
-        Route::get('/community', [CommunityController::class, 'index'])->name('community');
-
-        Route::get('/comments', [CommentController::class, 'index'])->name('comments');
+        Route::get('/community', fn()=> view('admin.community'))->name('community');
 
         // Admin post management (create/draft/publish)
         Route::get('/posts', [AdminPostController::class, 'index'])->name('posts');
@@ -54,13 +47,10 @@ use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController
 
         Route::get('/newsletter', fn()=> view('admin.newsletter.index'))->name('newsletter');
         Route::get('/feedback', fn()=> view('admin.feedback.index'))->name('feedback');
-
-        Route::get('/other-actions', [OtherActionsController::class, 'index'])->name('other-actions');
+        
+        Route::get('/jobs', fn()=> view('admin.jobs.index'))->name('jobs');
 
         Route::view('/courses', 'admin.courses')->name('courses');
-        Route::view('/newsletter', 'admin.newsletter')->name('newsletter');
-
-        Route::get('/jobs', function(){ return view('admin.jobs.index'); })->name('admin.jobs');
 
 
 });

@@ -121,12 +121,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('admins/{id}', [AdminController::class, 'show'])->name('admins.show');
         Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
 
-        // Simple views
-        Route::view('community', 'admin.community')->name('community');
-        Route::view('comments', 'admin.comments')->name('comments');
-        Route::view('posts', 'admin.posts')->name('posts');
-        Route::view('feedback', 'admin.feedback')->name('feedback');
-        Route::view('other-actions', 'admin.other-actions')->name('other-actions');
+
 
         // full-screen notifications page
         Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
