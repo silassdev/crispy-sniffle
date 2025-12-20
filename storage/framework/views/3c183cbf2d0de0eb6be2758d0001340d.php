@@ -197,5 +197,4 @@ unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
       }
     })();
   </script>
-<?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/forms/login-form.blade.php ENDPATH**/ ?>
+<?php endif; ?><!--[if ENDBLOCK]><![endif]--><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/forms/login-form.blade.php ENDPATH**/ ?>

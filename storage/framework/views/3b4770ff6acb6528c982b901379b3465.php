@@ -1,16 +1,19 @@
 
 
 <?php $__env->startSection('content'); ?>
-<div class="flex">
-  <?php echo $__env->make('dashboards.partials.sidebar', ['role' => auth()->user()->role ?? 'admin'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+<div class="flex min-h-screen">
+  
+  <aside class="w-64 flex-shrink-0 sticky top-0 h-screen overflow-y-auto bg-white border-r border-gray-200">
+    <?php echo $__env->make('dashboards.partials.sidebar', ['role' => auth()->user()->role ?? 'admin'], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+  </aside>
 
-  <main class="flex-1 p-6 relative">
-
+  
+  <main class="flex-1 overflow-y-auto relative">
     <div id="ajax-loader" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/30">
       <div class="loader-donut"></div>
     </div>
 
-    <div id="admin-content">
+    <div id="admin-content" class="p-6">
       <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];

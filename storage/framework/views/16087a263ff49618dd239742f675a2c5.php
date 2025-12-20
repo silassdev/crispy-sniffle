@@ -39,12 +39,21 @@
     };
 ?>
 
-<div id="user-grid" class="grid grid-cols-3 gap-4 p-4 bg-white shadow-md rounded-md">
-    <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>
-        <?php if(Route::has($targetRoute)): ?>
-            <a href="<?php echo e(route($targetRoute)); ?>" class="group block p-4 rounded-md text-center transition-colors text-slate-500 hover:bg-slate-50">
-                <?php if (isset($component)) { $__componentOriginal511d4862ff04963c3c16115c05a86a9d = $component; } ?>
+<div class="p-4">
+    
+    <div class="mb-4 px-3 py-2 rounded-md <?php echo e($themeClass); ?>">
+        <div class="text-xs font-semibold uppercase tracking-wider opacity-75"><?php echo e($role); ?></div>
+        <div class="text-sm font-medium truncate"><?php echo e($user->name ?? 'User'); ?></div>
+    </div>
+
+    
+    <nav class="space-y-1">
+        <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>
+            <?php if(Route::has($targetRoute)): ?>
+                <a href="<?php echo e(route($targetRoute)); ?>" 
+                   class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 <?php echo e($isActive($item['key'], $targetRoute)); ?>">
+                    <?php if (isset($component)) { $__componentOriginal511d4862ff04963c3c16115c05a86a9d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal511d4862ff04963c3c16115c05a86a9d = $attributes; } ?>
 <?php $component = Illuminate\View\DynamicComponent::resolve(['component' => 'icons.'.$item['icon']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('dynamic-component'); ?>
@@ -53,7 +62,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\DynamicComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['class' => 'w-8 h-8 mx-auto mb-2']); ?>
+<?php $component->withAttributes(['class' => 'w-5 h-5 flex-shrink-0']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal511d4862ff04963c3c16115c05a86a9d)): ?>
@@ -64,9 +73,10 @@
 <?php $component = $__componentOriginal511d4862ff04963c3c16115c05a86a9d; ?>
 <?php unset($__componentOriginal511d4862ff04963c3c16115c05a86a9d); ?>
 <?php endif; ?>
-                <span class="text-sm font-medium"><?php echo e($item['label']); ?></span>
-            </a>
-        <?php endif; ?>
-
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-</div><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>
+                    <span class="text-sm font-medium"><?php echo e($item['label']); ?></span>
+                </a>
+            <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    </nav>
+</div>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>

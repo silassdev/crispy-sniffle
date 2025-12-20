@@ -1,14 +1,7 @@
 <?php $__env->startSection('title','Login'); ?>
 
 <?php $__env->startSection('content'); ?>
-  <div class="py-10">
-    <div class="bg-white rounded-lg shadow p-6">
-      <div class="text-center mb-4">
-        <h1 class="text-2xl font-semibold">Sign in</h1>
-        <p class="text-sm text-gray-500">Enter your credentials to continue</p>
-      </div>
-
-      <?php
+  <?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -24,7 +17,5 @@ unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
 ?>
-    </div>
-  </div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.guest', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/auth/login.blade.php ENDPATH**/ ?>

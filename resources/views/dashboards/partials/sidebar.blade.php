@@ -39,15 +39,24 @@
     };
 @endphp
 
-<div id="user-grid" class="grid grid-cols-3 gap-4 p-4 bg-white shadow-md rounded-md">
-    @foreach($menuItems as $item)
-        @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp
-        @if(Route::has($targetRoute))
-            <a href="{{ route($targetRoute) }}" class="group block p-4 rounded-md text-center transition-colors text-slate-500 hover:bg-slate-50">
-                <x-dynamic-component :component="'icons.'.$item['icon']" class="w-8 h-8 mx-auto mb-2" />
-                <span class="text-sm font-medium">{{ $item['label'] }}</span>
-            </a>
-        @endif
+<div class="p-4">
+    {{-- Role Badge --}}
+    <div class="mb-4 px-3 py-2 rounded-md {{ $themeClass }}">
+        <div class="text-xs font-semibold uppercase tracking-wider opacity-75">{{ $role }}</div>
+        <div class="text-sm font-medium truncate">{{ $user->name ?? 'User' }}</div>
+    </div>
 
-    @endforeach
+    {{-- Compact Vertical Menu --}}
+    <nav class="space-y-1">
+        @foreach($menuItems as $item)
+            @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp
+            @if(Route::has($targetRoute))
+                <a href="{{ route($targetRoute) }}" 
+                   class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], $targetRoute) }}">
+                    <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5 flex-shrink-0" />
+                    <span class="text-sm font-medium">{{ $item['label'] }}</span>
+                </a>
+            @endif
+        @endforeach
+    </nav>
 </div>
