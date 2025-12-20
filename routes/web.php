@@ -15,8 +15,12 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\NewsletterController;
+
 
 // Admin controllers
 use App\Http\Controllers\Admin\AuthController;
@@ -31,7 +35,8 @@ use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardControll
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
 use App\Http\Controllers\Student\CourseController;
 
-
+//Notification
+use App\Http\Controllers\NotificationsController;
 
 
 
@@ -45,9 +50,21 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/pricing', [HomeController::class, 'pricing'])->name('pricing');
 Route::get('/contribution', [HomeController::class, 'contribution'])->name('contribution');
 
+//Subscribe & feedback
+Route::post('/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');
+Route::post('/feedback', [FeedbackController::class, 'submit'])->name('feedback.submit');
+
+//Notification public
+Route::get('/notifications/unread', [NotificationsController::class, 'unread'])->name('notifications.unread')->middleware('auth');
+Route::post('/notifications/mark-read', [NotificationsController::class, 'markRead'])->name('notifications.markRead')->middleware('auth');
+
+// Careers / Jobs
+Route::get('/careers', [JobController::class, 'index'])->name('careers.index');
+Route::get('/careers/{slug}', [JobController::class, 'show'])->name('careers.show');
+
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 
-//Post Routes
+
 
 
 // Blog
@@ -110,6 +127,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::view('posts', 'admin.posts')->name('posts');
         Route::view('feedback', 'admin.feedback')->name('feedback');
         Route::view('other-actions', 'admin.other-actions')->name('other-actions');
+
+        // full-screen notifications page
+        Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
     });
 });
 
@@ -136,7 +156,9 @@ Route::middleware(['auth','role:trainer'])->prefix('trainer')->name('trainer.')-
 });
 
 
-// Pending trainer (fix your middleware name if it’s custom)
+
+
+// Pending trainer
 Route::get('trainer/pending', fn () => view('trainer.pending', [
     'email' => session('trainer_email'),
 ]))->middleware('pending-trainer')->name('trainer.pending');

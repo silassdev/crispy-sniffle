@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\OtherActionsController;
+use App\Http\Controllers\Admin\JobAdminController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+
 
 
 
@@ -24,7 +27,6 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
         Route::get('students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students.index');
         Route::get('students/{id}', [\App\Http\Controllers\Admin\StudentController::class, 'show'])->name('students.show');
-
 
         Route::get('/trainers', [\App\Http\Controllers\Admin\TrainerController::class, 'index'])->name('trainers.index');
         Route::get('/trainers/{id}', [\App\Http\Controllers\Admin\TrainerController::class, 'show'])->name('trainers.show');
@@ -50,12 +52,16 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 
 
-        Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback');
+        Route::get('/newsletter', fn()=> view('admin.newsletter.index'))->name('newsletter');
+        Route::get('/feedback', fn()=> view('admin.feedback.index'))->name('feedback');
 
         Route::get('/other-actions', [OtherActionsController::class, 'index'])->name('other-actions');
 
         Route::view('/courses', 'admin.courses')->name('courses');
         Route::view('/newsletter', 'admin.newsletter')->name('newsletter');
+
+        Route::get('/jobs', function(){ return view('admin.jobs.index'); })->name('admin.jobs');
+
 
 });
 

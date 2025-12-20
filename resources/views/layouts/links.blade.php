@@ -100,19 +100,9 @@
         </h3>
         <p class="text-sm text-slate-400 mb-8 max-w-sm lg:ml-auto leading-relaxed">Subscribe for occasional updates about releases, tutorials and expert insights directly to your inbox.</p>
 
-        <form action="{{ route('admin.login') ?? '#' }}" method="POST" class="space-y-3 max-w-sm lg:ml-auto">
-          @csrf
-          <div class="relative group/input">
-              <input name="email" type="email" placeholder="name@company.com" 
-                     class="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500/50 focus:bg-white/10 transition-all duration-300" />
-              <div class="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-500 group-focus-within/input:text-emerald-500">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-              </div>
-          </div>
-          <button type="submit" class="w-full py-4 rounded-2xl bg-emerald-600 text-white font-extrabold hover:bg-emerald-500 transition-all duration-300 shadow-xl shadow-emerald-900/40 hover:-translate-y-1 transform">
-            Get Updates
-          </button>
-        </form>
+        <div class="max-w-sm lg:ml-auto">
+            <livewire:newsletter-subscription />
+        </div>
       </div>
 
     </div>

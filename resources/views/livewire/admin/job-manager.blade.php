@@ -1,0 +1,110 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-xl font-semibold">Jobs</h2>
+    <div class="flex items-center gap-2">
+      <input type="text" wire:model.debounce.300ms="search" placeholder="Search jobs..." class="border rounded px-3 py-1" />
+      <button wire:click="create" class="px-3 py-1 bg-indigo-600 text-white rounded">New Job</button>
+    </div>
+  </div>
+
+  <div class="bg-white shadow rounded overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="p-3 text-left">Company</th>
+          <th class="p-3 text-left">Title</th>
+          <th class="p-3 text-left">Type</th>
+          <th class="p-3 text-left">Location</th>
+          <th class="p-3 text-left">Status</th>
+          <th class="p-3 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach($jobs as $job)
+          <tr class="border-t">
+            <td class="p-3 flex items-center gap-3">
+              @php $logo = $job->getFirstMedia('company_logos'); @endphp
+              @if($logo)
+                <img src="{{ $logo->getUrl('logo_small') }}" alt="{{ $job->company_name }}" class="w-10 h-10 object-cover rounded">
+              @else
+                <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-xs">{{ strtoupper(substr($job->company_name ?: 'J', 0, 1)) }}</div>
+              @endif
+              <div>{{ $job->company_name }}</div>
+            </td>
+            <td class="p-3">{{ $job->title }}</td>
+            <td class="p-3">{{ $job->employment_type }}</td>
+            <td class="p-3">{{ $job->location }}</td>
+            <td class="p-3">
+              @if($job->is_active)
+                <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded">Open</span>
+              @else
+                <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">Closed</span>
+              @endif
+            </td>
+            <td class="p-3 text-right">
+              <button wire:click="edit({{ $job->id }})" class="px-2 py-1 border rounded text-xs">Edit</button>
+              <button wire:click="toggleActive({{ $job->id }})" class="px-2 py-1 border rounded text-xs">{{ $job->is_active ? 'Close' : 'Open' }}</button>
+              <button wire:click="confirmDelete({{ $job->id }})" class="px-2 py-1 border rounded text-xs text-red-600">Delete</button>
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+    <div class="p-3">
+      {{ $jobs->links() }}
+    </div>
+  </div>
+
+  {{-- Form modal --}}
+  <div x-data="{ open: @entangle('showForm') }" x-show="open" x-cloak class="fixed inset-0 z-50 flex items-start justify-center pt-16">
+    <div class="absolute inset-0 bg-black/40" @click="$wire.resetForm()"></div>
+
+    <div class="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg p-6">
+      <h3 class="font-semibold mb-4">{{ $jobId ? 'Edit Job' : 'Create Job' }}</h3>
+
+      <div class="grid grid-cols-1 gap-3">
+        <input wire:model.defer="title" type="text" placeholder="Job title" class="border rounded px-3 py-2" />
+        @error('title') <div class="text-xs text-red-600">{{ $message }}</div> @enderror
+
+        <div class="grid grid-cols-2 gap-2">
+          <input wire:model.defer="company_name" type="text" placeholder="Company name" class="border rounded px-3 py-2" />
+          <input wire:model.defer="employment_type" type="text" placeholder="Employment type" class="border rounded px-3 py-2" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <input wire:model.defer="location" type="text" placeholder="Location" class="border rounded px-3 py-2" />
+          <input wire:model.defer="salary" type="text" placeholder="Salary (optional)" class="border rounded px-3 py-2" />
+        </div>
+
+        <input wire:model.defer="excerpt" type="text" placeholder="Short excerpt" class="border rounded px-3 py-2" />
+        <textarea wire:model.defer="description" rows="6" placeholder="Full job description (markdown allowed)" class="border rounded px-3 py-2"></textarea>
+
+        <input wire:model.defer="tech_stack" type="text" placeholder="Tech stack (comma separated)" class="border rounded px-3 py-2" />
+        <div class="flex items-center gap-3">
+          <label class="flex items-center gap-2">
+            <input wire:model="is_active" type="checkbox" class="form-checkbox" />
+            <span>Open for applications</span>
+          </label>
+
+          <div class="ml-auto">
+            <input id="logoUpload" type="file" wire:model="logo" accept="image/*" class="hidden" />
+            <label for="logoUpload" class="px-3 py-1 border rounded cursor-pointer text-sm">Upload logo</label>
+            <div class="text-xs text-gray-500 mt-1">Max 1MB. Will be optimized to 120×120.</div>
+            @error('logo') <div class="text-xs text-red-600">{{ $message }}</div> @enderror
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3">
+          <button @click="open=false; $wire.resetForm()" class="px-3 py-1 border rounded">Cancel</button>
+          <button wire:click="save" class="px-3 py-1 bg-indigo-600 text-white rounded">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Delete modal (simple) --}}
+  <div id="deleteModal" x-data x-show="false" x-cloak @open-delete-job-modal.window=" $el.style.display='block'; $el.__x_show = true">
+    {{-- We rely on browser event to show; the Livewire listener will open it --}}
+  </div>
+</div>
