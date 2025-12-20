@@ -62,6 +62,46 @@
     }
 
     .mobile-backdrop { background: rgba(15,23,42,0.03); }
+
+    /* Premium Icon Nav Styles */
+    .icon-nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2.5rem;
+      min-width: 2.5rem;
+      border-radius: 0.75rem;
+      color: #64748b; /* slate-500 */
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: transparent;
+    }
+    .icon-nav-item:hover {
+      background-color: #f1f5f9; /* slate-100 */
+      color: #4f46e5; /* indigo-600 */
+      padding-left: 0.75rem;
+      padding-right: 1rem;
+    }
+    .icon-label {
+      max-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      opacity: 0;
+      margin-left: 0;
+    }
+    .icon-nav-item:hover .icon-label {
+      max-width: 8rem;
+      margin-left: 0.625rem;
+      opacity: 1;
+    }
+    .icon-nav-item svg {
+      flex-shrink: 0;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
   </style>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,11 +162,35 @@
           transition-all duration-200">Sign up</a>
           </div>
         @else
-          <div class="hidden md:flex md:items-center md:gap-3">
-            <a href="{{ route($dashboardRoute) }}" class="text-sm text-gray-700 hover:text-indigo-600 transition">Dashboard</a>
-            <div>
-              <livewire:actions.logout />
+          <div class="hidden md:flex md:items-center md:gap-2">
+            {{-- Dashboard --}}
+            <a href="{{ route($dashboardRoute) }}" class="icon-nav-item" title="Dashboard">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span class="icon-label">Dashboard</span>
+            </a>
+
+            {{-- Notifications --}}
+            <div class="relative">
+               <livewire:notifications.notification-bell />
+               {{-- Note: we might need to wrap the notification-bell content or style it to match icon-nav-item --}}
             </div>
+
+            {{-- Profile --}}
+            <a href="{{ route('profile.index') }}" class="icon-nav-item" title="Profile">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span class="icon-label">Profile</span>
+            </a>
+
+            {{-- Logout --}}
+            <livewire:actions.logout />
           </div>
         @endguest
 
@@ -155,7 +219,10 @@
           <a href="{{ route('register') }}" class="block py-2">Sign up</a>
         </div>
       @else
-        <a @click="mobile = false" href="{{ route($dashboardRoute) }}" class="block py-2">Dashboard</a>
+        <a @click="mobile = false" href="{{ route($dashboardRoute) }}" class="block py-2 text-gray-700 font-medium tracking-tight">Dashboard</a>
+        <a @click="mobile = false" href="{{ route('notifications.index') }}" class="block py-2 text-gray-700 font-medium tracking-tight">Notifications</a>
+        <a @click="mobile = false" href="{{ route('profile.index') }}" class="block py-2 text-gray-700 font-medium tracking-tight">Profile</a>
+        
         <div class="pt-3 border-t">
           <livewire:actions.logout />
         </div>

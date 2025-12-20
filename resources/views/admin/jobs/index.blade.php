@@ -8,10 +8,7 @@
       <h1 class="text-xl font-semibold">Jobs</h1>
     </div>
 
-    {{-- Notifications bell (Livewire) --}}
-    <div>
-      <livewire:notifications.notification-bell />
-    </div>
+
   </div>
 
   {{-- mount your JobManager livewire component --}}

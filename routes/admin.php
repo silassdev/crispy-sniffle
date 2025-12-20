@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 
 
-        Route::middleware(['auth', 'role:admin', 'fragment.redirect'])
+        Route::middleware(['auth', 'role:admin'])
         ->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         

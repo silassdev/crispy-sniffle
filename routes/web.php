@@ -57,6 +57,8 @@ Route::post('/feedback', [FeedbackController::class, 'submit'])->name('feedback.
 //Notification public
 Route::get('/notifications/unread', [NotificationsController::class, 'unread'])->name('notifications.unread')->middleware('auth');
 Route::post('/notifications/mark-read', [NotificationsController::class, 'markRead'])->name('notifications.markRead')->middleware('auth');
+Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
+Route::get('/profile', function () { return "Profile management functionality is coming soon!"; })->name('profile.index')->middleware('auth');
 
 // Careers / Jobs
 Route::get('/careers', [JobController::class, 'index'])->name('careers.index');
@@ -120,11 +122,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
         Route::get('admins/{id}', [AdminController::class, 'show'])->name('admins.show');
         Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
-
-
-
-        // full-screen notifications page
-        Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
     });
 });
 
