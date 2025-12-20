@@ -5,20 +5,21 @@
 <?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 text-white py-24 mb-16">
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        </div>
+    <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
+        <!-- Abstract Decoration -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up">
-                Empowering <span class="text-blue-400">Future</span> Minds
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up text-white font-['Playfair_Display']">
+                Empowering <span class="text-indigo-400">Future</span> Minds
             </h1>
-            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p class="text-xl md:text-2xl text-indigo-100/60 max-w-3xl mx-auto mb-10 leading-relaxed">
                 We are more than just an LMS. We are a community dedicated to lifelong learning, innovation, and technical excellence.
             </p>
             <div class="flex justify-center gap-4">
-                <a href="<?php echo e(route('blogs.index')); ?>" class="px-8 py-3 bg-white text-blue-900 font-bold rounded-full hover:bg-blue-50 transition duration-300 shadow-lg">Our Blog</a>
-                <a href="<?php echo e(route('contact.show')); ?>" class="px-8 py-3 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-blue-900 transition duration-300">Get in Touch</a>
+                <a href="<?php echo e(route('blogs.index')); ?>" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-50 transition duration-300 shadow-lg hover:-translate-y-1 transform">Our Blog</a>
+                <a href="<?php echo e(route('contact.show')); ?>" class="px-8 py-3 bg-transparent border-2 border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition duration-300">Get in Touch</a>
             </div>
         </div>
     </div>

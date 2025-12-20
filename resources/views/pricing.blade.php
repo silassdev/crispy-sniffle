@@ -5,15 +5,16 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 text-white py-24 mb-16">
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        </div>
+    <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
+        <!-- Abstract Decoration -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up">
-                Simple, <span class="text-blue-400">Transparent</span> Pricing
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up text-white font-['Playfair_Display']">
+                Simple, <span class="text-indigo-400">Transparent</span> Pricing
             </h1>
-            <p class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p class="text-xl md:text-2xl text-indigo-100/60 max-w-3xl mx-auto mb-10 leading-relaxed">
                 Choose the plan that fits your learning goals. No hidden fees, ever.
             </p>
         </div>

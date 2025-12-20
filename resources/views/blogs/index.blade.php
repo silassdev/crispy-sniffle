@@ -5,24 +5,25 @@
 @section('content')
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
-    <div class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-800 text-white py-24 mb-16">
-        <div class="absolute inset-0 opacity-20">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up">
-                    Insights & <span class="text-blue-400">Stories</span>
+    <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
+        <!-- Abstract Decoration -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up text-white font-['Playfair_Display']">
+                    Insights & <span class="text-indigo-400">Stories</span>
                 </h1>
-                <p class="text-xl text-blue-100 mb-10 leading-relaxed">
+                <p class="text-xl text-indigo-100/60 mb-10 leading-relaxed">
                     Explore our latest articles, tutorials, and community updates. Stay ahead of the curve with expert knowledge.
                 </p>
 
                 <!-- Integrated Search -->
-                <form method="GET" action="{{ route('blogs.index') }}" class="relative max-w-xl mx-auto group">
+                <form method="GET" action="{{ route('blogs.index') }}" class="relative max-w-xl mx-auto group/search">
                     <input name="q" value="{{ request('q') }}" placeholder="Search our articles..." 
-                           class="w-full px-8 py-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-blue-200 outline-none focus:ring-4 focus:ring-blue-500/20 focus:bg-white/20 transition-all duration-300 shadow-2xl" />
-                    <button class="absolute right-3 top-2.5 px-6 py-2.5 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-xl transition duration-300 shadow-lg flex items-center gap-2">
+                           class="w-full px-8 py-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-indigo-200 outline-none focus:ring-4 focus:ring-indigo-500/20 focus:bg-white/20 transition-all duration-300 shadow-2xl" />
+                    <button class="absolute right-3 top-2.5 px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition duration-300 shadow-lg flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>

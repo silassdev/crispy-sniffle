@@ -108,59 +108,118 @@
   </section>
 
   
-  <section id="explore" class="grid gap-8 lg:grid-cols-3">
-    <main class="lg:col-span-2 space-y-6">
+  <section id="explore" class="grid gap-12 lg:grid-cols-3">
+    <main class="lg:col-span-2 space-y-10">
 
       
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold">Latest posts</h2>
-        <a href="<?php echo e(route('blogs.index') ?? '#'); ?>" class="text-sm text-indigo-600 hover:underline">View all</a>
+      <div class="flex items-center justify-between border-b border-slate-100 pb-6">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-900 font-['Playfair_Display']">Latest Insights</h2>
+            <p class="text-slate-500 mt-1">Freshly baked thoughts from our community</p>
+        </div>
+        <a href="<?php echo e(route('blogs.index') ?? '#'); ?>" class="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-100 text-slate-700 rounded-full font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 group">
+          View all posts
+          <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
       </div>
 
-      <div class="space-y-4">
+      <div class="animate-fade-in-up">
         <?php echo $__env->make('partials.feed', ['posts' => $posts ?? null], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
       </div>
 
     </main>
 
     
-    <aside class="space-y-6">
-      <div class="p-4 bg-white rounded-lg shadow-sm">
-        <h4 class="font-semibold mb-2">Trending tags</h4>
+    <aside class="space-y-8">
+      <!-- Search Component (Desktop) -->
+      <div class="relative group hidden lg:block">
+          <form method="GET" action="<?php echo e(route('blogs.index')); ?>">
+              <input name="q" placeholder="Global search..." 
+                     class="w-full px-6 py-4 rounded-2xl bg-white border border-slate-100 shadow-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-300">
+              <button class="absolute right-3 top-2.5 p-2 text-slate-400 group-focus-within:text-indigo-600 transition-colors">
+                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              </button>
+          </form>
+      </div>
+
+      <!-- Trending Tags -->
+      <div class="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <h4 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center gap-2">
+            <span class="w-2 h-8 bg-indigo-500 rounded-full"></span>
+            Trending Tags
+        </h4>
         <div class="flex flex-wrap gap-2">
-          <a href="#" class="inline-block px-3 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">#laravel</a>
-          <a href="#" class="inline-block px-3 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">#react</a>
-          <a href="#" class="inline-block px-3 py-1 text-xs bg-gray-100 rounded hover:bg-gray-200">#tailwind</a>
+          <?php $tags = ['laravel', 'react', 'tailwind', 'php', 'javascript', 'vue']; ?>
+          <?php $__currentLoopData = $tags; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $t): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <a href="<?php echo e(route('blogs.index', ['tag' => $t])); ?>" 
+               class="px-4 py-2 text-xs font-bold text-slate-500 bg-slate-50 rounded-xl hover:bg-indigo-500 hover:text-white hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest">
+                #<?php echo e($t); ?>
+
+            </a>
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
       </div>
 
-      <div class="p-4 bg-white rounded-lg shadow-sm">
-        <h4 class="font-semibold mb-2">Top trainers</h4>
-        <ul class="space-y-2 text-sm text-gray-700">
-          <li class="flex items-center justify-between">
-            <div>Jane Doe</div>
-            <div class="text-xs text-gray-500">12 courses</div>
-          </li>
-          <li class="flex items-center justify-between">
-            <div>John Smith</div>
-            <div class="text-xs text-gray-500">8 courses</div>
-          </li>
-        </ul>
+      <!-- Top Trainers -->
+      <div class="p-8 bg-white rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <h4 class="text-lg font-extrabold text-slate-900 mb-6 flex items-center gap-2">
+            <span class="w-2 h-8 bg-yellow-500 rounded-full"></span>
+            Top Trainers
+        </h4>
+        <div class="space-y-6">
+          <?php $trainers = [['name' => 'Jane Doe', 'courses' => 12, 'color' => 'indigo'], ['name' => 'John Smith', 'courses' => 8, 'color' => 'emerald']]; ?>
+          <?php $__currentLoopData = $trainers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $trainer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="flex items-center justify-between group cursor-pointer">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-<?php echo e($trainer['color']); ?>-100 flex items-center justify-center text-<?php echo e($trainer['color']); ?>-600 font-black text-lg group-hover:scale-110 transition-transform">
+                  <?php echo e(substr($trainer['name'], 0, 1)); ?>
+
+                </div>
+                <div>
+                    <div class="font-bold text-slate-900"><?php echo e($trainer['name']); ?></div>
+                    <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest"><?php echo e($trainer['courses']); ?> Courses</div>
+                </div>
+              </div>
+              <svg class="w-5 h-5 text-slate-300 group-hover:text-<?php echo e($trainer['color']); ?>-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+            </div>
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+        <button class="w-full mt-8 py-3 text-sm font-bold text-indigo-600 bg-indigo-50 rounded-xl hover:bg-indigo-600 hover:text-white transition-all duration-300">
+            View All Trainers
+        </button>
       </div>
     </aside>
   </section>
 
   
-  <section class="mt-12">
+  <section class="mt-24">
     <?php if ($__env->exists('partials.testimonials')) echo $__env->make('partials.testimonials', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
   </section>
 
   
-  <section class="mt-12 p-6 bg-gradient-to-r from-indigo-50 to-white rounded-lg text-center">
-    <h3 class="text-lg font-semibold mb-2">Ready to start learning?</h3>
-    <a href="<?php echo e(route('register')); ?>" class="inline-block px-5 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 transition">
-      Create a free account
-    </a>
+  <section class="mt-24 mb-12 group">
+    <div class="relative p-12 md:p-20 bg-slate-900 rounded-[3rem] overflow-hidden">
+        <!-- Abstract Decoration -->
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-indigo-600 rounded-full blur-[100px] opacity-40 group-hover:opacity-60 transition-opacity"></div>
+        <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+
+        <div class="relative z-10 text-center max-w-2xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-black text-white mb-6 font-['Playfair_Display'] leading-tight">
+                Ready to elevate your <br> <span class="text-indigo-400">learning journey?</span>
+            </h2>
+            <p class="text-indigo-100/60 mb-10 text-lg">
+                Join thousands of students and trainers building the future of technology together.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="<?php echo e(route('register')); ?>" class="px-8 py-4 bg-white text-slate-900 rounded-full font-black hover:bg-indigo-500 hover:text-white hover:-translate-y-1 transition-all duration-300 shadow-2xl">
+                    Create free account
+                </a>
+                <a href="<?php echo e(route('contact.show')); ?>" class="px-8 py-4 border border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition-all duration-300">
+                    Contact sales
+                </a>
+            </div>
+        </div>
+    </div>
   </section>
 </div>
 
