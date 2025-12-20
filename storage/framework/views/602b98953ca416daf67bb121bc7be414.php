@@ -64,7 +64,29 @@
                  'text-white bg-indigo-600 shadow-lg shadow-indigo-600/20' => request()->routeIs('contribution'),
                  'text-slate-400 hover:text-white hover:bg-white/5' => ! request()->routeIs('contribution')
                ]); ?>">
-              Contributing
+              Contributors
+            </a>
+          </li>
+
+          <li>
+            <a href="<?php echo e(route('sponsor')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+                 'inline-flex items-center px-4 py-2 rounded-xl transition-all duration-300 font-bold',
+                 'text-white bg-indigo-600 shadow-lg shadow-indigo-600/20' => request()->routeIs('sponsor'),
+                 'text-slate-400 hover:text-white hover:bg-white/5' => ! request()->routeIs('sponsor')
+               ]); ?>">
+              Sponsor
+            </a>
+          </li>
+
+          <li>
+            <a href="<?php echo e(route('feedback')); ?>"
+               class="<?php echo \Illuminate\Support\Arr::toCssClasses([
+                 'inline-flex items-center px-4 py-2 rounded-xl transition-all duration-300 font-bold',
+                 'text-white bg-indigo-600 shadow-lg shadow-indigo-600/20' => request()->routeIs('feedback'),
+                 'text-slate-400 hover:text-white hover:bg-white/5' => ! request()->routeIs('feedback')
+               ]); ?>">
+              Feedback
             </a>
           </li>
         </ul>

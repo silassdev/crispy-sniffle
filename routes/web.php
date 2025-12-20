@@ -68,9 +68,12 @@ Route::post('/notifications/mark-read', [NotificationsController::class, 'markRe
 Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
 Route::get('/profile', function () { return "Profile management functionality is coming soon!"; })->name('profile.index')->middleware('auth');
 
-// Careers / Jobs
+// Careers / Jobs / Sponsor & Feedback
 Route::get('/careers', [JobController::class, 'index'])->name('careers.index');
 Route::get('/careers/{slug}', [JobController::class, 'show'])->name('careers.show');
+
+Route::get('/sponsor', function () { return view('sponsor'); })->name('sponsor');
+Route::get('/feedback', function () { return view('feedback'); })->name('feedback');
 
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 

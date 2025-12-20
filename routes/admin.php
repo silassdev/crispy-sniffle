@@ -46,7 +46,8 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 
         Route::get('/newsletter', fn()=> view('admin.newsletter.index'))->name('newsletter');
-        Route::get('/feedback', fn()=> view('admin.feedback.index'))->name('feedback');
+        Route::get('/feedback', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('feedback.index');
+        Route::delete('/feedback/{feedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'destroy'])->name('feedback.destroy');
         
         Route::get('/jobs', fn()=> view('admin.jobs.index'))->name('jobs');
 

@@ -18,7 +18,7 @@
             ['key' => 'community', 'label' => 'Community', 'icon' => 'community', 'route_suffix' => 'community'],
             ['key' => 'courses', 'label' =>    'Courses', 'icon' => 'courses', 'route_suffix' => 'courses'],
             ['key' => 'jobs', 'label' => 'Jobs', 'icon' => 'jobs', 'route_suffix' => 'jobs'],
-            ['key' => 'feedback', 'label' => 'Feedback', 'icon' => 'feedback', 'route_suffix' => 'feedback'],
+            ['key' => 'feedback', 'label' => 'Feedback', 'icon' => 'feedback', 'route_suffix' => 'feedback.index'],
             ['key' => 'newsletter', 'label' => 'Newsletter', 'icon' => 'newsletter', 'route_suffix' => 'newsletter'],
         ],  
         'trainer' => [
@@ -48,9 +48,9 @@
 
     
     <nav class="space-y-1">
-        <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>
-            <?php if(Route::has($targetRoute)): ?>
+            <!--[if BLOCK]><![endif]--><?php if(Route::has($targetRoute)): ?>
                 <a href="<?php echo e(route($targetRoute)); ?>" 
                    class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 <?php echo e($isActive($item['key'], $targetRoute)); ?>">
                     <?php if (isset($component)) { $__componentOriginal511d4862ff04963c3c16115c05a86a9d = $component; } ?>
@@ -75,8 +75,8 @@
 <?php endif; ?>
                     <span class="text-sm font-medium"><?php echo e($item['label']); ?></span>
                 </a>
-            <?php endif; ?>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
     </nav>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>
