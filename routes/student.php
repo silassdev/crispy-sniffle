@@ -4,15 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Student\DashboardController;
 use App\Http\Controllers\Student\CourseController;
 
-/*
-|--------------------------------------------------------------------------
-| Student Routes
-|--------------------------------------------------------------------------
-|
-| Routes for student role - course enrollment, assignments,
-| scores, and community participation.
-|
-*/
+
 
 Route::middleware(['auth', 'role:student'])
     ->prefix('student')

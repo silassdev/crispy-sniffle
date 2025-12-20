@@ -23,12 +23,18 @@
         ],  
         'trainer' => [
             ['key' => 'overview', 'label' => 'Overview', 'icon' => 'overview', 'route_suffix' => 'dashboard'],
-            ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
-            ['key' => 'certify', 'label' => 'Certificates', 'icon' => 'certify', 'route_suffix' => 'certify'],
+            ['key' => 'assignment', 'label' => 'Assignment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
+            ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
+            ['key' => 'course', 'label' => 'Courses', 'icon' => 'course', 'route_suffix' => 'course'],
+            ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students'],
+            ['key' => 'community', 'label' => 'Community', 'icon' => 'community', 'route_suffix' => 'community'],
         ],
         default => [
             ['key' => 'overview', 'label' => 'Overview', 'icon' => 'overview', 'route_suffix' => 'dashboard'],
             ['key' => 'courses', 'label' => 'Courses', 'icon' => 'courses', 'route_suffix' => 'courses.index'],
+            ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
+            ['key' => 'community', 'label' => 'Community', 'icon' => 'community', 'route_suffix' => 'community'],
+            ['key' => 'assignment', 'label' => 'Assignment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
         ],
     };
 ?>

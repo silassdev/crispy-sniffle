@@ -3,15 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Trainer\DashboardController;
 
-/*
-|--------------------------------------------------------------------------
-| Trainer Routes
-|--------------------------------------------------------------------------
-|
-| Routes for trainer role - course management, student oversight,
-| assignment grading, and analytics.
-|
-*/
 
 Route::middleware(['auth', 'role:trainer'])
     ->prefix('trainer')
