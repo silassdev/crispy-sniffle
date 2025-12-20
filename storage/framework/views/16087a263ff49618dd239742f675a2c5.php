@@ -8,8 +8,10 @@
     ];
     $themeClass = $colors[$role] ?? 'bg-gray-700 text-white';
     $currentRoute = Route::currentRouteName();
-    $activeSection = request('section') ?? 'overview';
+    $activeSection = $section ?? request('section') ?? 'overview';
+    
     $isActive = fn($key, $route) => ($activeSection === $key || $currentRoute === $route) ? $themeClass : 'text-slate-500 hover:bg-slate-50';
+    
     $menuItems = match($role) {
         'admin' => [
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
@@ -48,11 +50,13 @@
 
     
     <nav class="space-y-1">
-        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>
-            <!--[if BLOCK]><![endif]--><?php if(Route::has($targetRoute)): ?>
+            <?php if(Route::has($targetRoute)): ?>
                 <a href="<?php echo e(route($targetRoute)); ?>" 
-                   class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 <?php echo e($isActive($item['key'], $targetRoute)); ?>">
+                   data-route="<?php echo e(route($targetRoute)); ?>"
+                   data-section="<?php echo e($item['key']); ?>"
+                   class="ajax-link group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 <?php echo e($isActive($item['key'], $targetRoute)); ?>">
                     <?php if (isset($component)) { $__componentOriginal511d4862ff04963c3c16115c05a86a9d = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal511d4862ff04963c3c16115c05a86a9d = $attributes; } ?>
 <?php $component = Illuminate\View\DynamicComponent::resolve(['component' => 'icons.'.$item['icon']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
@@ -75,8 +79,8 @@
 <?php endif; ?>
                     <span class="text-sm font-medium"><?php echo e($item['label']); ?></span>
                 </a>
-            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
+            <?php endif; ?>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </nav>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/dashboards/partials/sidebar.blade.php ENDPATH**/ ?>

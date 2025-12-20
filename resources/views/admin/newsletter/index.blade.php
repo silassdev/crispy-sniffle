@@ -1,4 +1,6 @@
-@extends('dashboards.shell')
+@extends('dashboards.shell', ['section' => 'newsletter', 'role' => 'admin'])
+
 @section('content')
-  <livewire:admin.newsletter-manager />
+  @include('admin.newsletter.index-fragment')
 @endsection
+

@@ -9,28 +9,12 @@
   <div class="flex min-h-screen">
     
     <aside class="w-64 flex-shrink-0 sticky top-0 h-screen overflow-y-auto bg-white border-r border-gray-200">
-      
-      <?php
-$__split = function ($name, $params = []) {
-    return [$name, $params];
-};
-[$__name, $__params] = $__split('sidebar', ['role' => $role,'activeSection' => $section]);
-
-$__html = app('livewire')->mount($__name, $__params, 'lw-3631665400-0', $__slots ?? [], get_defined_vars());
-
-echo $__html;
-
-unset($__html);
-unset($__name);
-unset($__params);
-unset($__split);
-if (isset($__slots)) unset($__slots);
-?>
+       <?php echo $__env->make('dashboards.partials.sidebar', ['role' => $role, 'section' => $section], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </aside>
 
     
-    <main id="role-content" class="flex-1 overflow-y-auto">
-      <div class="p-6">
+    <main class="flex-1 overflow-y-auto">
+      <div id="admin-content" class="p-6">
         <?php if(View::exists("livewire.{$role}.{$section}")): ?>
           <livewire:<?php echo e($role); ?>.<?php echo e($section); ?> />
         <?php elseif(View::exists("dashboards.partials.sections.{$role}.{$section}")): ?>

@@ -9,13 +9,12 @@
   <div class="flex min-h-screen">
     {{-- Sidebar - sticky with max height --}}
     <aside class="w-64 flex-shrink-0 sticky top-0 h-screen overflow-y-auto bg-white border-r border-gray-200">
-      {{-- Sidebar rendered as Livewire so it is bootstrapped correctly --}}
-      <livewire:sidebar :role="$role" :active-section="$section" />
+       @include('dashboards.partials.sidebar', ['role' => $role, 'section' => $section])
     </aside>
 
     {{-- Main content area - scrollable --}}
-    <main id="role-content" class="flex-1 overflow-y-auto">
-      <div class="p-6">
+    <main class="flex-1 overflow-y-auto">
+      <div id="admin-content" class="p-6">
         @if(View::exists("livewire.{$role}.{$section}"))
           <livewire:{{ $role }}.{{ $section }} />
         @elseif(View::exists("dashboards.partials.sections.{$role}.{$section}"))

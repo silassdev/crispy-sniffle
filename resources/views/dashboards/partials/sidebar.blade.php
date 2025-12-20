@@ -8,8 +8,10 @@
     ];
     $themeClass = $colors[$role] ?? 'bg-gray-700 text-white';
     $currentRoute = Route::currentRouteName();
-    $activeSection = request('section') ?? 'overview';
+    $activeSection = $section ?? request('section') ?? 'overview';
+    
     $isActive = fn($key, $route) => ($activeSection === $key || $currentRoute === $route) ? $themeClass : 'text-slate-500 hover:bg-slate-50';
+    
     $menuItems = match($role) {
         'admin' => [
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students.index'],
@@ -52,7 +54,9 @@
             @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp
             @if(Route::has($targetRoute))
                 <a href="{{ route($targetRoute) }}" 
-                   class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], $targetRoute) }}">
+                   data-route="{{ route($targetRoute) }}"
+                   data-section="{{ $item['key'] }}"
+                   class="ajax-link group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], $targetRoute) }}">
                     <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5 flex-shrink-0" />
                     <span class="text-sm font-medium">{{ $item['label'] }}</span>
                 </a>

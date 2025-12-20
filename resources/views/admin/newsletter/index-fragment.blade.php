@@ -1,0 +1,1 @@
+<livewire:admin.newsletter-manager />

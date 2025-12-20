@@ -33,7 +33,11 @@ class PostController extends Controller
 
         $posts = $query->paginate(15)->withQueryString();
 
-        return view('admin.posts.index', compact('posts'));
+        if ($request->ajax()) {
+            return view('admin.community-fragment', compact('posts'));
+        }
+
+        return view('admin.community', compact('posts'));
     }
 
     public function create()

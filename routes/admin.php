@@ -32,8 +32,8 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
         Route::get('/admins', [AdminUserController::class, 'index'])->name('admins');
         Route::get('/admins/{id}', [AdminUserController::class, 'show'])->name('admins.show');
 
-        Route::get('/community', fn()=> view('admin.community'))->name('community');
-
+        Route::get('/community', [\App\Http\Controllers\Admin\AdminUIController::class, 'community'])->name('community');
+        
         // Admin post management (create/draft/publish)
         Route::get('/posts', [AdminPostController::class, 'index'])->name('posts');
         Route::get('/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
@@ -45,13 +45,13 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 
 
 
-        Route::get('/newsletter', fn()=> view('admin.newsletter.index'))->name('newsletter');
+        Route::get('/newsletter', [\App\Http\Controllers\Admin\AdminUIController::class, 'newsletter'])->name('newsletter');
         Route::get('/feedback', [\App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('feedback.index');
         Route::delete('/feedback/{feedback}', [\App\Http\Controllers\Admin\FeedbackController::class, 'destroy'])->name('feedback.destroy');
         
-        Route::get('/jobs', fn()=> view('admin.jobs.index'))->name('jobs');
+        Route::get('/jobs', [\App\Http\Controllers\Admin\AdminUIController::class, 'jobs'])->name('jobs');
 
-        Route::view('/courses', 'admin.courses')->name('courses');
+        Route::get('/courses', [\App\Http\Controllers\Admin\AdminUIController::class, 'courses'])->name('courses');
 
 
 });

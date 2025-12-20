@@ -8,9 +8,14 @@ use Illuminate\Http\Request;
 
 class FeedbackController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $feedbacks = Feedback::latest()->paginate(10);
+        
+        if ($request->ajax()) {
+            return view('admin.feedback.index-fragment', compact('feedbacks'));
+        }
+
         return view('admin.feedback.index', compact('feedbacks'));
     }
 
