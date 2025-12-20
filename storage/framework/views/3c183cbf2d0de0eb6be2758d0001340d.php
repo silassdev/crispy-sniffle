@@ -1,41 +1,26 @@
 <div id="login-modal-root"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
      role="dialog"
      aria-modal="true">
 
-  <div class="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900 grid grid-cols-1 md:grid-cols-2">
-    <!-- Left hero (desktop only) -->
-    <div class="hidden md:flex flex-col justify-center gap-6 p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
-      <div class="flex items-center gap-3">
-        <img src="<?php echo e(asset('img/igniscode.svg')); ?>" alt="Logo" class="w-12 h-12">
-        <div>
-          <h3 class="text-xl font-semibold">Welcome back</h3>
-          <p class="text-sm opacity-90">Sign in to continue to your dashboard</p>
-        </div>
-      </div>
-
-      <div class="mt-4 text-sm leading-relaxed opacity-45">
-        <p>Secure access, fast sign in, and social login options.</p>
-      </div>
-
-      <div class="mt-auto">
-        <div class="w-full h-36 rounded-lg bg-white/10 flex items-center justify-center text-white/80">
-          <span class="text-sm">Illustration or marketing message</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right form -->
-    <div class="p-6 sm:p-10">
+  <div class="relative w-full max-w-md mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900">
+    <!-- Form Content -->
+    <div class="p-8 sm:p-10">
       <button type="button"
               id="login-modal-close"
-              class="absolute right-4 top-4 md:top-6 text-gray-500 hover:text-gray-700 dark:text-gray-300"
+              class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
               aria-label="Close"
               onclick="document.getElementById('login-modal-root').remove(); window.location.href = '/';">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
+
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Sign In</h2>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Welcome back! Please sign in to continue</p>
+      </div>
 
       <form wire:submit.prevent="submit" method="POST" id="login-form" novalidate>
         <?php echo csrf_field(); ?>

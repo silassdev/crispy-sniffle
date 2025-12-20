@@ -1,42 +1,27 @@
 <!-- Register modal with blurred background (Livewire + vanilla JS version) -->
 <div id="register-modal-root"
-     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
      role="dialog"
      aria-modal="true">
 
   <!-- Card -->
-  <div class="relative w-full max-w-4xl mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900 grid grid-cols-1 md:grid-cols-2">
-    <!-- Left hero (desktop) -->
-    <div class="hidden md:flex flex-col justify-center gap-6 p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white">
-      <div class="flex items-center gap-3">
-        <img src="<?php echo e(asset('img/igniscode.svg')); ?>" alt="Logo" class="w-12 h-12">
-        <div>
-          <h3 class="text-xl font-semibold">Create your account</h3>
-          <p class="text-sm opacity-90">Join now and get access to your dashboard</p>
-        </div>
-      </div>
-
-      <div class="mt-4 text-sm leading-relaxed opacity-95">
-        <p>Secure sign up, social login, and role-based onboarding.</p>
-      </div>
-
-      <div class="mt-auto">
-        <div class="w-full h-36 rounded-lg bg-white/10 flex items-center justify-center text-white/80">
-          <span class="text-sm">Welcome aboard</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right form -->
-    <div class="p-6 sm:p-10">
+  <div class="relative w-full max-w-md mx-4 rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-gray-900">
+    <!-- Form Content -->
+    <div class="p-8 sm:p-10">
       <!-- Close button (now plain HTML; JS will handle) -->
       <button type="button"
               id="register-modal-close"
-              class="absolute right-4 top-4 md:top-6 text-gray-500 hover:text-gray-700 dark:text-gray-300"
+              class="absolute right-4 top-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
               aria-label="Close"
               onclick="document.getElementById('register-modal-root').remove(); window.location.href = '/';">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
+
+      <!-- Header -->
+      <div class="mb-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Create Account</h2>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Join us and start your learning journey</p>
+      </div>
 
       <form wire:submit.prevent="submit" id="register-form" autocomplete="off" novalidate>
         <?php echo csrf_field(); ?>
