@@ -14,7 +14,11 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $posts = \App\Models\Post::latest()->take(8)->get();
+        $posts = \App\Models\Post::with(['author', 'tags', 'reactions', 'comments'])
+            ->published()
+            ->latest()
+            ->take(15)
+            ->get();
 
         if (! auth()->check()) {
             return view('home.guest', compact('posts'));
