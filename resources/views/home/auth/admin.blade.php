@@ -55,7 +55,7 @@ Admin Home — {{ config('app.name') }}
                         'icon' => '👥',
                         'gradient' => 'from-blue-500 to-cyan-500',
                         'bg' => 'bg-blue-50',
-                        'link' => route('admin.users.index')
+                        'link' => route('admin.students.index')
                     ],
                     [
                         'label' => 'Active Posts',
@@ -63,7 +63,7 @@ Admin Home — {{ config('app.name') }}
                         'icon' => '📝',
                         'gradient' => 'from-green-500 to-emerald-500',
                         'bg' => 'bg-green-50',
-                        'link' => route('admin.community.index')
+                        'link' => route('admin.community')
                     ],
                     [
                         'label' => 'Total Comments',
@@ -71,7 +71,7 @@ Admin Home — {{ config('app.name') }}
                         'icon' => '💬',
                         'gradient' => 'from-purple-500 to-pink-500',
                         'bg' => 'bg-purple-50',
-                        'link' => route('admin.comments.index')
+                        'link' => route('admin.posts')
                     ],
                     [
                         'label' => 'Reactions',
@@ -106,7 +106,7 @@ Admin Home — {{ config('app.name') }}
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold text-gray-900">Community Activity</h3>
-                <a href="{{ route('admin.community.index') }}" class="text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                <a href="{{ route('admin.community') }}" class="text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                     Manage All Posts →
                 </a>
             </div>
@@ -141,13 +141,13 @@ Admin Home — {{ config('app.name') }}
                             'label' => 'Create New Post',
                             'icon' => '✍️',
                             'gradient' => 'from-blue-600 to-cyan-600',
-                            'link' => route('admin.community.create')
+                            'link' => route('admin.posts.create')
                         ],
                         [
                             'label' => 'Manage Users',
                             'icon' => '👤',
                             'gradient' => 'from-purple-600 to-pink-600',
-                            'link' => route('admin.users.index')
+                            'link' => route('admin.students.index')
                         ],
                         [
                             'label' => 'View Analytics',

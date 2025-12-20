@@ -1,24 +1,32 @@
 <div class="space-y-6">
-  {{-- New comment form --}}
+  
   <div class="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-100">
     <form wire:submit.prevent="add">
       <div class="mb-4">
         <label class="block text-sm font-bold text-gray-700 mb-2">
-          {{ $replyTo ? 'Write your reply' : 'Write a comment' }}
+          <?php echo e($replyTo ? 'Write your reply' : 'Write a comment'); ?>
+
         </label>
         <textarea 
           wire:model.defer="body" 
           rows="4" 
           class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all" 
-          placeholder="{{ $replyTo ? 'Share your thoughts on this comment...' : 'Share your thoughts on this post...' }}"
+          placeholder="<?php echo e($replyTo ? 'Share your thoughts on this comment...' : 'Share your thoughts on this post...'); ?>"
         ></textarea>
-        @error('body') 
-          <div class="mt-2 text-sm text-red-600 font-medium">{{ $message }}</div>
-        @enderror
+        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['body'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> 
+          <div class="mt-2 text-sm text-red-600 font-medium"><?php echo e($message); ?></div>
+        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
       </div>
 
       <div class="flex items-center gap-3">
-        @if($replyTo)
+        <!--[if BLOCK]><![endif]--><?php if($replyTo): ?>
           <button 
             type="button" 
             wire:click="cancelReply" 
@@ -26,7 +34,7 @@
           >
             Cancel Reply
           </button>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 
         <button 
           type="submit" 
@@ -43,28 +51,30 @@
     </form>
   </div>
 
-  {{-- Comments list --}}
+  
   <div class="space-y-4">
-    @forelse($comments as $comment)
+    <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
       <div class="bg-white border-2 border-gray-100 rounded-2xl p-6 hover:border-purple-200 transition-all duration-300 shadow-sm hover:shadow-md">
         <div class="flex items-start gap-4">
-          {{-- Avatar --}}
+          
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
-            {{ strtoupper(substr($comment->user->name ?? 'U', 0, 1)) }}
+            <?php echo e(strtoupper(substr($comment->user->name ?? 'U', 0, 1))); ?>
+
           </div>
 
           <div class="flex-1 min-w-0">
-            {{-- Comment header --}}
+            
             <div class="flex items-center justify-between mb-3">
               <div>
-                <div class="font-bold text-gray-900 text-lg">{{ $comment->user->name }}</div>
+                <div class="font-bold text-gray-900 text-lg"><?php echo e($comment->user->name); ?></div>
                 <div class="text-sm text-gray-500 font-medium mt-0.5">
-                  {{ $comment->created_at->diffForHumans() }}
+                  <?php echo e($comment->created_at->diffForHumans()); ?>
+
                 </div>
               </div>
 
               <button 
-                wire:click="startReply({{ $comment->id }})" 
+                wire:click="startReply(<?php echo e($comment->id); ?>)" 
                 class="flex items-center gap-1.5 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-sm rounded-full transition-all hover:scale-105"
               >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -74,42 +84,46 @@
               </button>
             </div>
 
-            {{-- Comment body --}}
+            
             <div class="text-gray-700 leading-relaxed mb-4">
-              {!! nl2br(e($comment->body)) !!}
+              <?php echo nl2br(e($comment->body)); ?>
+
             </div>
 
-            {{-- Replies --}}
-            @if($comment->children->count())
+            
+            <!--[if BLOCK]><![endif]--><?php if($comment->children->count()): ?>
               <div class="mt-4 space-y-3 pl-6 border-l-4 border-purple-200">
-                @foreach($comment->children as $child)
+                <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $comment->children; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $child): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                   <div class="bg-purple-50/50 rounded-xl p-4">
                     <div class="flex items-start gap-3">
-                      {{-- Reply avatar --}}
+                      
                       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
-                        {{ strtoupper(substr($child->user->name ?? 'U', 0, 1)) }}
+                        <?php echo e(strtoupper(substr($child->user->name ?? 'U', 0, 1))); ?>
+
                       </div>
 
                       <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-3 mb-2">
-                          <div class="font-bold text-gray-900">{{ $child->user->name }}</div>
+                          <div class="font-bold text-gray-900"><?php echo e($child->user->name); ?></div>
                           <div class="text-xs text-gray-500 font-medium">
-                            {{ $child->created_at->diffForHumans() }}
+                            <?php echo e($child->created_at->diffForHumans()); ?>
+
                           </div>
                         </div>
                         <div class="text-gray-700 leading-relaxed text-sm">
-                          {!! nl2br(e($child->body)) !!}
+                          <?php echo nl2br(e($child->body)); ?>
+
                         </div>
                       </div>
                     </div>
                   </div>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
               </div>
-            @endif
+            <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
           </div>
         </div>
       </div>
-    @empty
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
       <div class="text-center py-12 bg-gray-50 rounded-2xl">
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 mb-4">
           <svg class="w-8 h-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,13 +133,15 @@
         <h3 class="text-xl font-bold text-gray-900 mb-2">No comments yet</h3>
         <p class="text-gray-600">Be the first to share your thoughts!</p>
       </div>
-    @endforelse
+    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
   </div>
 
-  {{-- Pagination --}}
-  @if($comments->hasPages())
+  
+  <!--[if BLOCK]><![endif]--><?php if($comments->hasPages()): ?>
     <div class="mt-8">
-      {{ $comments->links() }}
+      <?php echo e($comments->links()); ?>
+
     </div>
-  @endif
+  <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
 </div>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/comments/thread.blade.php ENDPATH**/ ?>
