@@ -12,7 +12,7 @@
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
             <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 animate-fade-in-up text-white font-['Playfair_Display']">
-                Simple, <span class="text-indigo-400">Transparent</span> Pricing
+                Simple, <span class="text-indigo-400">Transparent</span>Explore Free Apps and APIs
             </h1>
             <p class="text-xl md:text-2xl text-indigo-100/60 max-w-3xl mx-auto mb-10 leading-relaxed">
                 Choose the plan that fits your learning goals. No hidden fees, ever.
