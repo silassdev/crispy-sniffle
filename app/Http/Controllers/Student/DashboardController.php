@@ -3,9 +3,17 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\StudentDashboardService;
 
 class DashboardController extends Controller
 {
+    protected StudentDashboardService $service;
+
+    public function __construct(StudentDashboardService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index(Request $request)
     {
         $role = 'student';
@@ -13,11 +21,10 @@ class DashboardController extends Controller
 
         // load any data needed by student's sections
         $data = [
-            // 'courses' => auth()->user()->courses()->latest()->take(10)->get(),
-            // 'recent'  => ...
+            'analytics' => $this->service->computeAnalytics(),
         ];
 
-        return view('dashboards.shell', array_merge($data, compact('role','section')));
+        return view('dashboards.shell', array_merge($data, compact('role', 'section')));
     }
 
     /**
@@ -33,7 +40,7 @@ class DashboardController extends Controller
 
         // pass data required by the section partial if needed
         $data = [
-            // 'courses' => auth()->user()->courses()->latest()->take(10)->get(),
+            'analytics' => $this->service->computeAnalytics(),
         ];
 
         return view($view, $data);

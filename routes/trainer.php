@@ -1,0 +1,43 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Trainer\DashboardController;
+
+/*
+|--------------------------------------------------------------------------
+| Trainer Routes
+|--------------------------------------------------------------------------
+|
+| Routes for trainer role - course management, student oversight,
+| assignment grading, and analytics.
+|
+*/
+
+Route::middleware(['auth', 'role:trainer'])
+    ->prefix('trainer')
+    ->name('trainer.')
+    ->group(function () {
+        
+        // Dashboard / Overview
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Assignment Management
+        Route::get('/assignment', fn() => view('trainer.assignment.index'))->name('assignment');
+        Route::get('/assignment/{id}', fn($id) => view('trainer.assignment.show', compact('id')))->name('assignment.show');
+        
+        // Scores / Grading
+        Route::get('/scores', fn() => view('trainer.scores.index'))->name('scores');
+        Route::get('/scores/{studentId}', fn($studentId) => view('trainer.scores.show', compact('studentId')))->name('scores.show');
+        
+        // Course Management
+        Route::get('/course', fn() => view('trainer.course.index'))->name('course');
+        Route::get('/course/{id}', fn($id) => view('trainer.course.show', compact('id')))->name('course.show');
+        
+        // Students under this trainer
+        Route::get('/students', fn() => view('trainer.students.index'))->name('students');
+        Route::get('/students/{id}', fn($id) => view('trainer.students.show', compact('id')))->name('students.show');
+        
+        // Community
+        Route::get('/community', fn() => view('trainer.community'))->name('community');
+        Route::get('/posts', fn() => view('trainer.posts'))->name('posts');
+    });

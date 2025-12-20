@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Student\DashboardController;
+use App\Http\Controllers\Student\CourseController;
+
+/*
+|--------------------------------------------------------------------------
+| Student Routes
+|--------------------------------------------------------------------------
+|
+| Routes for student role - course enrollment, assignments,
+| scores, and community participation.
+|
+*/
+
+Route::middleware(['auth', 'role:student'])
+    ->prefix('student')
+    ->name('student.')
+    ->group(function () {
+        
+        // Dashboard / Overview
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Courses
+        Route::resource('courses', CourseController::class);
+        
+        // Scores / Grades
+        Route::get('/scores', fn() => view('student.scores.index'))->name('scores');
+        Route::get('/scores/{courseId}', fn($courseId) => view('student.scores.show', compact('courseId')))->name('scores.show');
+        
+        // Community
+        Route::get('/community', fn() => view('student.community'))->name('community');
+        
+        // Assignments
+        Route::get('/assignment', fn() => view('student.assignment.index'))->name('assignment');
+        Route::get('/assignment/{id}', fn($id) => view('student.assignment.show', compact('id')))->name('assignment.show');
+        Route::post('/assignment/{id}/submit', fn($id) => redirect()->back()->with('success', 'Assignment submitted!'))->name('assignment.submit');
+    });

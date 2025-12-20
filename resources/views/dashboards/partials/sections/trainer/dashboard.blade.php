@@ -1,17 +1,7 @@
-@extends('layouts.app')
 
-@section('title','Trainer Dashboard')
+<div class="p-6 max-w-7xl mx-auto">
+  <h1 class="text-2xl font-bold mb-4">Trainer Dashboard</h1>
+  <p class="text-gray-700 mb-6">Welcome, {{ auth()->user()->name }}. This is your trainer area.</p>
 
-@section('content')
-<div class="p-6 max-w-4xl mx-auto">
-  <h1 class="text-2xl font-bold mb-4">Trainer dashboard</h1>
-  <p class="text-gray-700">Welcome, {{ auth()->user()->name }}. This is the trainer area.</p>
-
-  {{-- quick stats / placeholders --}}
-  <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-    <div class="p-4 bg-white rounded shadow">Courses: 0</div>
-    <div class="p-4 bg-white rounded shadow">Students: 0</div>
-    <div class="p-4 bg-white rounded shadow">Pending: 0</div>
-  </div>
+  <livewire:trainer.overview />
 </div>
-@endsection

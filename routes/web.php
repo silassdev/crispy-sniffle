@@ -10,6 +10,14 @@ if (file_exists(__DIR__ . '/admin.php')) {
     require __DIR__ . '/admin.php';
 }
 
+if (file_exists(__DIR__ . '/trainer.php')) {
+    require __DIR__ . '/trainer.php';
+}
+
+if (file_exists(__DIR__ . '/student.php')) {
+    require __DIR__ . '/student.php';
+}
+
 // Public controllers
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\HomeController;
@@ -138,17 +146,8 @@ Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])
 |--------------------------------------------------------------------------
 | Trainer Routes
 |--------------------------------------------------------------------------
+| Moved to routes/trainer.php
 */
-Route::middleware(['auth','role:trainer'])->prefix('trainer')->name('trainer.')->group(function(){
-
-    Route::get('dashboard', [\App\Http\Controllers\Trainer\DashboardController::class, 'index'])->name('dashboard');
-    
-    Route::view('community', 'trainer.community')->name('community');
-    Route::view('posts', 'trainer.posts')->name('posts');
-});
-
-
-
 
 // Pending trainer
 Route::get('trainer/pending', fn () => view('trainer.pending', [
@@ -159,9 +158,5 @@ Route::get('trainer/pending', fn () => view('trainer.pending', [
 |--------------------------------------------------------------------------
 | Student Routes
 |--------------------------------------------------------------------------
+| Moved to routes/student.php
 */
-Route::middleware(['auth','role:student'])->prefix('student')->name('student.')->group(function() {
-    Route::get('dashboard', [\App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
-            Route::resource('courses', CourseController::class);
-
-});
