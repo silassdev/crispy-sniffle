@@ -25,4 +25,9 @@ class DashboardController extends Controller
 
         return view('dashboards.shell', array_merge($data, compact('role', 'section')));
     }
+
+    public function courses(Request $request)
+    {
+        return $this->smartView('trainer.courses.index');
+    }
 }

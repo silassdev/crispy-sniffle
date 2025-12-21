@@ -1,4 +1,4 @@
-<a href="<?php echo e(route('notifications.index')); ?>" class="icon-nav-item" title="Notifications">
+<button @click="notificationsOpen = true" class="icon-nav-item" title="Notifications">
   <div class="relative">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
@@ -12,5 +12,5 @@
     <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
   </div>
   <span class="icon-label">Notifications</span>
-</a>
+</button>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/notifications/notification-bell.blade.php ENDPATH**/ ?>

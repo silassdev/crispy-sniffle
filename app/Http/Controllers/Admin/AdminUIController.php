@@ -9,33 +9,21 @@ class AdminUIController extends Controller
 {
     public function community(Request $request)
     {
-        if ($request->ajax()) {
-            return view('admin.community-fragment');
-        }
-        return view('admin.community');
+        return $this->smartView('admin.community');
     }
 
     public function newsletter(Request $request)
     {
-        if ($request->ajax()) {
-            return view('admin.newsletter.index-fragment');
-        }
-        return view('admin.newsletter.index');
+        return $this->smartView('admin.newsletter.index');
     }
 
     public function jobs(Request $request)
     {
-        if ($request->ajax()) {
-            return view('admin.jobs.index-fragment');
-        }
-        return view('admin.jobs.index');
+        return $this->smartView('admin.jobs.index');
     }
 
     public function courses(Request $request)
     {
-        if ($request->ajax()) {
-            return view('admin.courses-fragment');
-        }
-        return view('admin.courses');
+        return $this->smartView('admin.courses');
     }
 }

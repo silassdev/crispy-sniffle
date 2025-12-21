@@ -234,8 +234,82 @@
     function nav(){
       return {
         mobile: false,
-        closeAll(){ this.mobile = false; }
+        notificationsOpen: false,
+        closeAll(){ 
+          this.mobile = false; 
+          this.notificationsOpen = false;
+        }
       }
     }
   </script>
+
+  {{-- Notification Modal Backdrop --}}
+  <div x-show="notificationsOpen" 
+       x-transition:enter="transition ease-out duration-300"
+       x-transition:enter-start="opacity-0"
+       x-transition:enter-end="opacity-100"
+       x-transition:leave="transition ease-in duration-200"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0"
+       class="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm"
+       x-cloak
+       @click.self="notificationsOpen = false"
+       @keydown.escape.window="notificationsOpen = false">
+    
+    {{-- Modal Content --}}
+    <div x-show="notificationsOpen"
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 translate-y-full sm:translate-y-0 sm:scale-95"
+         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+         x-transition:leave-end="opacity-0 translate-y-full sm:translate-y-0 sm:scale-95"
+         class="relative w-full max-w-2xl h-[90vh] sm:h-auto sm:max-h-[85vh] bg-white sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+      
+      {{-- Modal Header --}}
+      <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
+        <div class="flex items-center gap-3">
+          <div class="bg-indigo-50 p-2 rounded-xl text-indigo-600">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 leading-tight">Notifications</h3>
+            <p class="text-xs text-slate-500 font-medium">Keep track of your latest updates</p>
+          </div>
+        </div>
+        
+        <button @click="notificationsOpen = false" class="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      {{-- Modal Body (Scrollable) --}}
+      <div class="flex-1 overflow-y-auto bg-slate-50/30 custom-scrollbar p-6">
+        @auth
+          <livewire:notifications.notifications-page />
+        @endauth
+      </div>
+    </div>
+  </div>
+
+  <style>
+    /* Custom scrollbar for better aesthetics */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+  </style>
 </nav>

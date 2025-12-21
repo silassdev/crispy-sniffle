@@ -14,7 +14,7 @@
         "livewire/livewire": "^3.6",
         "livewire/volt": "^1.7.0",
         "predis/predis": "^3.2",
-        "spatie/laravel-medialibrary": "^11.0"
+        "spatie/laravel-medialibrary": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

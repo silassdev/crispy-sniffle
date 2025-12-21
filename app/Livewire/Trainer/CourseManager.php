@@ -106,7 +106,7 @@ class CourseManager extends Component
 
         $this->dispatch('app-toast', ['title'=>'Saved','message'=>'Course saved','ttl'=>3000]);
         $this->resetForm();
-        $this->emit('refreshCourseList');
+        $this->dispatch('refreshCourseList');
     }
 
     public function delete($id)
@@ -120,7 +120,7 @@ class CourseManager extends Component
         $c->clearMediaCollection('attachments');
         $c->delete();
         $this->dispatch('app-toast', ['title'=>'Deleted','message'=>'Course removed','ttl'=>3000]);
-        $this->emit('refreshCourseList');
+        $this->dispatch('refreshCourseList');
     }
 
     protected function resetForm()

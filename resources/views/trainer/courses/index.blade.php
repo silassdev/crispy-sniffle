@@ -1,4 +1,4 @@
 @extends('dashboards.shell') {{-- or trainer's dashboard shell --}}
-@section('content')
-  <livewire:trainer.course-manager />
+@section('dashboard-content')
+  @include('trainer.courses.index-fragment')
 @endsection

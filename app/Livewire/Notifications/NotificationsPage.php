@@ -11,7 +11,7 @@ class NotificationsPage extends Component
 
     public $perPage = 20;
     public $q = '';
-    public $filter = 'all'; // all | unread | read
+    public $filter = 'all'; // all | unread | read 
 
     // bulk select
     public array $selected = [];
@@ -43,7 +43,7 @@ class NotificationsPage extends Component
     public function refreshList()
     {
         $this->resetPage();
-        $this->emitSelf('$refresh');
+        $this->dispatch('$refresh');
     }
 
     /** Bulk: select all notifications on the current page */
@@ -124,17 +124,13 @@ class NotificationsPage extends Component
             if ($notif && ! $notif->read_at) $notif->markAsRead();
         }
         $this->refreshList();
-        $this->dispatchBrowserEvent('navigate-to', ['url' => $url]);
+        $this->dispatch('navigate-to', ['url' => $url]);
     }
 
     protected function notify($title, $message)
     {
         $payload = ['title' => $title, 'message' => $message, 'ttl' => 2500];
-        if (method_exists($this, 'dispatch')) {
-            $this->dispatch('app-toast', $payload);
-        } else {
-            $this->dispatchBrowserEvent('app-toast', $payload);
-        }
+        $this->dispatch('app-toast', ...$payload);
     }
 
     public function render()
