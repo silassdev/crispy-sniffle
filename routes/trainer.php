@@ -21,8 +21,8 @@ Route::middleware(['auth', 'role:trainer'])
         Route::get('/scores/{studentId}', fn($studentId) => view('trainer.scores.show', compact('studentId')))->name('scores.show');
         
         // Course Management
-        Route::get('/course', fn() => view('trainer.course.index'))->name('course');
-        Route::get('/course/{id}', fn($id) => view('trainer.course.show', compact('id')))->name('course.show');
+        Route::get('/courses', fn()=> view('trainer.courses.index'))->name('courses.index');
+        Route::get('/courses/{id}', [TrainerCourseController::class,'show'])->name('courses.show'); 
         
         // Students under this trainer
         Route::get('/students', fn() => view('trainer.students.index'))->name('students');
