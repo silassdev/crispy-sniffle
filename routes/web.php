@@ -28,7 +28,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\NewsletterController;
-
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\CourseEnrollmentController;
 
 // Admin controllers
 use App\Http\Controllers\Admin\AuthController;
@@ -41,7 +42,6 @@ use App\Http\Controllers\Admin\AdminController;
 // Trainer & Student dashboards
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Student\DashboardController as StudentDashboardController;
-use App\Http\Controllers\Student\CourseController;
 
 //Notification
 use App\Http\Controllers\NotificationsController;
@@ -75,20 +75,30 @@ Route::get('/careers/{slug}', [JobController::class, 'show'])->name('careers.sho
 Route::get('/sponsor', function () { return view('sponsor'); })->name('sponsor');
 Route::get('/feedback', function () { return view('feedback'); })->name('feedback');
 
+
+// Courses
+Route::get('/courses', [CourseController::class,'index'])->name('courses.index');
+Route::get('/courses/{slug}', [CourseController::class,'show'])->name('courses.show');
+
 Route::fallback(fn () => response()->view('errors.404', [], 404));
 
+// Pending trainer
+Route::get('trainer/pending', fn () => view('trainer.pending', [ 'email' => session('trainer_email'), ]))->middleware('pending-trainer')->name('trainer.pending');
 
-
+// Invite accept
+Route::get('invite/accept/{token}', fn (string $token) => view('admin.invites.accept', ['token' => $token])) ->name('invite.accept');
 
 // Blog
 Route::get('/blogs', [PostController::class, 'index'])->name('blogs.index');
 Route::get('/blogs/{slug}', [PostController::class, 'show'])->name('blogs.show');
 
 // Contact
-Route::controller(ContactController::class)->group(function () {
-    Route::get('/contact', 'show')->name('contact.show');
+Route::controller(ContactController::class)->group(function () { Route::get('/contact', 'show')->name('contact.show');
     Route::post('/contact', 'submit')->name('contact.submit');
 });
+
+// enroll for authenticated users
+Route::post('/courses/{id}/enroll', [CourseEnrollmentController::class,'enroll']) ->name('courses.enroll')->middleware('auth');
 
 // Password reset
 Route::prefix('password')->group(function () {
@@ -98,6 +108,7 @@ Route::prefix('password')->group(function () {
     Route::post('reset', [ResetPasswordController::class, 'reset'])->name('password.update');
     Route::get('token-invalid', fn () => view('auth.passwords.token-expired'))->name('password.token.invalid');
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -110,13 +121,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-    // Invite accept (public)
-    Route::get('invite/accept/{token}', fn (string $token) => view('admin.invites.accept', ['token' => $token]))
-        ->name('invite.accept');
+    
 
     // Protected admin routes
     Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {
-        // Dashboard (named admin.dashboard)
+
+        // Dashboard 
         Route::get('dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // Trainer management
@@ -133,33 +143,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
         Route::get('admins/{id}', [AdminController::class, 'show'])->name('admins.show');
         Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
+
     });
 });
 
-// Admin “view as” (keep middleware consistent; using EnsureUserIsAdmin if you have it)
-Route::post('admin/view-as', [ViewAsController::class, 'set'])
-    ->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])
-    ->name('admin.view-as');
 
-Route::post('admin/view-as/clear', [ViewAsController::class, 'clear'])
-    ->middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])
-    ->name('admin.view-as.clear');
 
-/*
-|--------------------------------------------------------------------------
-| Trainer Routes
-|--------------------------------------------------------------------------
-| Moved to routes/trainer.php
-*/
 
-// Pending trainer
-Route::get('trainer/pending', fn () => view('trainer.pending', [
-    'email' => session('trainer_email'),
-]))->middleware('pending-trainer')->name('trainer.pending');
-
-/*
-|--------------------------------------------------------------------------
-| Student Routes
-|--------------------------------------------------------------------------
-| Moved to routes/student.php
-*/
