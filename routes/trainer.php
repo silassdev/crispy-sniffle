@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Trainer\DashboardController;
+use App\Http\Controllers\Trainer\CertificateController as TrainerCertificateController;
+use App\Http\Controllers\Trainer\CourseController as TrainerCourseController;
+
 
 
 Route::middleware(['auth', 'role:trainer'])
@@ -31,4 +34,10 @@ Route::middleware(['auth', 'role:trainer'])
         // Community
         Route::get('/community', fn() => view('trainer.community'))->name('community');
         Route::get('/posts', fn() => view('trainer.posts'))->name('posts');
+
+        // Certificates
+        Route::get('/certificates', [TrainerCertificateController::class,'index'])->name('certificates.index');
+        Route::get('/certificates/create', [TrainerCertificateController::class,'create'])->name('certificates.create');
+        Route::post('/certificates', [TrainerCertificateController::class,'store'])->name('certificates.store');
+        Route::get('/certificates/{id}', [TrainerCertificateController::class,'show'])->name('certificates.show');
     });

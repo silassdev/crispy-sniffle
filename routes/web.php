@@ -30,6 +30,8 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CourseEnrollmentController;
+use App\Http\Controllers\CertificateController;
+
 
 // Admin controllers
 use App\Http\Controllers\Admin\AuthController;
@@ -98,6 +100,11 @@ Route::get('/blogs/{slug}', [PostController::class, 'show'])->name('blogs.show')
 Route::controller(ContactController::class)->group(function () { Route::get('/contact', 'show')->name('contact.show');
     Route::post('/contact', 'submit')->name('contact.submit');
 });
+
+// Certificates
+Route::middleware(['auth'])->get('/my-certificates', [CertificateController::class,'myCertificates'])->name('student.certificates');
+Route::get('/certificate/{certificate_number}', [CertificateController::class,'publicShow'])->name('certificates.public');
+
 
 // enroll for authenticated users
 Route::post('/courses/{id}/enroll', [CourseEnrollmentController::class,'enroll']) ->name('courses.enroll')->middleware('auth');

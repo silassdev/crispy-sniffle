@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
+
 
 
 
@@ -52,6 +54,11 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
         Route::get('/jobs', [\App\Http\Controllers\Admin\AdminUIController::class, 'jobs'])->name('jobs');
 
         Route::get('/courses', [\App\Http\Controllers\Admin\AdminUIController::class, 'courses'])->name('courses');
+
+        Route::get('/certificates', [AdminCertificateController::class,'index'])->name('certificates.index');
+        Route::post('/certificates/{id}/approve', [AdminCertificateController::class,'approve'])->name('certificates.approve');
+        Route::post('/certificates/{id}/reject', [AdminCertificateController::class,'reject'])->name('certificates.reject');
+        Route::post('/certificates/{id}/revoke', [AdminCertificateController::class,'revoke'])->name('certificates.revoke');
 
 
 });
