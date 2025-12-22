@@ -25,6 +25,9 @@
     @yield('content')
   </main>
 
+  <livewire:certificate.preview-modal />
+
+
   @if(!isset($hideFooter) || !$hideFooter)
     @include('layouts.links')
     @include('layouts.footer')

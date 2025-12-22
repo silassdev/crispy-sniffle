@@ -46,6 +46,8 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 //Notification
 use App\Http\Controllers\NotificationsController;
 
+// Certificate PDF
+use App\Http\Controllers\CertificatePdfController;
 
 
 /*
@@ -107,6 +109,19 @@ Route::prefix('password')->group(function () {
     Route::get('reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset', [ResetPasswordController::class, 'reset'])->name('password.update');
     Route::get('token-invalid', fn () => view('auth.passwords.token-expired'))->name('password.token.invalid');
+});
+
+// Certificate PDF routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview'])
+        ->name('certificates.pdf.preview');
+
+    Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download'])
+        ->name('certificates.pdf.download');
+
+    //save PDF to storage and return public URL
+    Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage'])
+        ->name('certificates.pdf.save');
 });
 
 
