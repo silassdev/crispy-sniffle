@@ -51,6 +51,8 @@ use App\Http\Controllers\NotificationsController;
 // Certificate PDF
 use App\Http\Controllers\CertificatePdfController;
 
+//Assessment
+use App\Http\Controllers\AssessmentSubmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,7 +131,16 @@ Route::middleware(['auth'])->group(function () {
     //save PDF to storage and return public URL
     Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage'])
         ->name('certificates.pdf.save');
+
+    // assessments submit
+    Route::post('/assessments/{id}/submit', [AssessmentSubmissionController::class,'submit'])->name('assessments.submit')->middleware('auth'); // auth middleware as needed
+
+    // student full assessments page (auth required)
+        Route::middleware(['auth'])->get('/student/assessments', function () {    return view('student.assessments.index'); 
+        })->name('student.assessments');
+
 });
+
 
 
 /*
@@ -168,6 +179,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     });
 });
+
 
 
 

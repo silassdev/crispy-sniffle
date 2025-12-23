@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Trainer\DashboardController;
+use App\Http\Controllers\AssessmentSubmissionController;
 use App\Http\Controllers\Trainer\CertificateController as TrainerCertificateController;
 use App\Http\Controllers\Trainer\CourseController as TrainerCourseController;
+
 
 
 
@@ -24,7 +26,7 @@ Route::middleware(['auth', 'role:trainer'])
         Route::get('/scores/{studentId}', fn($studentId) => view('trainer.scores.show', compact('studentId')))->name('scores.show');
         
         // Course Management
-        Route::get('/courses', [DashboardController::class, 'courses'])->name('courses.index');
+        Route::get('/courses', fn()=> view('trainer.courses.index'))->name('courses.index');
         Route::get('/courses/{id}', [TrainerCourseController::class,'show'])->name('courses.show'); 
         
         // Students under this trainer
@@ -40,4 +42,8 @@ Route::middleware(['auth', 'role:trainer'])
         Route::get('/certificates/create', [TrainerCertificateController::class,'create'])->name('certificates.create');
         Route::post('/certificates', [TrainerCertificateController::class,'store'])->name('certificates.store');
         Route::get('/certificates/{id}', [TrainerCertificateController::class,'show'])->name('certificates.show');
+
+        //Assessment
+        Route::get('/courses/{course}/assessments', fn($courseId) => view('trainer.assessments.index', ['courseId' => $courseId]))->name('assessments.index');
+        Route::get('/assessments/{id}/submissions', fn($id) => view('trainer.assessments.submissions', ['assessmentId'=>$id]))->name('assessments.submissions');
     });
