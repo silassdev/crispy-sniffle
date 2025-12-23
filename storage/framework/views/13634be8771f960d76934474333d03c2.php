@@ -45,6 +45,24 @@
     <?php echo $__env->yieldContent('content'); ?>
   </main>
 
+  <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('certificate.preview-modal', []);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-4025576166-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
+
+
   <?php if(!isset($hideFooter) || !$hideFooter): ?>
     <?php echo $__env->make('layouts.links', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     <?php echo $__env->make('layouts.footer', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
