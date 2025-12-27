@@ -10,12 +10,7 @@ use Illuminate\Support\Str;
 
 class CertificatePdfController extends Controller
 {
-    // ... preview() and download() methods ...
-
-    /**
-     * Generate PDF and save to storage/public/certificates/
-     * Returns JSON: { success: true, url: "..." } or { success:false, message: "..." }
-     */
+    
     public function saveToStorage(Request $request, $id)
     {
         $cert = Certificate::with(['student','trainer','course','approver'])->findOrFail($id);

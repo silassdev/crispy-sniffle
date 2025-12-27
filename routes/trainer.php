@@ -9,10 +9,7 @@ use App\Http\Controllers\Trainer\CourseController as TrainerCourseController;
 
 
 
-Route::middleware(['auth', 'role:trainer'])
-    ->prefix('trainer')
-    ->name('trainer.')
-    ->group(function () {
+Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.') ->group(function () {
         
         // Dashboard / Overview
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -42,6 +39,12 @@ Route::middleware(['auth', 'role:trainer'])
         Route::get('/certificates/create', [TrainerCertificateController::class,'create'])->name('certificates.create');
         Route::post('/certificates', [TrainerCertificateController::class,'store'])->name('certificates.store');
         Route::get('/certificates/{id}', [TrainerCertificateController::class,'show'])->name('certificates.show');
+
+        //Courses
+        Route::get('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'index'])->name('chapters.index');
+        Route::post('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'store'])->name('chapters.store');
+        Route::put('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'update'])->name('chapters.update');
+        Route::delete('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'destroy'])->name('chapters.destroy');
 
         //Assessment
         Route::get('/courses/{course}/assessments', fn($courseId) => view('trainer.assessments.index', ['courseId' => $courseId]))->name('assessments.index');

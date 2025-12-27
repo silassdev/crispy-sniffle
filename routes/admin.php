@@ -8,9 +8,8 @@ use App\Http\Controllers\Admin\TrainerController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\CourseController as AdminCourseController;
 use App\Http\Controllers\Admin\CertificateController as AdminCertificateController;
-
-
 
 
 
@@ -19,7 +18,7 @@ use App\Http\Controllers\Admin\CertificateController as AdminCertificateControll
         ->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
-        // Counters endpoint for AJAX or dashboard widgets
+        // Counters endpoint for AJAX dashboard widgets
         Route::get('/counters', [DashboardController::class, 'counters'])->name('counters');
 
         Route::get('students', [\App\Http\Controllers\Admin\StudentController::class, 'index'])->name('students.index');
@@ -36,7 +35,7 @@ use App\Http\Controllers\Admin\CertificateController as AdminCertificateControll
 
         Route::get('/community', [\App\Http\Controllers\Admin\AdminUIController::class, 'community'])->name('community');
         
-        // Admin post management (create/draft/publish)
+        // post management
         Route::get('/posts', [AdminPostController::class, 'index'])->name('posts');
         Route::get('/posts/create', [AdminPostController::class, 'create'])->name('posts.create');
         Route::post('/posts', [AdminPostController::class, 'store'])->name('posts.store');
@@ -53,14 +52,19 @@ use App\Http\Controllers\Admin\CertificateController as AdminCertificateControll
         
         Route::get('/jobs', [\App\Http\Controllers\Admin\AdminUIController::class, 'jobs'])->name('jobs');
 
-        Route::get('/courses', [\App\Http\Controllers\Admin\AdminUIController::class, 'courses'])->name('courses');
 
+        //  courses View & Export
+        Route::get('/courses/{course}', [AdminCourseController::class, 'show'])->name('courses.show');
+        Route::get('/courses/{course}/view', [\App\Http\Controllers\Admin\CourseController::class,'show'])->name('courses.show');
+        Route::get('/courses/{course}/export-csv', [AdminCourseController::class, 'exportCsv'])->name('courses.export.csv');
+        Route::get('/courses/{course}/export-students-csv', [AdminCourseController::class, 'exportStudentsCsv'])->name('courses.export.students_csv');
+        Route::get('/courses/{course}/export-chapters-pdf', [AdminCourseController::class, 'exportChaptersPdf'])->name('courses.export.chapters_pdf');
+
+        // Certifiication
         Route::get('/certificates', [AdminCertificateController::class,'index'])->name('certificates.index');
         Route::post('/certificates/{id}/approve', [AdminCertificateController::class,'approve'])->name('certificates.approve');
         Route::post('/certificates/{id}/reject', [AdminCertificateController::class,'reject'])->name('certificates.reject');
         Route::post('/certificates/{id}/revoke', [AdminCertificateController::class,'revoke'])->name('certificates.revoke');
-
-
 });
 
 

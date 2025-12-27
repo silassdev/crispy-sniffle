@@ -11,6 +11,7 @@
             <h3 class="text-sm font-semibold">Certificate preview</h3>
             <!--[if BLOCK]><![endif]--><?php if($certificateId): ?>
               <span class="text-xs text-gray-500">#<?php echo e($certificateId); ?></span>
+             <a href="<?php echo e(route('certificates.pdf.download', $certificateId)); ?>" class="px-3 py-1 text-xs bg-indigo-600 text-white rounded" target="_blank" rel="noopener">Download PDF</a>
             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
           </div>
 
@@ -18,7 +19,19 @@
             <!--[if BLOCK]><![endif]--><?php if($certificateId): ?>
               <a href="<?php echo e($certificateId ? route('certificates.pdf.download', $certificateId) : '#'); ?>" class="px-3 py-1 text-xs bg-indigo-600 text-white rounded" target="_blank" rel="noopener">Download PDF</a>
             <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-            <button class="px-3 py-1 text-xs border rounded" wire:click="close">Close</button>
+            <button
+              id="save-pdf-btn"
+              type="button"
+              class="px-3 py-1 text-xs bg-emerald-600 text-white rounded"
+              data-save-url="<?php echo e($certificateId ? route('certificates.pdf.save', $certificateId) : ''); ?>"
+              onclick="saveCertificateToStorage(this)"
+            >
+              Save to storage
+            </button>
+        
+
+          <button class="px-3 py-1 text-xs border rounded" wire:click="close">Close</button>
+        </div>
           </div>
         </div>
 

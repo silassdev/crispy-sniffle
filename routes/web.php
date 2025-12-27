@@ -48,7 +48,7 @@ use App\Http\Controllers\Student\DashboardController as StudentDashboardControll
 //Notification
 use App\Http\Controllers\NotificationsController;
 
-// Certificate PDF
+// Certificate 
 use App\Http\Controllers\CertificatePdfController;
 
 //Assessment
@@ -122,22 +122,13 @@ Route::prefix('password')->group(function () {
 
 // Certificate PDF routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview'])
-        ->name('certificates.pdf.preview');
+    Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview']) ->name('certificates.pdf.preview');
 
-    Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download'])
-        ->name('certificates.pdf.download');
+    Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download']) ->name('certificates.pdf.download');
+    Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage']) ->name('certificates.pdf.save');
 
-    //save PDF to storage and return public URL
-    Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage'])
-        ->name('certificates.pdf.save');
-
-    // assessments submit
-    Route::post('/assessments/{id}/submit', [AssessmentSubmissionController::class,'submit'])->name('assessments.submit')->middleware('auth'); // auth middleware as needed
 
     // student full assessments page (auth required)
-        Route::middleware(['auth'])->get('/student/assessments', function () {    return view('student.assessments.index'); 
-        })->name('student.assessments');
 
 });
 
