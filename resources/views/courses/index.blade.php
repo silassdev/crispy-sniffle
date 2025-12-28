@@ -4,8 +4,50 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <div class="mb-10">
-    <h1 class="text-4xl font-bold text-slate-900 font-['Playfair_Display'] mb-2">🎓 Browse Courses</h1>
+    <h1 class="text-4xl font-bold text-slate-900 mb-2">Courses</h1>
     <p class="text-slate-600">Explore our collection of free courses and start learning today</p>
+  </div>
+
+  {{-- Search and Filter Section --}}
+  <div class="mb-8 space-y-4">
+    {{-- Search Bar --}}
+    <form method="GET" action="{{ route('courses.index') }}" class="relative">
+      <input 
+        type="text" 
+        name="q" 
+        value="{{ request('q') }}" 
+        placeholder="Search courses by title, description, or tags..." 
+        class="w-full px-6 py-4 pl-12 rounded-2xl bg-white border border-slate-200 shadow-sm focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 outline-none transition-all duration-300"
+      >
+      <svg class="absolute left-4 top-4 w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      @if(request('filter'))
+        <input type="hidden" name="filter" value="{{ request('filter') }}">
+      @endif
+    </form>
+
+    {{-- Filter Buttons --}}
+    <div class="flex flex-wrap gap-3">
+      <a href="{{ route('courses.index') }}" 
+         class="px-4 py-2 rounded-lg font-semibold text-sm transition-all {{ !request('filter') && !request('q') ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+        All Courses
+      </a>
+      <a href="{{ route('courses.index', ['filter' => 'public'] + request()->only('q')) }}" 
+         class="px-4 py-2 rounded-lg font-semibold text-sm transition-all {{ request('filter') == 'public' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+        🔓 Free Courses
+      </a>
+      @auth
+        <a href="{{ route('courses.index', ['filter' => 'private'] + request()->only('q')) }}" 
+           class="px-4 py-2 rounded-lg font-semibold text-sm transition-all {{ request('filter') == 'private' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+          🔒 Premium Courses
+        </a>
+      @endauth
+      <a href="{{ route('courses.index', ['filter' => 'recent'] + request()->only('q')) }}" 
+         class="px-4 py-2 rounded-lg font-semibold text-sm transition-all {{ request('filter') == 'recent' ? 'bg-blue-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+        🆕 Recently Added
+      </a>
+    </div>
   </div>
 
   @if($courses->count() > 0)

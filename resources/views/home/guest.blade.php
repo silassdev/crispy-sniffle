@@ -62,24 +62,49 @@
       </div>
   </section>
 
-  {{-- FREE COURSES SECTION --}}
-  @if(isset($courses) && $courses->count() > 0)
+  {{-- EXPLORE COURSES SECTION --}}
+  @if((isset($publicCourses) && $publicCourses->count() > 0) || (isset($privateCourses) && $privateCourses->count() > 0))
   <section class="mb-20">
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
         <div>
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-['Playfair_Display']">🎓 Free Courses</h2>
-            <p class="text-slate-500 mt-2">Start learning today, no payment required</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900">Explore Courses</h2>
+            <p class="text-slate-500 mt-2">Free courses and premium content for your learning journey</p>
         </div>
         <a href="{{ route('courses.index') }}" class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:gap-3 transition-all group">
             View all courses
             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
         </a>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach($courses as $course)
-            <x-course-card :course="$course" />
-        @endforeach
-    </div>
+
+    {{-- Public Courses --}}
+    @if(isset($publicCourses) && $publicCourses->count() > 0)
+      <div class="mb-12">
+        <h3 class="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <span class="w-2 h-6 bg-emerald-500 rounded-full"></span>
+          No Login Required
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          @foreach($publicCourses as $course)
+              <x-course-card :course="$course" :showLock="false" />
+          @endforeach
+        </div>
+      </div>
+    @endif
+
+    {{-- Private/Premium Courses --}}
+    @if(isset($privateCourses) && $privateCourses->count() > 0)
+      <div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
+          <span class="w-2 h-6 bg-amber-500 rounded-full"></span>
+          Login Required
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          @foreach($privateCourses as $course)
+              <x-course-card :course="$course" :showLock="true" />
+          @endforeach
+        </div>
+      </div>
+    @endif
   </section>
   @endif
 

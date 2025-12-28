@@ -1,3 +1,12 @@
+@props(['course', 'showLock' => null])
+
+@php
+    // Auto-detect if course should show lock if not explicitly set
+    if ($showLock === null) {
+        $showLock = !$course->is_public;
+    }
+@endphp
+
 <div class="group bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
     {{-- Course Image/Thumbnail --}}
     <div class="relative h-48 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden">
@@ -11,9 +20,16 @@
             </div>
         @endif
         
-        {{-- Public Badge --}}
+        {{-- Badge (Free/Locked) --}}
         <div class="absolute top-3 right-3">
-            <span class="px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full">FREE</span>
+            @if($showLock)
+                <span class="px-3 py-1 bg-amber-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                    LOCKED
+                </span>
+            @else
+                <span class="px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full">FREE</span>
+            @endif
         </div>
     </div>
 

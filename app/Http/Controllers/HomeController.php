@@ -21,14 +21,20 @@ class HomeController extends Controller
             ->get();
 
         if (! auth()->check()) {
-            // Fetch public courses for the homepage
-            $courses = \App\Models\Course::where('is_public', true)
+            // Fetch 3 public and 3 private courses for homepage
+            $publicCourses = \App\Models\Course::where('is_public', true)
                 ->with('trainer')
                 ->latest()
-                ->take(6)
+                ->take(3)
                 ->get();
             
-            return view('home.guest', compact('posts', 'courses'));
+            $privateCourses = \App\Models\Course::where('is_public', false)
+                ->with('trainer')
+                ->latest()
+                ->take(3)
+                ->get();
+            
+            return view('home.guest', compact('posts', 'publicCourses', 'privateCourses'));
         }
 
         $user = auth()->user();
