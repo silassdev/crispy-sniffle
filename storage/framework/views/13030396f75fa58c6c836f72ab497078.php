@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Contact Us')
 
-@section('content')
+<?php $__env->startSection('title', 'Contact Us'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
@@ -69,7 +69,7 @@
 
             <!-- Contact Form -->
             <div class="lg:w-3/5 p-12">
-                @if(session('success'))
+                <?php if(session('success')): ?>
                     <div class="bg-emerald-50 border-l-4 border-emerald-400 p-6 mb-8 rounded-r-2xl flex items-center gap-4 animate-fade-in-up">
                         <div class="bg-emerald-100 p-2 rounded-full">
                             <svg class="h-6 w-6 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
@@ -78,33 +78,54 @@
                         </div>
                         <div>
                             <p class="text-emerald-800 font-bold">Message Sent!</p>
-                            <p class="text-emerald-700 text-sm">{{ session('success') }}</p>
+                            <p class="text-emerald-700 text-sm"><?php echo e(session('success')); ?></p>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                <form method="POST" action="{{ route('contact.submit') }}" class="space-y-8">
-                    @csrf
+                <form method="POST" action="<?php echo e(route('contact.submit')); ?>" class="space-y-8">
+                    <?php echo csrf_field(); ?>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wider">Your Name</label>
-                            <input name="name" value="{{ old('name') }}" placeholder="Enter your full name" 
+                            <input name="name" value="<?php echo e(old('name')); ?>" placeholder="Enter your full name" 
                                 class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition duration-300 outline-none bg-gray-50/50" />
-                            @error('name')<p class="text-rose-500 text-xs font-semibold mt-1">{{ $message }}</p>@enderror
+                            <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="text-rose-500 text-xs font-semibold mt-1"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="space-y-3">
                             <label class="text-sm font-bold text-gray-700 uppercase tracking-wider">Email Address</label>
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="name@company.com" 
+                            <input type="email" name="email" value="<?php echo e(old('email')); ?>" placeholder="name@company.com" 
                                 class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition duration-300 outline-none bg-gray-50/50" />
-                            @error('email')<p class="text-rose-500 text-xs font-semibold mt-1">{{ $message }}</p>@enderror
+                            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="text-rose-500 text-xs font-semibold mt-1"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
                     <div class="space-y-3">
                         <label class="text-sm font-bold text-gray-700 uppercase tracking-wider">Your Message</label>
                         <textarea name="message" rows="6" placeholder="How can we help you achieve your goals?" 
-                            class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition duration-300 outline-none bg-gray-50/50 resize-none">{{ old('message') }}</textarea>
-                        @error('message')<p class="text-rose-500 text-xs font-semibold mt-1">{{ $message }}</p>@enderror
+                            class="w-full px-5 py-4 rounded-2xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition duration-300 outline-none bg-gray-50/50 resize-none"><?php echo e(old('message')); ?></textarea>
+                        <?php $__errorArgs = ['message'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><p class="text-rose-500 text-xs font-semibold mt-1"><?php echo e($message); ?></p><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <button class="w-full md:w-auto px-12 py-5 bg-blue-600 text-white font-extrabold rounded-2xl hover:bg-blue-700 transition duration-300 shadow-xl shadow-blue-200 flex items-center justify-center gap-3 group transform hover:-translate-y-1">
@@ -128,4 +149,6 @@
         animation: fade-in-up 0.8s ease-out forwards;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/contact.blade.php ENDPATH**/ ?>

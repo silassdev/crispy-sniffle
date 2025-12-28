@@ -142,7 +142,7 @@
       {{-- Section Header --}}
       <div class="flex items-center justify-between border-b border-slate-100 pb-6">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900 font-['Playfair_Display']">Latest Insights</h2>
+            <h2 class="text-3xl font-bold text-slate-900">Latest Insights</h2>
             <p class="text-slate-500 mt-1">Freshly baked thoughts from our community</p>
         </div>
         <a href="{{ route('blogs.index') ?? '#' }}" class="inline-flex items-center gap-2 px-6 py-2.5 bg-slate-100 text-slate-700 rounded-full font-bold text-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 group">
@@ -230,7 +230,7 @@
         <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
 
         <div class="relative z-10 text-center max-w-2xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-black text-white mb-6 font-['Playfair_Display'] leading-tight">
+            <h2 class="text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
                 Ready to elevate your <br> <span class="text-indigo-400">learning journey?</span>
             </h2>
             <p class="text-indigo-100/60 mb-10 text-lg">

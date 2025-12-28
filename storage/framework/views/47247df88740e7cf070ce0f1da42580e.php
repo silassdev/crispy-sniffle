@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'Our Blog')
 
-@section('content')
+<?php $__env->startSection('title', 'Our Blog'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
@@ -20,8 +20,8 @@
                 </p>
 
                 <!-- Integrated Search -->
-                <form method="GET" action="{{ route('blogs.index') }}" class="relative max-w-xl mx-auto group/search">
-                    <input name="q" value="{{ request('q') }}" placeholder="Search our articles..." 
+                <form method="GET" action="<?php echo e(route('blogs.index')); ?>" class="relative max-w-xl mx-auto group/search">
+                    <input name="q" value="<?php echo e(request('q')); ?>" placeholder="Search our articles..." 
                            class="w-full px-8 py-5 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-indigo-200 outline-none focus:ring-4 focus:ring-indigo-500/20 focus:bg-white/20 transition-all duration-300 shadow-2xl" />
                     <button class="absolute right-3 top-2.5 px-6 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition duration-300 shadow-lg flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,18 +36,33 @@
 
     <!-- Feed Section -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        @if(request('q'))
+        <?php if(request('q')): ?>
             <div class="mb-12 flex items-center gap-4 animate-fade-in-up">
                 <p class="text-gray-500 font-medium">Showing results for:</p>
                 <span class="px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full font-bold text-sm border border-blue-200 shadow-sm">
-                    "{{ request('q') }}"
+                    "<?php echo e(request('q')); ?>"
                 </span>
-                <a href="{{ route('blogs.index') }}" class="text-sm text-gray-400 hover:text-blue-600 transition-colors font-bold underline underline-offset-4">Clear search</a>
+                <a href="<?php echo e(route('blogs.index')); ?>" class="text-sm text-gray-400 hover:text-blue-600 transition-colors font-bold underline underline-offset-4">Clear search</a>
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="bg-white/50 rounded-[3rem] p-8 md:p-12 border border-gray-100 shadow-sm backdrop-blur-sm">
-            <livewire:community.community-feed post-type="blog" />
+            <?php
+$__split = function ($name, $params = []) {
+    return [$name, $params];
+};
+[$__name, $__params] = $__split('community.community-feed', ['postType' => 'blog']);
+
+$__html = app('livewire')->mount($__name, $__params, 'lw-3935999579-0', $__slots ?? [], get_defined_vars());
+
+echo $__html;
+
+unset($__html);
+unset($__name);
+unset($__params);
+unset($__split);
+if (isset($__slots)) unset($__slots);
+?>
         </div>
     </div>
 </div>
@@ -61,4 +76,6 @@
         animation: fade-in-up 0.8s ease-out forwards;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/blogs/index.blade.php ENDPATH**/ ?>

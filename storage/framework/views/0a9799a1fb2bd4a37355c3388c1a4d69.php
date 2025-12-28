@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Pricing'); ?>
 
-@section('title', 'Pricing')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
@@ -93,7 +91,7 @@
                         Dedicated account manager
                     </li>
                 </ul>
-                <a href="{{ route('contact.show') }}" class="block text-center py-3 px-6 rounded-xl bg-gray-900 text-white font-bold hover:bg-black transition">Contact Sales</a>
+                <a href="<?php echo e(route('contact.show')); ?>" class="block text-center py-3 px-6 rounded-xl bg-gray-900 text-white font-bold hover:bg-black transition">Contact Sales</a>
             </div>
         </div>
     </div>
@@ -109,7 +107,7 @@
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold text-gray-800 mb-2">Do you offer student discounts?</h4>
-                    <p class="text-gray-600">We offer special pricing for students and educators. Please <a href="{{ route('contact.show') }}" class="text-blue-600 hover:underline">contact us</a> for more details.</p>
+                    <p class="text-gray-600">We offer special pricing for students and educators. Please <a href="<?php echo e(route('contact.show')); ?>" class="text-blue-600 hover:underline">contact us</a> for more details.</p>
                 </div>
             </div>
         </div>
@@ -125,4 +123,6 @@
         animation: fade-in-up 0.8s ease-out forwards;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/pricing.blade.php ENDPATH**/ ?>

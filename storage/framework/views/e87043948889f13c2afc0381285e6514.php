@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('title', 'About Us')
 
-@section('content')
+<?php $__env->startSection('title', 'About Us'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="bg-gray-50 min-h-screen">
     <!-- Hero Section -->
     <div class="relative overflow-hidden bg-slate-900 py-24 mb-16 group">
@@ -18,8 +18,8 @@
                 We are more than just an LMS. We are a community dedicated to lifelong learning, innovation, and technical excellence.
             </p>
             <div class="flex justify-center gap-4">
-                <a href="{{ route('blogs.index') }}" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-50 transition duration-300 shadow-lg hover:-translate-y-1 transform">Our Blog</a>
-                <a href="{{ route('contact.show') }}" class="px-8 py-3 bg-transparent border-2 border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition duration-300">Get in Touch</a>
+                <a href="<?php echo e(route('blogs.index')); ?>" class="px-8 py-3 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-50 transition duration-300 shadow-lg hover:-translate-y-1 transform">Our Blog</a>
+                <a href="<?php echo e(route('contact.show')); ?>" class="px-8 py-3 bg-transparent border-2 border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition duration-300">Get in Touch</a>
             </div>
         </div>
     </div>
@@ -112,4 +112,6 @@
         animation: fade-in-up 0.8s ease-out forwards;
     }
 </style>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/about.blade.php ENDPATH**/ ?>
