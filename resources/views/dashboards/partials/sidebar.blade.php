@@ -21,22 +21,21 @@
             ['key' => 'courses', 'label' =>    'Courses', 'icon' => 'courses', 'route_suffix' => 'courses'],
             ['key' => 'jobs', 'label' => 'Jobs', 'icon' => 'jobs', 'route_suffix' => 'jobs'],
             ['key' => 'feedback', 'label' => 'Feedback', 'icon' => 'feedback', 'route_suffix' => 'feedback.index'],
-            ['key' => 'community', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'community'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'community'],
             ['key' => 'newsletter', 'label' => 'Newsletter', 'icon' => 'newsletter', 'route_suffix' => 'newsletter'],
         ],  
         'trainer' => [
-            ['key' => 'assignment', 'label' => 'Assignment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
+            ['key' => 'assignment', 'label' => 'Assessment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'course', 'label' => 'Courses', 'icon' => 'course', 'route_suffix' => 'courses.index'],
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students'],
-            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'certificates'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'certificates.index'],
         ],
         default => [
             ['key' => 'courses', 'label' => 'Courses', 'icon' => 'courses', 'route_suffix' => 'courses.index'],
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'community', 'label' => 'Community', 'icon' => 'community', 'route_suffix' => 'community'],
-            ['key' => 'assignment', 'label' => 'Assignment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
-            ['key' => 'community', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'community'],
+            ['key' => 'assignment', 'label' => 'Assessment', 'icon' => 'assignment', 'route_suffix' => 'assessments'],
         ],
     };
 @endphp

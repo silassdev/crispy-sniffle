@@ -24,7 +24,7 @@ Route::middleware(['auth', 'role:student']) ->prefix('student') ->name('student.
         Route::get('/community', fn() => view('student.community'))->name('community');
         
         // Assignments
-        Route::get('/student/assessments', function () {    return view('student.assessments.index'); })->name('student.assessments');
+        Route::get('/student/assessments', function () {    return view('student.assessments.index'); })->name('assessments');
         Route::get('/assignment/{id}', fn($id) => view('student.assignment.show', compact('id')))->name('assignment.show');
         Route::post('/assignment/{id}/submit', fn($id) => redirect()->back()->with('success', 'Assignment submitted!'))->name('assignment.submit');
     });
