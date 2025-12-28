@@ -9,6 +9,7 @@ class CourseController extends Controller
 {
     public function index()
     {
-        return view('student.courses.index');
+        $courses = auth()->user()->enrolledCourses()->latest()->get();
+        return view('student.courses.index', compact('courses'));
     }
 }

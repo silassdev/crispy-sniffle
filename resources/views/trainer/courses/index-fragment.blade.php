@@ -1,1 +1,0 @@
-<livewire:trainer.course-manager />

@@ -77,8 +77,12 @@ class User extends Authenticatable
        course accounts relation
        ---------------------- */
     public function courses() {
-    return $this->hasMany(\App\Models\Course::class, 'trainer_id');
-     }
+        return $this->hasMany(\App\Models\Course::class, 'trainer_id');
+    }
+
+    public function enrolledCourses() {
+        return $this->belongsToMany(\App\Models\Course::class, 'course_user')->withTimestamps()->withPivot(['guest_email','enrolled_at']);
+    }
 
     /* ----------------------
        Social accounts relation

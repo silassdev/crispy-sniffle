@@ -15,20 +15,30 @@ Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         
         // Assignment Management
-        Route::get('/assignment', fn() => view('trainer.assignment.index'))->name('assignment');
-        Route::get('/assignment/{id}', fn($id) => view('trainer.assignment.show', compact('id')))->name('assignment.show');
+        Route::get('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'index'])->name('assignment');
+        Route::get('/assignment/create', [\App\Http\Controllers\Trainer\AssignmentController::class, 'create'])->name('assignment.create');
+        Route::post('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'store'])->name('assignment.store');
+        Route::get('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'show'])->name('assignment.show');
+        Route::get('/assignment/{assignment}/edit', [\App\Http\Controllers\Trainer\AssignmentController::class, 'edit'])->name('assignment.edit');
+        Route::put('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'update'])->name('assignment.update');
+        Route::delete('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'destroy'])->name('assignment.destroy');
         
         // Scores / Grading
-        Route::get('/scores', fn() => view('trainer.scores.index'))->name('scores');
-        Route::get('/scores/{studentId}', fn($studentId) => view('trainer.scores.show', compact('studentId')))->name('scores.show');
+        Route::get('/scores', [\App\Http\Controllers\Trainer\ScoreController::class, 'index'])->name('scores');
+        Route::get('/scores/show', [\App\Http\Controllers\Trainer\ScoreController::class, 'show'])->name('scores.show');
         
         // Course Management
-        Route::get('/courses', fn()=> view('trainer.courses.index'))->name('courses.index');
-        Route::get('/courses/{id}', [TrainerCourseController::class,'show'])->name('courses.show'); 
+        Route::get('/courses', [\App\Http\Controllers\Trainer\CourseController::class, 'index'])->name('courses.index');
+        Route::get('/courses/create', [\App\Http\Controllers\Trainer\CourseController::class, 'create'])->name('courses.create');
+        Route::post('/courses', [\App\Http\Controllers\Trainer\CourseController::class, 'store'])->name('courses.store');
+        Route::get('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'show'])->name('courses.show');
+        Route::get('/courses/{course}/edit', [\App\Http\Controllers\Trainer\CourseController::class, 'edit'])->name('courses.edit');
+        Route::put('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'update'])->name('courses.update');
+        Route::delete('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'destroy'])->name('courses.destroy');
         
         // Students under this trainer
-        Route::get('/students', fn() => view('trainer.students.index'))->name('students');
-        Route::get('/students/{id}', fn($id) => view('trainer.students.show', compact('id')))->name('students.show');
+        Route::get('/students', [\App\Http\Controllers\Trainer\StudentController::class, 'index'])->name('students');
+        Route::get('/students/{id}', [\App\Http\Controllers\Trainer\StudentController::class, 'show'])->name('students.show');
         
         // Community
         Route::get('/community', fn() => view('trainer.community'))->name('community');

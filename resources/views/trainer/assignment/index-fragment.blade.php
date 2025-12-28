@@ -1,1 +1,0 @@
-<livewire:trainer.assessment-manager />

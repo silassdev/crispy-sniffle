@@ -25,7 +25,7 @@ class AssignmentController extends Controller
             $q->where('trainer_id', $trainerId);
         })->with('course')->orderByDesc('created_at')->paginate(12);
 
-        return view('trainer.assignments.index', compact('assignments'));
+        return view('trainer.assignment.index', compact('assignments'));
     }
 
     /**
@@ -35,7 +35,7 @@ class AssignmentController extends Controller
     public function create()
     {
         $courses = Course::where('trainer_id', Auth::id())->get();
-        return view('trainer.assignments.create', compact('courses'));
+        return view('trainer.assignment.create', compact('courses'));
     }
 
     /**
@@ -91,7 +91,7 @@ class AssignmentController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20);
 
-        return view('trainer.assignments.show', compact('assignment','submissions'));
+        return view('trainer.assignment.show', compact('assignment','submissions'));
     }
 
     /**
@@ -101,7 +101,7 @@ class AssignmentController extends Controller
     {
         if ($assignment->course->trainer_id !== Auth::id()) abort(403);
         $courses = Course::where('trainer_id', Auth::id())->get();
-        return view('trainer.assignments.edit', compact('assignment','courses'));
+        return view('trainer.assignment.edit', compact('assignment','courses'));
     }
 
     /**
