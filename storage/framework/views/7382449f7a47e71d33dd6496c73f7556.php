@@ -63,18 +63,40 @@
   </section>
 
   
-  <?php if(isset($courses) && count($courses) > 0): ?>
+  <?php if(isset($courses) && $courses->count() > 0): ?>
   <section class="mb-20">
-    <div class="flex items-center justify-between mb-10">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
         <div>
-            <h2 class="text-3xl font-bold text-slate-900 font-['Playfair_Display']">Popular Courses</h2>
-            <p class="text-slate-500">Handpicked for your professional growth</p>
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 font-['Playfair_Display']">🎓 Free Courses</h2>
+            <p class="text-slate-500 mt-2">Start learning today, no payment required</p>
         </div>
-        <a href="#" class="text-indigo-600 font-semibold hover:underline">View all courses</a>
+        <a href="<?php echo e(route('courses.index')); ?>" class="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:gap-3 transition-all group">
+            View all courses
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+        </a>
     </div>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <?php $__currentLoopData = $courses->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-            <?php echo $__env->make('partials.post-card', ['post' => $course], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <?php $__currentLoopData = $courses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $course): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if (isset($component)) { $__componentOriginal0a1b9827ce04f2b2ad6eeae95024b702 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal0a1b9827ce04f2b2ad6eeae95024b702 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.course-card','data' => ['course' => $course]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('course-card'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['course' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($course)]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal0a1b9827ce04f2b2ad6eeae95024b702)): ?>
+<?php $attributes = $__attributesOriginal0a1b9827ce04f2b2ad6eeae95024b702; ?>
+<?php unset($__attributesOriginal0a1b9827ce04f2b2ad6eeae95024b702); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal0a1b9827ce04f2b2ad6eeae95024b702)): ?>
+<?php $component = $__componentOriginal0a1b9827ce04f2b2ad6eeae95024b702; ?>
+<?php unset($__componentOriginal0a1b9827ce04f2b2ad6eeae95024b702); ?>
+<?php endif; ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </div>
   </section>

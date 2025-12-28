@@ -55,14 +55,24 @@ class CourseController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:courses,slug',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000', // Excerpt/Short description
+            'body' => 'nullable|string', // Markdown content
+            'tags' => 'nullable|string', // Comma separated
+            'youtube_url' => 'nullable|url',
+            'zoom_url' => 'nullable|url',
             'is_public' => 'nullable|boolean',
         ]);
+
+        $tags = $request->tags ? array_map('trim', explode(',', $request->tags)) : null;
 
         $course = Course::create([
             'title' => $request->title,
             'slug' => $request->slug ?: Str::slug($request->title).'-'.Str::random(5),
             'description' => $request->description,
+            'body' => $request->body,
+            'tags' => $tags,
+            'youtube_url' => $request->youtube_url,
+            'zoom_url' => $request->zoom_url,
             'is_public' => (bool) $request->input('is_public', false),
             'trainer_id' => Auth::id(),
         ]);
@@ -90,14 +100,24 @@ class CourseController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'slug' => "nullable|string|unique:courses,slug,{$course->id}",
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',
+            'body' => 'nullable|string',
+            'tags' => 'nullable|string',
+            'youtube_url' => 'nullable|url',
+            'zoom_url' => 'nullable|url',
             'is_public' => 'nullable|boolean',
         ]);
+
+        $tags = $request->tags ? array_map('trim', explode(',', $request->tags)) : null;
 
         $course->update([
             'title' => $request->title,
             'slug' => $request->slug ?: $course->slug,
             'description' => $request->description,
+            'body' => $request->body,
+            'tags' => $tags,
+            'youtube_url' => $request->youtube_url,
+            'zoom_url' => $request->zoom_url,
             'is_public' => (bool) $request->input('is_public', false),
         ]);
 

@@ -13,20 +13,20 @@ class ChapterController extends Controller
 {
     public function index(Course $course)
     {
-        $this->authorize('create', [Chapter::class, $course]);
         $chapters = $course->chapters()->get();
         return view('trainer.chapters.index', compact('course','chapters'));
     }
 
     public function store(Request $request, Course $course)
     {
-        $this->authorize('create', [Chapter::class, $course]);
 
         $payload = $request->validate([
             'chapters' => 'required|array|min:1',
             'chapters.*.title' => 'required|string|max:255',
             'chapters.*.description' => 'nullable|string',
             'chapters.*.content' => 'nullable|string',
+            'chapters.*.pdf' => 'nullable|file|mimes:pdf|max:10240',
+            'chapters.*.video' => 'nullable|file|mimes:mp4,mpeg,mov,avi|max:102400',
         ]);
 
         $existingCount = $course->chapters()->count();
@@ -37,9 +37,8 @@ class ChapterController extends Controller
 
         DB::beginTransaction();
         try {
-            // assign order = existingCount + n (append)
             $order = $existingCount;
-            foreach ($payload['chapters'] as $ch) {
+            foreach ($payload['chapters'] as $index => $ch) {
                 $order++;
                 $chapter = Chapter::create([
                     'course_id' => $course->id,
@@ -49,6 +48,18 @@ class ChapterController extends Controller
                     'content' => $ch['content'] ?? null,
                     'order' => $order,
                 ]);
+
+                // Handle PDF upload
+                if ($request->hasFile("chapters.{$index}.pdf")) {
+                    $chapter->addMediaFromRequest("chapters.{$index}.pdf")
+                        ->toMediaCollection('pdf');
+                }
+
+                // Handle Video upload
+                if ($request->hasFile("chapters.{$index}.video")) {
+                    $chapter->addMediaFromRequest("chapters.{$index}.video")
+                        ->toMediaCollection('video');
+                }
             }
             DB::commit();
             return redirect()->route('trainer.chapters.index', $course)->with('success','Chapters created');
@@ -61,8 +72,6 @@ class ChapterController extends Controller
 
     public function update(Request $request, Course $course, Chapter $chapter)
     {
-        $this->authorize('create', [Chapter::class, $course]);
-        $this->authorize('update', $chapter);
 
         $data = $request->validate([
             'title' => 'required|string|max:255',
@@ -82,7 +91,6 @@ class ChapterController extends Controller
 
     public function destroy(Course $course, Chapter $chapter)
     {
-        $this->authorize('create', [Chapter::class, $course]);
         $chapter->delete();
 
         // re-order remaining chapters to keep contiguous orders

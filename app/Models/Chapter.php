@@ -21,8 +21,15 @@ class Chapter extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
+        $this->addMediaCollection('video')
+            ->singleFile()
+            ->acceptsMimeTypes(['video/mp4', 'video/mpeg', 'video/quicktime', 'video/x-msvideo']);
+        
+        $this->addMediaCollection('pdf')
+            ->singleFile()
+            ->acceptsMimeTypes(['application/pdf']);
+        
         $this->addMediaCollection('resources')->useDisk('public');
         $this->addMediaCollection('images')->useDisk('public');
-        $this->addMediaCollection('videos')->useDisk('public');
     }
 }

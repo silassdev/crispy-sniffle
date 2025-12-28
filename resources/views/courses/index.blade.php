@@ -2,25 +2,32 @@
 @section('title','Courses')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-semibold mb-4">Courses</h1>
-  <div class="grid md:grid-cols-3 gap-6">
-    @foreach($courses as $c)
-      @php $img = $c->getFirstMediaUrl('illustration','thumb') ?: null; @endphp
-      <article class="bg-white rounded shadow p-4">
-        @if($img)
-          <img src="{{ $img }}" alt="{{ $c->title }}" class="w-full h-40 object-cover rounded mb-3">
-        @endif
-        <h3 class="font-semibold text-lg"><a href="{{ route('courses.show',$c->slug) }}" class="hover:underline">{{ $c->title }}</a></h3>
-        <div class="text-sm text-gray-500">{{ $c->excerpt }}</div>
-        <div class="mt-3 flex items-center justify-between">
-          <div class="text-xs text-gray-500">{{ $c->trainer->name ?? 'Unknown' }}</div>
-          <a href="{{ route('courses.show',$c->slug) }}" class="text-sm text-indigo-600">View</a>
-        </div>
-      </article>
-    @endforeach
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <div class="mb-10">
+    <h1 class="text-4xl font-bold text-slate-900 font-['Playfair_Display'] mb-2">🎓 Browse Courses</h1>
+    <p class="text-slate-600">Explore our collection of free courses and start learning today</p>
   </div>
 
-  <div class="mt-6">{{ $courses->links() }}</div>
+  @if($courses->count() > 0)
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      @foreach($courses as $course)
+        <x-course-card :course="$course" />
+      @endforeach
+    </div>
+
+    <div class="mt-10">
+      {{ $courses->links() }}
+    </div>
+  @else
+    <div class="text-center py-16">
+      <div class="w-24 h-24 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-4">
+        <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-slate-900 mb-2">No courses available yet</h3>
+      <p class="text-slate-600">Check back soon for new courses!</p>
+    </div>
+  @endif
 </div>
 @endsection

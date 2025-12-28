@@ -47,7 +47,6 @@
         <div class="text-sm font-medium truncate"><?php echo e($user->name ?? 'User'); ?></div>
     </div>
 
-    
     <nav class="space-y-1">
         <?php $__currentLoopData = $menuItems; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <?php $targetRoute = $role . '.' . $item['route_suffix']; ?>

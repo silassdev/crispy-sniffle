@@ -21,7 +21,14 @@ class HomeController extends Controller
             ->get();
 
         if (! auth()->check()) {
-            return view('home.guest', compact('posts'));
+            // Fetch public courses for the homepage
+            $courses = \App\Models\Course::where('is_public', true)
+                ->with('trainer')
+                ->latest()
+                ->take(6)
+                ->get();
+            
+            return view('home.guest', compact('posts', 'courses'));
         }
 
         $user = auth()->user();

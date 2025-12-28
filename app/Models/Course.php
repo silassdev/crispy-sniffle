@@ -12,7 +12,7 @@ class Course extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = [
-        'course_id','trainer_id','title','slug','excerpt','body','tags','youtube_url','zoom_url','is_public'
+        'course_id','trainer_id','title','slug','excerpt','description','body','tags','youtube_url','zoom_url','is_public'
     ];
 
     protected $casts = [
@@ -47,6 +47,16 @@ class Course extends Model implements HasMedia
         return $this->hasMany(\App\Models\CourseUser::class);
     }
 
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class)->orderBy('order');
+    }
+
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
 
     public function registerMediaCollections(): void
     {
@@ -54,6 +64,11 @@ class Course extends Model implements HasMedia
         $this->addMediaCollection('attachments');
     }
 
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {

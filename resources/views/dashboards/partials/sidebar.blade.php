@@ -47,7 +47,6 @@
         <div class="text-sm font-medium truncate">{{ $user->name ?? 'User' }}</div>
     </div>
 
-    {{-- Compact Vertical Menu --}}
     <nav class="space-y-1">
         @foreach($menuItems as $item)
             @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp

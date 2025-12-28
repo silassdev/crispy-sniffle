@@ -17,10 +17,16 @@
             <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <x-dynamic-component :component="'icons.course'" class="w-8 h-8 text-slate-400" />
             </div>
-            <h3 class="text-lg font-medium text-slate-900">No courses created yet</h3>
+            <h3 class="text-lg font-medium text-slate-900">You haven't created any courses yet</h3>
             <p class="text-slate-500 max-w-sm mx-auto mt-2">
-                Start sharing your knowledge by creating your first course.
+                Ready to inspire students? Create your first course to get started!
             </p>
+            <div class="mt-6">
+                <a href="{{ route('trainer.courses.create') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 text-white rounded-md hover:bg-sky-700 transition-colors font-medium">
+                    <x-dynamic-component :component="'icons.plus'" class="w-4 h-4" />
+                    <span>Create Your First Course</span>
+                </a>
+            </div>
         </div>
     @else
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
