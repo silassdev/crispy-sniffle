@@ -29,7 +29,7 @@
 
       <div class="relative lg:h-[500px] hidden lg:block">
         <div class="absolute -right-24 top-1/2 -translate-y-1/2 w-[140%] h-[120%] z-0 opacity-10 bg-indigo-600 rounded-full blur-3xl"></div>
-        <img src="/img/hero-right.svg"
+        <img src="/img/hero.jpg"
              alt="Hero Illustration"
              class="relative z-10 w-full h-full object-contain drop-shadow-2xl animate-float hero-blend">
       </div>

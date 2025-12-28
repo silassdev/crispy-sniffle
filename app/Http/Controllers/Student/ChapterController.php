@@ -48,14 +48,29 @@ class ChapterController extends Controller
 
     public function markComplete(Request $request, $chapterId)
     {
-       // Implementation for marking incomplete. User code had a route pointing to 'markComplete'
-       // Route::post('/chapters/{chapter}/complete', [\App\Http\Controllers\Student\ChapterController::class,'markComplete'])->name('chapters.complete');
-       // But the file content I saw only had 'show'.
-       // I'll add a dummy or basic implementation if needed, or check if I missed it.
-       // The view_file output ONLY showed 'show'.
-       // But route definition expects 'markComplete'.
-       // I will add a placeholder for markComplete to prevent crash.
-       
-       return back()->with('success', 'Chapter marked as complete');
+        $user = auth()->user();
+        $chapter = \App\Models\Chapter::findOrFail($chapterId);
+        
+        $isEnrolled = $chapter->course->students()->where('user_id', $user->id)->exists();
+        
+        if (!$isEnrolled && $user->role === 'student') {
+            return back()->withErrors(['error' => 'You must be enrolled in this course.']);
+        }
+
+        if (!$chapter->isUnlockedFor($user)) {
+            return back()->withErrors(['error' => 'Please complete the previous chapter first.']);
+        }
+
+        if ($chapter->isCompletedBy($user)) {
+            return back()->with('info', 'Chapter already marked as complete.');
+        }
+
+        \App\Models\ChapterCompletion::create([
+            'chapter_id' => $chapter->id,
+            'user_id' => $user->id,
+            'completed_at' => now(),
+        ]);
+
+        return back()->with('success', 'Chapter marked as complete! Next chapter unlocked.');
     }
 }
