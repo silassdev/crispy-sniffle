@@ -1,5 +1,4 @@
-<div class="space-y-4">
-    <?php
+<?php
 $__split = function ($name, $params = []) {
     return [$name, $params];
 };
@@ -14,6 +13,4 @@ unset($__name);
 unset($__params);
 unset($__split);
 if (isset($__slots)) unset($__slots);
-?>
-</div>
-<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/trainer/courses/index-fragment.blade.php ENDPATH**/ ?>
+?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/trainer/courses/index-fragment.blade.php ENDPATH**/ ?>

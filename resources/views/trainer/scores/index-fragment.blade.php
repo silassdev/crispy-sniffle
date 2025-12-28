@@ -1,0 +1,1 @@
+<livewire:trainer.scores-manager />

@@ -1,3 +1,4 @@
+
 <div>
   <div class="flex items-center justify-between mb-4">
     <h3 class="font-semibold">Assessments</h3>
@@ -29,6 +30,5 @@
     <div class="p-3">{{ $assessments->links() }}</div>
   </div>
 
-  {{-- mount editor component separately on page --}}
   <livewire:trainer.assessment-editor />
 </div>

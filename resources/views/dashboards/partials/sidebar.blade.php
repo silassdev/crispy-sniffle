@@ -29,7 +29,7 @@
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'course', 'label' => 'Courses', 'icon' => 'course', 'route_suffix' => 'courses.index'],
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students'],
-            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'scores'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'community', 'route_suffix' => 'certificates'],
         ],
         default => [
             ['key' => 'courses', 'label' => 'Courses', 'icon' => 'courses', 'route_suffix' => 'courses.index'],

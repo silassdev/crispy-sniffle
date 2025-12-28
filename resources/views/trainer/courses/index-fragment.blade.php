@@ -1,3 +1,1 @@
-<div class="space-y-4">
-    <livewire:trainer.course-manager />
-</div>
+<livewire:trainer.course-manager />
