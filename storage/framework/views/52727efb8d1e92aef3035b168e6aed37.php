@@ -28,10 +28,10 @@ foreach ($attributes->all() as $__key => $__value) {
 }
 
 unset($__defined_vars, $__key, $__value); ?>
-<?php if (isset($component)) { $__componentOriginal62ed55c76c49d05f415b555584018ad2 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal62ed55c76c49d05f415b555584018ad2 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icons.admins','data' => ['class' => $class]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('icons.admins'); ?>
+<?php if (isset($component)) { $__componentOriginald6ca8b457011f181a771f206721dd170 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginald6ca8b457011f181a771f206721dd170 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.icons.certificate','data' => ['class' => $class]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('icons.certificate'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
@@ -43,11 +43,11 @@ unset($__defined_vars, $__key, $__value); ?>
 
  <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginal62ed55c76c49d05f415b555584018ad2)): ?>
-<?php $attributes = $__attributesOriginal62ed55c76c49d05f415b555584018ad2; ?>
-<?php unset($__attributesOriginal62ed55c76c49d05f415b555584018ad2); ?>
+<?php if (isset($__attributesOriginald6ca8b457011f181a771f206721dd170)): ?>
+<?php $attributes = $__attributesOriginald6ca8b457011f181a771f206721dd170; ?>
+<?php unset($__attributesOriginald6ca8b457011f181a771f206721dd170); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginal62ed55c76c49d05f415b555584018ad2)): ?>
-<?php $component = $__componentOriginal62ed55c76c49d05f415b555584018ad2; ?>
-<?php unset($__componentOriginal62ed55c76c49d05f415b555584018ad2); ?>
-<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel-lms\storage\framework\views/74cae7d445d2270237ff042cafa6bd87.blade.php ENDPATH**/ ?>
+<?php if (isset($__componentOriginald6ca8b457011f181a771f206721dd170)): ?>
+<?php $component = $__componentOriginald6ca8b457011f181a771f206721dd170; ?>
+<?php unset($__componentOriginald6ca8b457011f181a771f206721dd170); ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\laravel-lms\storage\framework\views/abf529d954e8610f1f69b81efb52f63e.blade.php ENDPATH**/ ?>
