@@ -1,4 +1,3 @@
-
 <?php
   $dashboardRoute = 'home';
 
@@ -17,7 +16,6 @@
 
 <nav x-data="nav()" @keydown.window="if($event.key === 'Escape'){ closeAll() }" class="bg-white border-b">
   <style>
-    /* quick local styles — composited transitions, tighter logo spacing */
     .nav-link { position: relative; transition: color .14s ease; }
     .nav-link::after {
       content: '';
@@ -36,7 +34,6 @@
     .nav-link.active::after,
     .nav-link[aria-expanded="true"]::after { width: 100%; }
 
-    /* lightweight panel animation using transform+opacity for GPU compositing */
     .menu-panel {
       min-width: 18.75rem; /* 300px */
       border-radius: 0.5rem;
@@ -106,10 +103,9 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
-      
       <div class="flex items-center nav-left-gap">
         <a href="<?php echo e(route('home')); ?>" class="flex items-center gap-3">
-          <img src="<?php echo e(asset('img/igniscode.svg')); ?>" alt="Logo" class="w-10 h-10 object-contain">
+          <img src="<?php echo e(asset('img/igniscode.png')); ?>" alt="Logo" class="w-10 h-10 object-contain">
           <span class="font-extrabold text-lg leading-none"><?php echo e(config('app.name')); ?></span>
         </a>
 

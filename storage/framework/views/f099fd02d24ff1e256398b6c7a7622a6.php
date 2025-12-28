@@ -107,7 +107,5 @@
       Save to storage
     </button>
   <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
-
-  <button class="px-3 py-1 text-xs border rounded" wire:click="close">Close</button>
 </div>
 <?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/certificate/preview-modal.blade.php ENDPATH**/ ?>

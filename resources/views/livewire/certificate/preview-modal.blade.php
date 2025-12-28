@@ -107,6 +107,4 @@
       Save to storage
     </button>
   @endif
-
-  <button class="px-3 py-1 text-xs border rounded" wire:click="close">Close</button>
 </div>
