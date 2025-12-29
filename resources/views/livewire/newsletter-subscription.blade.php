@@ -18,7 +18,7 @@
         </button>
     </form>
 
-    {{-- Premium Modal --}}
+
     @if($showModal)
     <div class="fixed inset-0 z-[100] flex items-center justify-center px-4"
          x-data
@@ -29,10 +29,11 @@
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0">
         
-        <!-- Backdrop -->
+
         <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" wire:click="$set('showModal', false)"></div>
 
-        <!-- Modal Content -->
+
+        
         <div class="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden transform transition-all p-8 md:p-10"
              x-transition:enter="transition ease-out duration-300"
              x-transition:enter-start="opacity-0 translate-y-8 scale-95"
