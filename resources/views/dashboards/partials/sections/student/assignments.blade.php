@@ -1,0 +1,1 @@
+<livewire:student.assignments.index />

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Student\DashboardController;
 use App\Http\Controllers\Student\CourseController;
+use App\Http\Livewire\Student\QuizAttempt as QuizAttemptComponent;
 
 
 
@@ -23,8 +24,10 @@ Route::middleware(['auth', 'role:student']) ->prefix('student') ->name('student.
         // Community
         Route::get('/community', fn() => view('student.community'))->name('community');
         
-        // Assignments
+        // Assessment (Quiz & Assignment)
         Route::get('/student/assessments', function () {    return view('student.assessments.index'); })->name('assessments');
         Route::get('/assignment/{id}', fn($id) => view('student.assignment.show', compact('id')))->name('assignment.show');
         Route::post('/assignment/{id}/submit', fn($id) => redirect()->back()->with('success', 'Assignment submitted!'))->name('assignment.submit');
+        Route::get('/quizzes/{quiz}/attempt', \App\Http\Livewire\Student\QuizAttempt::class)->name('student.quiz.attempt');
+        Route::get('/quiz-attempts/{id}/result', [\App\Http\Controllers\Student\QuizController::class,'result'])->name('student.quiz.result');
     });

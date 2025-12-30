@@ -23,9 +23,17 @@
             ['key' => 'feedback', 'label' => 'Feedback', 'icon' => 'feedback', 'route_suffix' => 'feedback.index'],
             ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates.index'],
             ['key' => 'newsletter', 'label' => 'Newsletter', 'icon' => 'newsletter', 'route_suffix' => 'newsletter'],
-        ],  
+        ],
         'trainer' => [
-            ['key' => 'assignment', 'label' => 'Assessment', 'icon' => 'assignment', 'route_suffix' => 'assignment'],
+            [
+                'key' => 'assessment',
+                'label' => 'Assessments',
+                'icon' => 'clipboard',
+                'children' => [
+                    ['key' => 'assignments', 'label' => 'Assignments'],
+                    ['key' => 'quizzes', 'label' => 'Quizzes'],
+                ],
+            ],
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'course', 'label' => 'Courses', 'icon' => 'course', 'route_suffix' => 'courses.index'],
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students'],
@@ -35,7 +43,12 @@
             ['key' => 'courses', 'label' => 'Courses', 'icon' => 'courses', 'route_suffix' => 'courses.index'],
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates'],
-            ['key' => 'assignment', 'label' => 'Assessment', 'icon' => 'assignment', 'route_suffix' => 'assessments'],
+            ['key' => 'assessment', 'label' => 'Assessments',  'icon' => 'clipboard',
+              'children' => [
+                ['key' => 'assignments', 'label' => 'Assignments'],
+                ['key' => 'quizzes', 'label' => 'Quizzes'],
+              ],
+            ],
         ],
     };
 @endphp
@@ -49,8 +62,8 @@
 
     <nav class="space-y-1">
         @foreach($menuItems as $item)
-            @php $targetRoute = $role . '.' . $item['route_suffix']; @endphp
-            @if(Route::has($targetRoute))
+            @php $targetRoute = $role . '.' . ($item['route_suffix'] ?? $item['key']); @endphp
+            @if(isset($item['route_suffix']) && Route::has($targetRoute))
                 <a href="{{ route($targetRoute) }}" 
                    data-route="{{ route($targetRoute) }}"
                    data-section="{{ $item['key'] }}"
@@ -58,6 +71,25 @@
                     <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5 flex-shrink-0" />
                     <span class="text-sm font-medium">{{ $item['label'] }}</span>
                 </a>
+            @else
+                {{-- Fallback for items without a route (e.g., parent with children) --}}
+                <div class="group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], '') }}">
+                    @if(!empty($item['icon']))
+                        <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5 flex-shrink-0" />
+                    @endif
+                    <span class="text-sm font-medium">{{ $item['label'] }}</span>
+                </div>
+            @endif
+
+            {{-- Render children if present --}}
+            @if(!empty($item['children']) && is_array($item['children']))
+                <div class="ml-8 mt-1 space-y-1">
+                    @foreach($item['children'] as $child)
+                        <a href="#" data-section="{{ $child['key'] }}" class="block text-sm px-3 py-2 rounded-md {{ $isActive($child['key'], '') }}">
+                            {{ $child['label'] }}
+                        </a>
+                    @endforeach
+                </div>
             @endif
         @endforeach
     </nav>

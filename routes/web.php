@@ -51,9 +51,6 @@ use App\Http\Controllers\NotificationsController;
 // Certificate 
 use App\Http\Controllers\CertificatePdfController;
 
-//Assessment
-use App\Http\Controllers\AssessmentSubmissionController;
-
 /*
 |--------------------------------------------------------------------------
 | Public Routes
@@ -145,7 +142,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('register', [AuthController::class, 'register'])->name('register');
     Route::post('logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-    
+    // student result (viewable by owner, trainer, admin)
+    Route::get('quiz-attempts/{id}/result', [\App\Http\Controllers\Student\QuizController::class,'result'])
+        ->name('student.quiz.result');
 
     // Protected admin routes
     Route::middleware(['auth', \App\Http\Middleware\EnsureUserIsAdmin::class])->group(function () {

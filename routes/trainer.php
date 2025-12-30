@@ -35,6 +35,8 @@ Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.
         Route::get('/courses/{course}/edit', [\App\Http\Controllers\Trainer\CourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'update'])->name('courses.update');
         Route::delete('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'destroy'])->name('courses.destroy');
+        Route::get('/courses/{course}/quizzes', \App\Http\Livewire\Trainer\Quizzes\Index::class)->name('trainer.quizzes.index');
+        Route::get('/courses/{course}/quiz/create', \App\Http\Livewire\Trainer\Quizzes\Builder::class)  ->name('trainer.quiz.builder');
         
         // Students under this trainer
         Route::get('/students', [\App\Http\Controllers\Trainer\StudentController::class, 'index'])->name('students');
