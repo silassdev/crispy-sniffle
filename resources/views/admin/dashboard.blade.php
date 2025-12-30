@@ -3,5 +3,3 @@
 @section('dashboard-content')
   @include('admin.overview-fragment')
 @endsection
-
-
