@@ -24,7 +24,7 @@ class ResizePostImage implements ShouldQueue
 
     public function __construct(string $path, int $postId)
     {
-        $this->path = $path;      // e.g. posts/abcd.jpg
+        $this->path = $path;
         $this->postId = $postId;
     }
 
