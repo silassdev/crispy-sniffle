@@ -26,7 +26,7 @@ class CommunityManager extends Component
         'status' => 'draft', // draft|published
     ];
 
-    public $featureImage = null; // Livewire file upload
+    public $featureImage = null;
 
     public $confirmAction = null; // 'publish'|'save-draft'|'delete-post'|'ban-user'|'unban-user'|'abandon'
     public $confirmPayload = null;
