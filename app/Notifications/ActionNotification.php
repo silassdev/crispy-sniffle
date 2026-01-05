@@ -32,7 +32,6 @@ class ActionNotification extends Notification implements ShouldQueue
 
     public function via($notifiable)
     {
-        // database always, broadcast if configured
         $channels = ['database'];
         if (config('broadcasting.default') !== 'null') $channels[] = 'broadcast';
         // optionally add mail: if($notifiable->receives_emails) $channels[]='mail';
