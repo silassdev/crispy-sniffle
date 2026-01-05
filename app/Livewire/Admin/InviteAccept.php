@@ -63,7 +63,7 @@ class InviteAccept extends Component
         $user = User::where('email', $this->email)->first();
 
         if ($user) {
-            // If already admin, stop
+            // If user already exit || admin, stop
             if ($user->isAdmin()) {
                 $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Account already exists as admin','ttl'=>6000]);
                 return;
