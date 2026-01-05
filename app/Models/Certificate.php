@@ -26,7 +26,7 @@ class Certificate extends Model
 
     public static function generateNumber(): string
     {
-        // keep short and unique: CERT-YYYYMMDD-XXXX
+        //Unique Human id
         return 'CERT-'.now()->format('Ymd').'-'.Str::upper(Str::random(6));
     }
 
