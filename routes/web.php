@@ -124,9 +124,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download']) ->name('certificates.pdf.download');
     Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage']) ->name('certificates.pdf.save');
 
-
-    // student full assessments page (auth required)
-
 });
 
 
@@ -169,8 +166,3 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     });
 });
-
-
-
-
-

@@ -9,7 +9,7 @@ use App\Models\QuizAttempt;
 use App\Models\QuizAnswer;
 use Carbon\Carbon;
 
-class QuizAttempt extends Component
+class QuizAttemptComponent extends Component
 {
     public Quiz $quiz;
     public ?QuizAttempt $attempt = null;

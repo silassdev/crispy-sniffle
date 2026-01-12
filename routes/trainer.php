@@ -5,6 +5,8 @@ use App\Http\Controllers\Trainer\DashboardController;
 use App\Http\Controllers\AssessmentSubmissionController;
 use App\Http\Controllers\Trainer\CertificateController as TrainerCertificateController;
 use App\Http\Controllers\Trainer\CourseController as TrainerCourseController;
+use App\Livewire\Trainer\Quizzes\Index as TrainerQuizzesIndex;
+use App\Livewire\Trainer\Quizzes\Builder as TrainerQuizzesBuilder;
 
 
 
@@ -13,15 +15,6 @@ Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.
         
         // Dashboard / Overview
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
-        // Assignment Management
-        Route::get('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'index'])->name('assignment');
-        Route::get('/assignment/create', [\App\Http\Controllers\Trainer\AssignmentController::class, 'create'])->name('assignment.create');
-        Route::post('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'store'])->name('assignment.store');
-        Route::get('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'show'])->name('assignment.show');
-        Route::get('/assignment/{assignment}/edit', [\App\Http\Controllers\Trainer\AssignmentController::class, 'edit'])->name('assignment.edit');
-        Route::put('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'update'])->name('assignment.update');
-        Route::delete('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'destroy'])->name('assignment.destroy');
         
         // Scores / Grading
         Route::get('/scores', [\App\Http\Controllers\Trainer\ScoreController::class, 'index'])->name('scores');
@@ -35,8 +28,24 @@ Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.
         Route::get('/courses/{course}/edit', [\App\Http\Controllers\Trainer\CourseController::class, 'edit'])->name('courses.edit');
         Route::put('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'update'])->name('courses.update');
         Route::delete('/courses/{course}', [\App\Http\Controllers\Trainer\CourseController::class, 'destroy'])->name('courses.destroy');
-        Route::get('/courses/{course}/quizzes', \App\Http\Livewire\Trainer\Quizzes\Index::class)->name('trainer.quizzes.index');
-        Route::get('/courses/{course}/quiz/create', \App\Http\Livewire\Trainer\Quizzes\Builder::class)  ->name('trainer.quiz.builder');
+        Route::get('/courses/{course}/quizzes', TrainerQuizzesIndex::class)->name('quizzes.index');
+        Route::get('/courses/{course}/quiz/create', TrainerQuizzesBuilder::class)  ->name('quiz.builder');
+        Route::get('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'index'])->name('chapters.index');
+        Route::post('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'store'])->name('chapters.store');
+        Route::put('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'update'])->name('chapters.update');
+        Route::delete('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'destroy'])->name('chapters.destroy');
+
+        Route::get('/courses/{course}/assessments', fn($courseId) => view('trainer.assessments.index', ['courseId' => $courseId]))->name('assessments.index');
+        Route::get('/assessments/{id}/submissions', fn($id) => view('trainer.assessments.submissions', ['assessmentId'=>$id]))->name('assessments.submissions');
+        // Assignment Management
+        Route::get('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'index'])->name('assignment');
+        Route::get('/assignment/create', [\App\Http\Controllers\Trainer\AssignmentController::class, 'create'])->name('assignment.create');
+        Route::post('/assignment', [\App\Http\Controllers\Trainer\AssignmentController::class, 'store'])->name('assignment.store');
+        Route::get('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'show'])->name('assignment.show');
+        Route::get('/assignment/{assignment}/edit', [\App\Http\Controllers\Trainer\AssignmentController::class, 'edit'])->name('assignment.edit');
+        Route::put('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'update'])->name('assignment.update');
+        Route::delete('/assignment/{assignment}', [\App\Http\Controllers\Trainer\AssignmentController::class, 'destroy'])->name('assignment.destroy');
+        
         
         // Students under this trainer
         Route::get('/students', [\App\Http\Controllers\Trainer\StudentController::class, 'index'])->name('students');
@@ -52,13 +61,5 @@ Route::middleware(['auth', 'role:trainer']) ->prefix('trainer') ->name('trainer.
         Route::post('/certificates', [TrainerCertificateController::class,'store'])->name('certificates.store');
         Route::get('/certificates/{id}', [TrainerCertificateController::class,'show'])->name('certificates.show');
 
-        //Courses
-        Route::get('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'index'])->name('chapters.index');
-        Route::post('/courses/{course}/chapters', [\App\Http\Controllers\Trainer\ChapterController::class,'store'])->name('chapters.store');
-        Route::put('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'update'])->name('chapters.update');
-        Route::delete('/courses/{course}/chapters/{chapter}', [\App\Http\Controllers\Trainer\ChapterController::class,'destroy'])->name('chapters.destroy');
-
-        //Assessment
-        Route::get('/courses/{course}/assessments', fn($courseId) => view('trainer.assessments.index', ['courseId' => $courseId]))->name('assessments.index');
-        Route::get('/assessments/{id}/submissions', fn($id) => view('trainer.assessments.submissions', ['assessmentId'=>$id]))->name('assessments.submissions');
+        
     });
