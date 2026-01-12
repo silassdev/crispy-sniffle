@@ -6,11 +6,6 @@ use Tests\TestCase;
 
 class HomePageTest extends TestCase
 {
-    /**
-     * Ensure the home page loads, uses the 'home' view, and provides expected data.
-     *
-     * @return void
-     */
     public function test_home_page_loads_and_has_expected_view_data()
     {
         $response = $this->get('/');
