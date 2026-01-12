@@ -1,5 +1,7 @@
-@extends('dashboards.shell')
-@section('content')
+@extends(request()->ajax() ? 'layouts.plain' : 'dashboards.shell')
+
+
+@section('dashboard-content')
 <div class="max-w-2xl mx-auto">
   <h1 class="text-xl font-semibold mb-4">Request Certificate</h1>
 

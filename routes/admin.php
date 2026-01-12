@@ -62,6 +62,7 @@ use App\Http\Controllers\Admin\CertificateController as AdminCertificateControll
 
         // Certifiication
         Route::get('/certificates', [AdminCertificateController::class,'index'])->name('certificates.index');
+        Route::get('/certificates/{id}', [AdminCertificateController::class,'show'])->name('certificates.show');
         Route::post('/certificates/{id}/approve', [AdminCertificateController::class,'approve'])->name('certificates.approve');
         Route::post('/certificates/{id}/reject', [AdminCertificateController::class,'reject'])->name('certificates.reject');
         Route::post('/certificates/{id}/revoke', [AdminCertificateController::class,'revoke'])->name('certificates.revoke');

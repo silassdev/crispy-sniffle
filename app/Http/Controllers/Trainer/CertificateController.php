@@ -5,78 +5,42 @@ namespace App\Http\Controllers\Trainer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Certificate;
+use App\Models\CertificateRequest;
 use App\Models\Course;
 use App\Models\User;
 
 class CertificateController extends Controller
 {
-    /**
-     * List certificates created/requested by this trainer.
-     * View: resources/views/trainer/certificates/index.blade.php
-     */
-    public function index(Request $request)
+    public function index()
     {
         $trainerId = Auth::id();
-
-        // Trainer may see certificates they issued (or requested)
-        $certs = Certificate::where('trainer_id', $trainerId)
+        $requests = CertificateRequest::where('requested_by', $trainerId)
+            ->with(['student', 'course'])
             ->orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(15);
 
-        return view('trainer.certificates.index', compact('certs'));
+        return view('trainer.certificates.index', compact('requests'));
     }
 
-    /**
-     * Show certificate record (read-only for trainer).
-     * View: resources/views/trainer/certificates/show.blade.php
-     */
-    public function show(Certificate $certificate)
+    public function create()
     {
-        if ($certificate->trainer_id !== Auth::id() && ! (Auth::user()->isAdmin() ?? false)) abort(403);
-        return view('trainer.certificates.show', compact('certificate'));
+        $students = User::where('role', User::ROLE_STUDENT)->get();
+        $courses = auth()->user()->courses ?? collect();
+
+        return view('trainer.certificates.create', compact('students', 'courses'));
     }
 
-    /**
-     * Trainer requests a certificate for a student (creates a 'pending' certificate request).
-     * This does not approve it — admin review needed.
-     */
-    public function requestForStudent(Request $request, Course $course)
+    
+    public function store(Request $request)
     {
-        $this->authorizeCourseOwnership($course);
-
-        $request->validate([
+        $data = $request->validate([
             'student_id' => 'required|exists:users,id',
-            'type' => 'required|string|max:80',
-            'notes' => 'nullable|string'
+            'course_id' => 'nullable|exists:courses,id',
+            'reason' => 'nullable|string|max:1000',
         ]);
+        $data['request_by'] = Auth::id();
+        $req = CertificateRequest::create($data);
 
-        $student = User::findOrFail($request->student_id);
-
-        // create certificate request record
-        $cert = Certificate::create([
-            'course_id' => $course->id,
-            'trainer_id' => Auth::id(),
-            'student_id' => $student->id,
-            'type' => $request->type,
-            'notes' => $request->notes,
-            'status' => 'pending', // pending for admin review
-        ]);
-
-        // dispatch notification/email to admins — you can dispatch a job here
-        session()->flash('success', 'Certificate request submitted for review.');
-
-        return redirect()->route('trainer.certificates.index');
-    }
-
-    /**
-     * Simple helper to ensure trainer owns a course.
-     */
-    protected function authorizeCourseOwnership(Course $course)
-    {
-        $user = Auth::user();
-        if ($course->trainer_id !== $user->id && ! (method_exists($user,'isAdmin') && $user->isAdmin())) {
-            abort(403);
-        }
+        return redirect()->route('trainer.certificates.index') ->with('success', 'Certificate request submitted. Admin will review it');
     }
 }
