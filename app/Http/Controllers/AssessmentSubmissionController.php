@@ -13,8 +13,6 @@ class AssessmentSubmissionController extends Controller
     {
         $assessment = Assessment::findOrFail($assessmentId);
         $type = $assessment->type;
-
-        // Basic due check
         if ($assessment->due_at && now()->greaterThan($assessment->due_at)) {
             return back()->with('error', 'This assessment is closed.');
         }
