@@ -4,7 +4,6 @@
 
 
 
-/* active item */
 .dash-item {
   transition: background-color .12s, color .12s;
 }
@@ -137,7 +136,7 @@ aside[data-role="student"] .ajax-link.dash-active {
   z-index: 2;
 }
 
-/* responsive tweaks */
+/* responsiveness */
 @media (max-width: 640px) {
   .hero-svg {
     right: -6%;
