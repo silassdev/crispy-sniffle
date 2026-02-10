@@ -16,7 +16,6 @@ class CertificateRequest extends Model
     public const STATUS_APPROVED = 'approved';
     public const STATUS_REJECTED = 'rejected';
 
-    // Example types (extend as needed)
     public const TYPE_COURSE_COMPLETION = 'course_completion';
     public const TYPE_GRADUATION         = 'graduation';
 
