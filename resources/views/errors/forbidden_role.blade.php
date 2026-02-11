@@ -42,15 +42,13 @@
       <span class="font-semibold text-indigo-600">
         {{ $userRole ?? (auth()->check() ? (auth()->user()->role ?? 'unknown') : 'guest') }}
       </span>
-       is not allowed here.
+       is not allowed access to this page.
     </p>
 
-    <!-- Required roles -->
     <p class="text-sm text-gray-500 italic">
       This page requires: {{ implode(', ', $requiredRoles ?? []) }}.
     </p>
 
-    <!-- Action button -->
     <div class="mt-8">
       <a href="{{ route($dashboardRoute) }}" 
          class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md text-lg font-medium transition transform hover:scale-105 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300">
