@@ -1,7 +1,6 @@
 @props(['course', 'showLock' => null])
 
 @php
-    // Auto-detect if course should show lock if not explicitly set
     if ($showLock === null) {
         $showLock = !$course->is_public;
     }
