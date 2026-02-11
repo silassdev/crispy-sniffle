@@ -58,7 +58,6 @@ export function adminAuth() {
       this.error = ''
       this.loading = true
 
-      // ✅ Client-side checks
       if (this.mode === 'signup' && this.form.password.length < 6) {
         this.error = 'Password must be at least 6 characters'
         this.showToast(this.error, 'error')
