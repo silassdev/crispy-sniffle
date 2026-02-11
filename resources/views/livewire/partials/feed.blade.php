@@ -1,5 +1,4 @@
 @php
-    // If controller passed $posts use it, otherwise load latest 10 posts
     $posts = $posts ?? \App\Models\Post::latest()->take(10)->get();
 @endphp
 
