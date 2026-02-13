@@ -14,7 +14,7 @@ class CertificateController extends Controller
     public function index()
     {
         $trainerId = Auth::id();
-        $requests = CertificateRequest::where('requested_by', $trainerId)
+        $requests = CertificateRequest::where('trainer_id', $trainerId)
             ->with(['student', 'course'])
             ->orderByDesc('created_at')
             ->paginate(15);

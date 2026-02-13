@@ -19,13 +19,13 @@ class CertificateRequest extends Model
     public const TYPE_COURSE_COMPLETION = 'course_completion';
     public const TYPE_GRADUATION         = 'graduation';
 
-    protected $table = 'certificates_requests';
+    protected $table = 'certificate_requests';
 
     protected $fillable = [
         'certificate_number',
         'course_id',
         'student_id',
-        'requested_by',
+        'trainer_id', 
         'type',
         'notes',
         'status',

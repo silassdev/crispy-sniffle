@@ -20,52 +20,60 @@
         </tr>
       </thead>
       <tbody>
-        @foreach($jobs as $job)
+        <!--[if BLOCK]><![endif]--><?php $__currentLoopData = $jobs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $job): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           <tr class="border-t">
             <td class="p-3 flex items-center gap-3">
-              @php $logo = $job->getFirstMedia('company_logos'); @endphp
-              @if($logo)
-                <img src="{{ $logo->getUrl('logo_small') }}" alt="{{ $job->company_name }}" class="w-10 h-10 object-cover rounded">
-              @else
-                <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-xs">{{ strtoupper(substr($job->company_name ?: 'J', 0, 1)) }}</div>
-              @endif
-              <div>{{ $job->company_name }}</div>
+              <?php $logo = $job->getFirstMedia('company_logos'); ?>
+              <!--[if BLOCK]><![endif]--><?php if($logo): ?>
+                <img src="<?php echo e($logo->getUrl('logo_small')); ?>" alt="<?php echo e($job->company_name); ?>" class="w-10 h-10 object-cover rounded">
+              <?php else: ?>
+                <div class="w-10 h-10 bg-gray-100 rounded flex items-center justify-center text-xs"><?php echo e(strtoupper(substr($job->company_name ?: 'J', 0, 1))); ?></div>
+              <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
+              <div><?php echo e($job->company_name); ?></div>
             </td>
-            <td class="p-3">{{ $job->title }}</td>
-            <td class="p-3">{{ $job->employment_type }}</td>
-            <td class="p-3">{{ $job->location }}</td>
+            <td class="p-3"><?php echo e($job->title); ?></td>
+            <td class="p-3"><?php echo e($job->employment_type); ?></td>
+            <td class="p-3"><?php echo e($job->location); ?></td>
             <td class="p-3">
-              @if($job->is_active)
+              <!--[if BLOCK]><![endif]--><?php if($job->is_active): ?>
                 <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded">Open</span>
-              @else
+              <?php else: ?>
                 <span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded">Closed</span>
-              @endif
+              <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
             </td>
             <td class="p-3 text-right">
-              <button wire:click="edit({{ $job->id }})" class="px-2 py-1 border rounded text-xs">Edit</button>
-              <button wire:click="toggleActive({{ $job->id }})" class="px-2 py-1 border rounded text-xs">{{ $job->is_active ? 'Close' : 'Open' }}</button>
-              <button wire:click="confirmDelete({{ $job->id }})" class="px-2 py-1 border rounded text-xs text-red-600">Delete</button>
+              <button wire:click="edit(<?php echo e($job->id); ?>)" class="px-2 py-1 border rounded text-xs">Edit</button>
+              <button wire:click="toggleActive(<?php echo e($job->id); ?>)" class="px-2 py-1 border rounded text-xs"><?php echo e($job->is_active ? 'Close' : 'Open'); ?></button>
+              <button wire:click="confirmDelete(<?php echo e($job->id); ?>)" class="px-2 py-1 border rounded text-xs text-red-600">Delete</button>
             </td>
           </tr>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><!--[if ENDBLOCK]><![endif]-->
       </tbody>
     </table>
 
     <div class="p-3">
-      {{ $jobs->links() }}
+      <?php echo e($jobs->links()); ?>
+
     </div>
   </div>
 
-  {{-- Form modal --}}
-  <div x-data="{ open: @entangle('showForm') }" x-show="open" x-cloak class="fixed inset-0 z-50 flex items-start justify-center pt-16">
+  
+  <div x-data="{ open: <?php if ((object) ('showForm') instanceof \Livewire\WireDirective) : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showForm'->value()); ?>')<?php echo e('showForm'->hasModifier('live') ? '.live' : ''); ?><?php else : ?>window.Livewire.find('<?php echo e($__livewire->getId()); ?>').entangle('<?php echo e('showForm'); ?>')<?php endif; ?> }" x-show="open" x-cloak class="fixed inset-0 z-50 flex items-start justify-center pt-16">
     <div class="absolute inset-0 bg-black/40" @click="$wire.resetForm()"></div>
 
     <div class="relative z-10 w-full max-w-2xl bg-white rounded shadow-lg p-6">
-      <h3 class="font-semibold mb-4">{{ $jobId ? 'Edit Job' : 'Create Job' }}</h3>
+      <h3 class="font-semibold mb-4"><?php echo e($jobId ? 'Edit Job' : 'Create Job'); ?></h3>
 
       <div class="grid grid-cols-1 gap-3">
         <input wire:model.defer="title" type="text" placeholder="Job title" class="border rounded px-3 py-2" />
-        @error('title') <div class="text-xs text-red-600">{{ $message }}</div> @enderror
+        <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-600"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
 
         <div class="grid grid-cols-2 gap-2">
           <input wire:model.defer="company_name" type="text" placeholder="Company name" class="border rounded px-3 py-2" />
@@ -91,7 +99,14 @@
             <input id="logoUpload" type="file" wire:model="logo" accept="image/*" class="hidden" />
             <label for="logoUpload" class="px-3 py-1 border rounded cursor-pointer text-sm">Upload logo</label>
             <div class="text-xs text-gray-500 mt-1">Max 1MB. Will be optimized to 120×120.</div>
-            @error('logo') <div class="text-xs text-red-600">{{ $message }}</div> @enderror
+            <!--[if BLOCK]><![endif]--><?php $__errorArgs = ['logo'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="text-xs text-red-600"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><!--[if ENDBLOCK]><![endif]-->
           </div>
         </div>
 
@@ -103,7 +118,8 @@
     </div>
   </div>
 
-  {{-- Delete modal (simple) --}}
+  
   <div id="deleteModal" x-data x-show="false" x-cloak @open-delete-job-modal.window=" $el.style.display='block'; $el.__x_show = true">
   </div>
 </div>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/admin/job-manager.blade.php ENDPATH**/ ?>

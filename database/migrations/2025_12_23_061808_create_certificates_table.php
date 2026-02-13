@@ -13,7 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('certificate_number')->nullable()->unique();
             $table->foreignId('course_id')->nullable()->constrained('courses')->nullOnDelete();
-            $table->foreignId('requested_by')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('')->constrained('users')->cascadeOnDelete();
             $table->foreignId('student_id')->constrained('users')->cascadeOnDelete();
             $table->string('type');
             $table->text('notes')->nullable();

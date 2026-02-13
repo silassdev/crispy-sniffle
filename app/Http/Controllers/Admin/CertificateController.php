@@ -13,13 +13,13 @@ class CertificateController extends Controller
     public function index()
     {
         $requests = CertificateRequest::with(['student', 'trainer', 'course'])->orderByDesc('created_at')->paginate(20);
-        return view('admin.certificates.index', compact('requests'));
+        return view('admin.certificate.index', compact('requests'));
     }
 
      public function show($id)
     {
         $req = CertificateRequest::with(['student', 'trainer', 'course'])->findOrFail($id);
-        return view('admin.certificates.show', compact('req'));
+        return view('admin.certificate.show', compact('req'));
     }
 
          //Approve nd Generate
