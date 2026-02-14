@@ -46,4 +46,5 @@
     if(note === null) return;
     Livewire.emit('reject', id, note);
   }
-</script><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views\livewire/admin/certificate-manager.blade.php ENDPATH**/ ?>
+</script>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/admin/certificate-manager.blade.php ENDPATH**/ ?>

@@ -32,7 +32,7 @@ class CertificatesIndex extends Component
 
     public function render()
     {
-        $query = Certificate::with(['student', 'course'])
+        $query = CertificateRequest::with(['student', 'course'])
             ->when($this->q, function ($q) {
                 $search = '%' . $this->q . '%';
                 $q->where(function ($qr) use ($search) {

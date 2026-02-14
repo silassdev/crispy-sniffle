@@ -2,7 +2,7 @@
 namespace App\Livewire\Certificate;
 
 use Livewire\Component;
-use App\Models\Certificate;
+use App\Models\CertificateRequest;
 use Illuminate\Support\Facades\Gate;
 
 class PreviewModal extends Component
@@ -19,7 +19,7 @@ class PreviewModal extends Component
     public function open($id)
     {
         // find certificate
-        $cert = Certificate::with(['student','trainer','course'])->find($id);
+        $cert = CertificateRequest::with(['student','trainer','course'])->find($id);
         if (! $cert) {
             $this->dispatchBrowserEvent('app-toast', ['title'=>'Error','message'=>'Certificate not found','ttl'=>4000]);
             return;

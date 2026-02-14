@@ -22,7 +22,7 @@ class CertificateController extends Controller
         return view('admin.certificate.show', compact('req'));
     }
 
-         //Approve nd Generate
+         //Approve and Generate
     public function approve(Request $request, $id)
     {
         $req = CertificateRequest::findOrFail($id);
@@ -65,10 +65,10 @@ class CertificateController extends Controller
 
     public function revoke(Request $request, $id)
     {
-        $cert = Certificate::findOrFail($id);
+        $cert = CertificateRequest::findOrFail($id);
         $cert->status = 'revoked';
         $cert->save();
-        $cert->student->notify(new \App\Notifications\CertificateRevoked($cert));
+        //$cert->student->notify(new \App\Notifications\CertificateRevoked($cert));
         return back()->with('success','Certificate revoked');
     }
 }

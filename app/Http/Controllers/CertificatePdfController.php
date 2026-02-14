@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Certificate;
+use App\Models\CertificateRequest;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
@@ -13,13 +13,13 @@ class CertificatePdfController extends Controller
     
     public function saveToStorage(Request $request, $id)
     {
-        $cert = Certificate::with(['student','trainer','course','approver'])->findOrFail($id);
+        $cert = CertificateRequest::with(['student','trainer','course','approver'])->findOrFail($id);
 
         // policy: authorized users only
         $this->authorize('view', $cert);
 
         // generate filename
-        $number = $cert->certificate_number ?? Certificate::generateNumber();
+        $number = $cert->certificate_number ?? CertificateRequest::generateNumber();
         $safeNumber = Str::slug($number ?: 'cert-'.$cert->id);
         $filename = "certificate-{$safeNumber}.pdf";
         $folder = 'certificates';

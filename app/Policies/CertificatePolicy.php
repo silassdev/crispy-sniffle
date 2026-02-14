@@ -2,14 +2,14 @@
 namespace App\Policies;
 
 use App\Models\User;
-use App\Models\Certificate;
+use App\Models\CertificateRequest;
 
 class CertificatePolicy
 {
     /**
      * View certificate: allowed for admin, trainer (owner), or the student who owns it.
      */
-    public function view(User $user, Certificate $certificate): bool
+    public function view(User $user, CertificateRequest $certificate): bool
     {
         if ($user->isAdmin && method_exists($user,'isAdmin') ? $user->isAdmin() : ($user->role === 'admin')) {
             return true;
@@ -24,7 +24,7 @@ class CertificatePolicy
     /**
      * Download - reuse view logic.
      */
-    public function download(User $user, Certificate $certificate): bool
+    public function download(User $user, CertificateRequest $certificate): bool
     {
         return $this->view($user, $certificate);
     }

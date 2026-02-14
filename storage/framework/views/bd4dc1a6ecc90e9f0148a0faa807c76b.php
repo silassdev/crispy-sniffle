@@ -29,7 +29,6 @@ foreach ($attributes->all() as $__key => $__value) {
 unset($__defined_vars, $__key, $__value); ?>
 
 <?php
-    // Auto-detect if course should show lock if not explicitly set
     if ($showLock === null) {
         $showLock = !$course->is_public;
     }
