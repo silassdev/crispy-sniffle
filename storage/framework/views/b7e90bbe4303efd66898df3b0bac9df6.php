@@ -1,0 +1,1 @@
+<?php echo $__env->yieldContent('dashboard-content'); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/layouts/plain.blade.php ENDPATH**/ ?>

@@ -11,15 +11,9 @@ use App\Models\User;
 
 class CertificateController extends Controller
 {
-    public function index()
+    public function index() 
     {
-        $trainerId = Auth::id();
-        $requests = CertificateRequest::where('trainer_id', $trainerId)
-            ->with(['student', 'course'])
-            ->orderByDesc('created_at')
-            ->paginate(15);
-
-        return view('trainer.certificates.index', compact('requests'));
+        return view('trainer.certificates.index');
     }
 
     public function create()
@@ -61,5 +55,14 @@ class CertificateController extends Controller
         CertificateRequest::create($createData);
 
         return redirect()->route('trainer.certificates.index')->with('success', 'Certificate request submitted. Admin will review it');
+    }
+
+    public function show($id)
+    {
+        $cert = CertificateRequest::where('trainer_id', Auth::id())
+            ->with(['student', 'course'])
+            ->findOrFail($id);
+
+        return view('trainer.certificates.show', compact('cert'));
     }
 }

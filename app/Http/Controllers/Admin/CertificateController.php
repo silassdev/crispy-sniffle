@@ -12,27 +12,32 @@ class CertificateController extends Controller
 {
     public function index()
     {
-        $requests = CertificateRequest::with(['student', 'trainer', 'course'])->orderByDesc('created_at')->paginate(20);
-        return view('admin.certificate.index', compact('requests'));
+        $certs = CertificateRequest::with(['student', 'trainer', 'course'])->orderByDesc('created_at')->paginate(20);
+        
+        if (request()->ajax()) {
+            return view('admin.certificate.index-fragment');
+        }
+
+        return view('admin.certificate.index', compact('certs'));
     }
 
      public function show($id)
     {
-        $req = CertificateRequest::with(['student', 'trainer', 'course'])->findOrFail($id);
-        return view('admin.certificate.show', compact('req'));
+        $cert = CertificateRequest::with(['student', 'trainer', 'course'])->findOrFail($id);
+        return view('admin.certificate.show', compact('cert'));
     }
 
          //Approve and Generate
     public function approve(Request $request, $id)
     {
-        $req = CertificateRequest::findOrFail($id);
+        $cert = CertificateRequest::findOrFail($id);
         $note = $request->input('admin_note', null);
 
-        if ($req->status !== 'pending') {
+        if ($cert->status !== 'pending') {
             return back()->with('error','Certificate is not pending');
         }
 
-        $req->update([
+        $cert->update([
             'status' => 'approved',
             'approved_by' => Auth::id(),
             'admin_note' => $note,
@@ -43,18 +48,18 @@ class CertificateController extends Controller
 
 
         // notify student and trainer
-        //$req->student->notify(new \App\Notifications\CertificateApproved($req));
-        //$req->trainer->notify(new \App\Notifications\CertificateStatusChanged($req));
+        //$cert->student->notify(new \App\Notifications\CertificateApproved($cert));
+        //$cert->trainer->notify(new \App\Notifications\CertificateStatusChanged($cert));
 
         return redirect()->route('admin.certificates.index')->with('success', 'Certificate request approved.');
     }
 
     public function reject(Request $request, $id)
     {
-        $req = CertificateRequest::findOrFail($id);
+        $cert = CertificateRequest::findOrFail($id);
         $note = $request->input('admin_note', null);
 
-        $req->update([
+        $cert->update([
             'status' => 'rejected',
             'rejected_by' => Auth::id(),
             'admin_note' => $note,

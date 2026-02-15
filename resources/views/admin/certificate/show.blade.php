@@ -7,8 +7,8 @@
             <div class="card shadow border-0 mb-4">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 text-primary fw-bold">Certificate Request Details</h5>
-                    <span class="badge {{ $req->status == 'approved' ? 'bg-success' : ($req->status == 'rejected' ? 'bg-danger' : 'bg-warning') }} rounded-pill px-3">
-                        {{ ucfirst($req->status) }}
+                    <span class="badge {{ $cert->status == 'approved' ? 'bg-success' : ($cert->status == 'rejected' ? 'bg-danger' : 'bg-warning') }} rounded-pill px-3">
+                        {{ ucfirst($cert->status) }}
                     </span>
                 </div>
                 <div class="card-body p-4">
@@ -17,32 +17,32 @@
                             <label class="text-muted small text-uppercase fw-bold">Student</label>
                             <div class="d-flex align-items-center mt-2">
                                 <div class="avatar avatar-md bg-light text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:40px;height:40px">
-                                    {{ substr($req->student->name ?? '?', 0, 1) }}
+                                    {{ substr($cert->student->name ?? '?', 0, 1) }}
                                 </div>
                                 <div>
-                                    <h6 class="mb-0 fw-bold">{{ $req->student->name ?? 'Unknown' }}</h6>
-                                    <div class="small text-muted">{{ $req->student->email ?? '' }}</div>
+                                    <h6 class="mb-0 fw-bold">{{ $cert->student->name ?? 'Unknown' }}</h6>
+                                    <div class="small text-muted">{{ $cert->student->email ?? '' }}</div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="text-muted small text-uppercase fw-bold">Course</label>
-                            <h6 class="mt-2 fw-bold text-dark">{{ $req->course->title ?? 'N/A' }}</h6>
-                            <div class="small text-muted">{{ $req->type }}</div>
+                            <h6 class="mt-2 fw-bold text-dark">{{ $cert->course->title ?? 'N/A' }}</h6>
+                            <div class="small text-muted">{{ $cert->type }}</div>
                         </div>
                     </div>
 
                     <div class="mb-4">
                         <label class="text-muted small text-uppercase fw-bold">Trainer Notes</label>
                         <div class="bg-light rounded p-3 mt-2 border">
-                            {{ $req->notes ?: 'No notes provided.' }}
+                            {{ $cert->notes ?: 'No notes provided.' }}
                         </div>
                         <div class="text-end mt-1">
-                            <small class="text-muted">Requested by {{ $req->trainer->name ?? 'Trainer' }} on {{ $req->created_at->format('M d, Y h:i A') }}</small>
+                            <small class="text-muted">Requested by {{ $cert->trainer->name ?? 'Trainer' }} on {{ $cert->created_at->format('M d, Y h:i A') }}</small>
                         </div>
                     </div>
 
-                    @if($req->status === 'pending')
+                    @if($cert->status === 'pending')
                     <hr>
                     <div class="d-flex gap-3 justify-content-end mt-4">
                         <!-- Reject Button -->
@@ -51,7 +51,7 @@
                         </button>
                         
                         <!-- Approve Form -->
-                         <form action="{{ route('admin.certificates.approve', $req->id) }}" method="POST">
+                         <form action="{{ route('admin.certificates.approve', $cert->id) }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-success text-white">
                                 <i class="fas fa-check me-1"></i> Approve & Issue
@@ -60,16 +60,16 @@
                     </div>
                     @endif
                     
-                    @if($req->status === 'approved')
+                    @if($cert->status === 'approved')
                         <hr>
                         <div class="alert alert-success d-flex align-items-center">
                             <i class="fas fa-check-circle fa-2x me-3"></i>
                             <div>
-                                <strong>Issued on {{ $req->issued_at->format('M d, Y') }}</strong>
-                                <p class="mb-0 small">Certificate Number: {{ $req->certificate_number }}</p>
+                                <strong>Issued on {{ $cert->issued_at->format('M d, Y') }}</strong>
+                                <p class="mb-0 small">Certificate Number: {{ $cert->certificate_number }}</p>
                             </div>
                             <div class="ms-auto">
-                                <a href="{{ route('certificates.pdf.download', $req->id) }}" class="btn btn-sm btn-success">Download PDF</a>
+                                <a href="{{ route('certificates.pdf.download', $cert->id) }}" class="btn btn-sm btn-success">Download PDF</a>
                             </div>
                         </div>
                     @endif
@@ -88,7 +88,7 @@
 <!-- Reject Modal -->
 <div class="modal fade" id="rejectModal" tabindex="-1">
     <div class="modal-dialog">
-        <form action="{{ route('admin.certificates.reject', $req->id) }}" method="POST">
+        <form action="{{ route('admin.certificates.reject', $cert->id) }}" method="POST">
             @csrf
             <div class="modal-content">
                 <div class="modal-header">

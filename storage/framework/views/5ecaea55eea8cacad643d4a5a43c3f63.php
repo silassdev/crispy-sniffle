@@ -1,7 +1,7 @@
 <div>
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-certificate me-2 text-indigo-600"></i> Certificates Management</h2>
-        <a href="{{ route('trainer.certificates.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+        <a href="<?php echo e(route('trainer.certificates.create')); ?>" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
             <i class="fas fa-plus me-2"></i> Request Certificate
         </a>
     </div>
@@ -41,51 +41,55 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($certs as $cert)
+                    <!--[if BLOCK]><![endif]--><?php $__empty_1 = true; $__currentLoopData = $certs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cert): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {{ $cert->certificate_number ?? 'PENDING' }}
+                                <?php echo e($cert->certificate_number ?? 'PENDING'); ?>
+
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-8 w-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs uppercase">
-                                        {{ substr($cert->student->name ?? 'U', 0, 1) }}
+                                        <?php echo e(substr($cert->student->name ?? 'U', 0, 1)); ?>
+
                                     </div>
                                     <div class="ml-3">
-                                        <div class="text-sm font-medium text-gray-900">{{ $cert->student->name ?? 'Unknown' }}</div>
-                                        <div class="text-xs text-gray-500">{{ $cert->student->email ?? '' }}</div>
+                                        <div class="text-sm font-medium text-gray-900"><?php echo e($cert->student->name ?? 'Unknown'); ?></div>
+                                        <div class="text-xs text-gray-500"><?php echo e($cert->student->email ?? ''); ?></div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                {{ $cert->course->title ?? '—' }}
+                                <?php echo e($cert->course->title ?? '—'); ?>
+
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($cert->status === 'approved')
+                                <!--[if BLOCK]><![endif]--><?php if($cert->status === 'approved'): ?>
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full">Approved</span>
-                                @elseif($cert->status === 'rejected')
+                                <?php elseif($cert->status === 'rejected'): ?>
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold leading-5 text-red-800 bg-red-100 rounded-full">Rejected</span>
-                                @else
+                                <?php else: ?>
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold leading-5 text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
-                                @endif
+                                <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                {{ $cert->created_at->format('M d, Y') }}
+                                <?php echo e($cert->created_at->format('M d, Y')); ?>
+
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('trainer.certificates.show', $cert->id) }}" class="text-gray-500 hover:text-indigo-600 transition" title="View Details">
+                                    <a href="<?php echo e(route('trainer.certificates.show', $cert->id)); ?>" class="text-gray-500 hover:text-indigo-600 transition" title="View Details">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @if($cert->status === 'approved')
-                                        <a href="{{ route('certificates.pdf.download', $cert->id) }}" class="text-indigo-600 hover:text-indigo-900 transition" title="Download PDF">
+                                    <!--[if BLOCK]><![endif]--><?php if($cert->status === 'approved'): ?>
+                                        <a href="<?php echo e(route('certificates.pdf.download', $cert->id)); ?>" class="text-indigo-600 hover:text-indigo-900 transition" title="Download PDF">
                                             <i class="fas fa-download"></i>
                                         </a>
-                                    @endif
+                                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                                 </div>
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                                 <div class="flex flex-col items-center justify-center">
@@ -95,15 +99,17 @@
                                 </div>
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
                 </tbody>
             </table>
         </div>
         
-        @if($certs->hasPages())
+        <!--[if BLOCK]><![endif]--><?php if($certs->hasPages()): ?>
             <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                {{ $certs->links() }}
+                <?php echo e($certs->links()); ?>
+
             </div>
-        @endif
+        <?php endif; ?><!--[if ENDBLOCK]><![endif]-->
     </div>
 </div>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/livewire/trainer/certificates-index.blade.php ENDPATH**/ ?>
