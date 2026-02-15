@@ -15,6 +15,10 @@ class CertificatesIndex extends Component
     public $type = 'all';
     public $perPage = 15;
 
+    // Modal State
+    public $selectedCertId = null;
+    public $isModalOpen = false;
+
     protected $queryString = [
         'q' => ['except' => ''],
         'status' => ['except' => 'all'],
@@ -29,6 +33,18 @@ class CertificatesIndex extends Component
     public function updatingStatus() { $this->resetPage(); }
     public function updatingType() { $this->resetPage(); }
     public function updatingPerPage() { $this->resetPage(); }
+
+    public function openModal($id)
+    {
+        $this->selectedCertId = $id;
+        $this->isModalOpen = true;
+    }
+
+    public function closeModal()
+    {
+        $this->isModalOpen = false;
+        $this->selectedCertId = null;
+    }
 
     public function render()
     {
@@ -47,6 +63,13 @@ class CertificatesIndex extends Component
 
         $certs = $query->paginate($this->perPage)->withQueryString();
 
-        return view('livewire.trainer.certificates-index', compact('certs'));
+        $selectedCert = $this->selectedCertId 
+            ? CertificateRequest::with(['student','trainer','course'])->find($this->selectedCertId) 
+            : null;
+
+        return view('livewire.trainer.certificates-index', [
+            'certs' => $certs,
+            'selectedCert' => $selectedCert,
+        ]);
     }
 }

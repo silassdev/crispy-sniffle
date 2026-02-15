@@ -26,8 +26,9 @@ class CertificatePdfController extends Controller
 
     public function download($id)
     {
-        $cert = CertificateRequest::with(['student','trainer','course','approver'])->findOrFail($id);
-        $this->authorize('view', $cert);
+        $cert = CertificateRequest::with(['student','trainer','course','approver'])
+            ->where('status', 'approved')
+            ->findOrFail($id);
 
         $pdf = PDF::loadView('certificates.print', compact('cert'))
                   ->setPaper('a4', 'landscape');

@@ -11,12 +11,20 @@ class CertificatePolicy
      */
     public function view(User $user, CertificateRequest $certificate): bool
     {
-        if ($user->isAdmin && method_exists($user,'isAdmin') ? $user->isAdmin() : ($user->role === 'admin')) {
+        // Admins can view all certificates
+        if ($user->role === 'admin') {
             return true;
         }
 
-        if ($user->id === $certificate->student_id) return true;
-        if ($user->id === $certificate->trainer_id) return true;
+        // Student who owns the certificate can view it
+        if ($user->id === $certificate->student_id) {
+            return true;
+        }
+
+        // Trainer who was assigned can view it
+        if ($user->id === $certificate->trainer_id) {
+            return true;
+        }
 
         return false;
     }
@@ -34,6 +42,6 @@ class CertificatePolicy
      */
     public function approve(User $user): bool
     {
-        return method_exists($user,'isAdmin') ? $user->isAdmin() : ($user->role === 'admin');
+        return $user->role === 'admin';
     }
 }
