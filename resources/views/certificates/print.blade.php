@@ -88,7 +88,7 @@
       </div>
 
       <div class="center small" style="margin-top:30px; color:#999;">
-        {{ config('app.name') }} • {{ url('/') }}
+        {{ config('app.name') }} • {{ config('app.url') }}
       </div>
     </div>
   </div>

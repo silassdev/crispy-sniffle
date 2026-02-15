@@ -11,6 +11,28 @@ use Illuminate\Support\Str;
 class CertificatePdfController extends Controller
 {
     
+    public function preview($id)
+    {
+        $cert = CertificateRequest::with(['student','trainer','course','approver'])->findOrFail($id);
+        $this->authorize('view', $cert);
+
+        $pdf = PDF::loadView('certificates.print', compact('cert'))
+                  ->setPaper('a4', 'landscape');
+
+        return $pdf->stream("certificate-{$cert->certificate_number}.pdf");
+    }
+
+    public function download($id)
+    {
+        $cert = CertificateRequest::with(['student','trainer','course','approver'])->findOrFail($id);
+        $this->authorize('view', $cert);
+
+        $pdf = PDF::loadView('certificates.print', compact('cert'))
+                  ->setPaper('a4', 'landscape');
+
+        return $pdf->download("certificate-{$cert->certificate_number}.pdf");
+    }
+
     public function saveToStorage(Request $request, $id)
     {
         $cert = CertificateRequest::with(['student','trainer','course','approver'])->findOrFail($id);

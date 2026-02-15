@@ -21,7 +21,7 @@
             ['key' => 'courses', 'label' =>    'Courses', 'icon' => 'courses', 'route_suffix' => 'courses'],
             ['key' => 'jobs', 'label' => 'Jobs', 'icon' => 'jobs', 'route_suffix' => 'jobs'],
             ['key' => 'feedback', 'label' => 'Feedback', 'icon' => 'feedback', 'route_suffix' => 'feedback.index'],
-            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates.index'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates.index', 'no_ajax' => true],
             ['key' => 'newsletter', 'label' => 'Newsletter', 'icon' => 'newsletter', 'route_suffix' => 'newsletter'],
         ],
         'trainer' => [
@@ -37,12 +37,12 @@
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
             ['key' => 'course', 'label' => 'Courses', 'icon' => 'course', 'route_suffix' => 'courses.index'],
             ['key' => 'students', 'label' => 'Students', 'icon' => 'students', 'route_suffix' => 'students'],
-            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates.index'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates.index', 'no_ajax' => true],
         ],
         default => [
             ['key' => 'courses', 'label' => 'Courses', 'icon' => 'courses', 'route_suffix' => 'courses.index'],
             ['key' => 'scores', 'label' => 'Scores', 'icon' => 'scores', 'route_suffix' => 'scores'],
-            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates'],
+            ['key' => 'certificate', 'label' => 'Certificate', 'icon' => 'certificate', 'route_suffix' => 'certificates', 'no_ajax' => true],
             ['key' => 'assessment', 'label' => 'Assessments',  'icon' => 'clipboard',
               'children' => [
                 ['key' => 'assignments', 'label' => 'Assignments'],
@@ -67,7 +67,7 @@
                 <a href="{{ route($targetRoute) }}" 
                    data-route="{{ route($targetRoute) }}"
                    data-section="{{ $item['key'] }}"
-                   class="ajax-link group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], $targetRoute) }}">
+                   class="{{ isset($item['no_ajax']) && $item['no_ajax'] ? '' : 'ajax-link' }} group flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 {{ $isActive($item['key'], $targetRoute) }}">
                     <x-dynamic-component :component="'icons.'.$item['icon']" class="w-5 h-5 flex-shrink-0" />
                     <span class="text-sm font-medium">{{ $item['label'] }}</span>
                 </a>

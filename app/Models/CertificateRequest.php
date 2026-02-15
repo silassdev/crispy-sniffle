@@ -31,6 +31,7 @@ class CertificateRequest extends Model
         'status',
         'approved_by',
         'issued_at',
+        'rejected_by',
         'rejected_at',
         'certificate_path',
     ];
