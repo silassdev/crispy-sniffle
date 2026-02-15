@@ -44,12 +44,11 @@
       const countersEl = document.getElementById('admin-counters');
       const toggle = document.getElementById('sidebar-toggle');
       
-      // SVG Icons for the toggle (if they exist)
+      // SVG Icons for the toggle
       const openIcon = document.getElementById('toggle-open');
       const closeIcon = document.getElementById('toggle-close');
 
       // --- Helper Functions ---
-
       function showLoader() {
         if (loader) { loader.classList.remove('hidden'); loader.classList.add('flex'); }
       }
@@ -66,7 +65,7 @@
       // --- Core Logic ---
 
       async function fetchCounters() {
-        if (!countersEl) return; // Safety check
+        if (!countersEl) return;
         try {
           const res = await fetch("{{ route('admin.counters') }}", {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }

@@ -170,10 +170,9 @@
               <span class="icon-label">Dashboard</span>
             </a>
 
-            {{-- Notifications --}}
+            {{-- Notifications icon--}}
             <div class="relative">
                <livewire:notifications.notification-bell />
-               {{-- Note: we might need to wrap the notification-bell content or style it to match icon-nav-item --}}
             </div>
 
             {{-- Profile --}}

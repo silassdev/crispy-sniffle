@@ -50,11 +50,11 @@
         </ul>
       </nav>
 
-      <!-- Sponsor Benefits (Visual Placeholder) -->
+
       <div class="hidden lg:block">
            <h3 class="text-white text-xl font-extrabold mb-8 flex items-center gap-3">
                 <span class="w-1.5 h-6 bg-blue-500 rounded-full"></span>
-                Why Sponsor Us?
+                Sponsorship &  Donation
            </h3>
            <p class="text-slate-400 text-sm leading-relaxed mb-6">
                 Support the future of digital learning and gain visibility in our growing community of learners and educators.
@@ -78,7 +78,7 @@
             Get in Touch
             <span class="w-1.5 h-6 bg-emerald-500 rounded-full"></span>
         </h3>
-        <p class="text-sm text-slate-400 mb-8 max-w-sm lg:ml-auto leading-relaxed">Interested in sponsoring? Reach out to our partnership team to discuss opportunities.</p>
+        <p class="text-sm text-slate-400 mb-8 max-w-sm lg:ml-auto leading-relaxed">Interested in sponsoring? Reach out to our partnership team to discuss with Us.</p>
 
         <div class="max-w-sm lg:ml-auto">
             <a href="{{ route('contact.show') }}" class="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition-all duration-300 shadow-lg shadow-indigo-600/20 w-full">
