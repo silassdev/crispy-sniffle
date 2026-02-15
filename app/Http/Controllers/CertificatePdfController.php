@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CertificatePdfController extends Controller
 {
+    use AuthorizesRequests;
     
     public function preview($id)
     {

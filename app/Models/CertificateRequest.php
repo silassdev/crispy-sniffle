@@ -34,6 +34,7 @@ class CertificateRequest extends Model
         'rejected_by',
         'rejected_at',
         'certificate_path',
+        'template_id',
     ];
 
     protected $casts = [
@@ -84,6 +85,11 @@ class CertificateRequest extends Model
     public function approver()
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function template()
+    {
+        return $this->belongsTo(CertificateTemplate::class, 'template_id');
     }
 
     /* ---------------------------
