@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Certificate - {{ $cert->certificate_number ?? '' }}</title>
+  <title>Certificate - <?php echo e($cert->certificate_number ?? ''); ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     @page { margin: 0; }
@@ -233,57 +233,58 @@
       
       <!-- Logo (Top Right) -->
       <div class="logo-container">
-        @if(file_exists(public_path('img/igniscode.png')))
-          <img src="{{ public_path('img/igniscode.png') }}" alt="Logo">
-        @else
-          <div class="logo-placeholder">{{ substr(config('app.name'), 0, 1) }}</div>
-        @endif
+        <?php if(file_exists(public_path('img/igniscode.png'))): ?>
+          <img src="<?php echo e(public_path('img/igniscode.png')); ?>" alt="Logo">
+        <?php else: ?>
+          <div class="logo-placeholder"><?php echo e(substr(config('app.name'), 0, 1)); ?></div>
+        <?php endif; ?>
       </div>
       
       <!-- Header -->
       <div class="cert-header">
         <div class="cert-badge">Official Certificate</div>
         <h1 class="cert-title">Certificate of Achievement</h1>
-        <p class="cert-subtitle">{{ config('app.name') }}</p>
+        <p class="cert-subtitle"><?php echo e(config('app.name')); ?></p>
       </div>
       
       <!-- Body -->
       <div class="cert-body">
         <p class="presented-to">This certificate is proudly presented to</p>
-        <div class="recipient-name">{{ $cert->student->name }}</div>
+        <div class="recipient-name"><?php echo e($cert->student->name); ?></div>
         
         <p class="completion-text">
           For successfully completing the course with excellence and dedication
         </p>
         
-        @if($cert->course)
-          <div class="course-title">{{ $cert->course->title }}</div>
-        @endif
+        <?php if($cert->course): ?>
+          <div class="course-title"><?php echo e($cert->course->title); ?></div>
+        <?php endif; ?>
         
-        @if($cert->notes)
+        <?php if($cert->notes): ?>
           <div class="notes-section">
-            {{ $cert->notes }}
+            <?php echo e($cert->notes); ?>
+
           </div>
-        @endif
+        <?php endif; ?>
       </div>
       
       <!-- Footer -->
       <div class="cert-footer">
         <div class="signature-block">
           <div class="signature-line"></div>
-          <div class="signature-name">{{ $cert->trainer->name ?? 'Trainer' }}</div>
+          <div class="signature-name"><?php echo e($cert->trainer->name ?? 'Trainer'); ?></div>
           <div class="signature-title">Course Trainer</div>
         </div>
         
         <div class="cert-meta">
           <div class="cert-number">Certificate No.</div>
-          <div class="cert-id">{{ $cert->certificate_number ?? '—' }}</div>
-          <div class="cert-date">{{ optional($cert->issued_at)->format('F d, Y') ?? '—' }}</div>
+          <div class="cert-id"><?php echo e($cert->certificate_number ?? '—'); ?></div>
+          <div class="cert-date"><?php echo e(optional($cert->issued_at)->format('F d, Y') ?? '—'); ?></div>
         </div>
         
         <div class="signature-block">
           <div class="signature-line"></div>
-          <div class="signature-name">{{ $cert->approver?->name ?? 'Administrator' }}</div>
+          <div class="signature-name"><?php echo e($cert->approver?->name ?? 'Administrator'); ?></div>
           <div class="signature-title">Approved By</div>
         </div>
       </div>
@@ -291,3 +292,4 @@
   </div>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/certificates/print.blade.php ENDPATH**/ ?>
