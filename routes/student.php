@@ -16,6 +16,8 @@ Route::middleware(['auth', 'role:student']) ->prefix('student') ->name('student.
         Route::get('/courses/{course}/chapters/{order}', [\App\Http\Controllers\Student\ChapterController::class,'showByOrder'])->name('chapters.show');
         Route::post('/chapters/{chapter}/complete', [\App\Http\Controllers\Student\ChapterController::class,'markComplete'])->name('chapters.complete');
         
+        
+        Route::get('/my-certificates', [CertificateController::class, 'myCertificates']);
         // Scores / Grades
         Route::get('/scores', fn() => view('student.scores.index'))->name('scores');
         Route::get('/scores/{courseId}', fn($courseId) => view('student.scores.show', compact('courseId')))->name('scores.show');
