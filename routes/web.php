@@ -100,11 +100,6 @@ Route::controller(ContactController::class)->group(function () { Route::get('/co
     Route::post('/contact', 'submit')->name('contact.submit');
 });
 
-// Certificates
-Route::middleware(['auth'])->get('/my-certificates', [CertificateController::class,'myCertificates'])->name('student.certificates');
-Route::get('/certificate/{certificate_number}', [CertificateController::class,'publicShow'])->name('certificates.public');
-
-
 // enroll for authenticated users
 Route::post('/courses/{id}/enroll', [CourseEnrollmentController::class,'enroll']) ->name('courses.enroll')->middleware('auth');
 
@@ -117,7 +112,9 @@ Route::prefix('password')->group(function () {
     Route::get('token-invalid', fn () => view('auth.passwords.token-expired'))->name('password.token.invalid');
 });
 
-// Certificate PDF routes
+// Certificates & PDF routes
+Route::get('/certificate/{number}', [CertificateController::class, 'publicView'])->name('certificate.public');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview']) ->name('certificates.pdf.preview');
 
