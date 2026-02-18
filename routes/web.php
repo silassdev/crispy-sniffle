@@ -113,9 +113,9 @@ Route::prefix('password')->group(function () {
 });
 
 // Certificates & PDF routes
-Route::get('/certificate/{number}', [CertificateController::class, 'publicView'])->name('certificate.public');
+Route::get('/certificate/{number}', [CertificateController::class, 'publicShow'])->name('certificate.public');
 Route::get('/verify/{certificate_number}', [CertificateController::class, 'publicShow'])->name('certificate.verify');
-Route::get('/certificates/{certificate}/pdf/download', [CertificateController::class, 'download'])
+Route::get('/certificates/{certificate}/pdf/download', [CertificatePdfController::class, 'download'])
     ->name('certificates.pdf.download');
 
 Route::middleware(['auth'])->group(function () {

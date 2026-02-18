@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Student\DashboardController;
 use App\Http\Controllers\Student\CourseController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Livewire\Student\QuizAttempt;
 use App\Http\Livewire\Student\QuizAttemptComponent;
 
@@ -17,7 +18,7 @@ Route::middleware(['auth', 'role:student']) ->prefix('student') ->name('student.
         Route::post('/chapters/{chapter}/complete', [\App\Http\Controllers\Student\ChapterController::class,'markComplete'])->name('chapters.complete');
         
         
-        Route::get('/my-certificates', [CertificateController::class, 'myCertificates']);
+        Route::get('/my-certificates', [CertificateController::class, 'myCertificates'])->name('certificates');
         // Scores / Grades
         Route::get('/scores', fn() => view('student.scores.index'))->name('scores');
         Route::get('/scores/{courseId}', fn($courseId) => view('student.scores.show', compact('courseId')))->name('scores.show');

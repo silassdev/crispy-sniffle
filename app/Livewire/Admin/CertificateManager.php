@@ -74,14 +74,48 @@ class CertificateManager extends Component
     {
         if (!$this->selectedCertId) return;
 
-        $req = CertificateRequest::findOrFail($this->selectedCertId);
-        $req->update([
-            'status' => 'approved',
-            'approved_by' => auth()->id(),
-            'issued_at' => now(),
-        ]);
-        
-        $this->dispatch('app-toast', ['title'=>'Approved','message'=>'Certificate approved','ttl'=>3000]); 
+        $req = CertificateRequest::with(['student','trainer','course','approver'])
+            ->findOrFail($this->selectedCertId);
+
+        if ($req->status !== 'pending') {
+            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Certificate is not pending','ttl'=>3000]);
+            return;
+        }
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+
+        try {
+            if (empty($req->certificate_number)) {
+                $req->certificate_number = CertificateRequest::generateNumber();
+            }
+
+            $req->status = 'approved';
+            $req->approved_by = auth()->id();
+            $req->issued_at = now();
+            $req->save();
+
+            // Generate PDF
+            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('certificates.print', ['cert' => $req])
+                ->setPaper('a4', 'landscape');
+
+            $safeNumber = \Illuminate\Support\Str::slug($req->certificate_number);
+            $filename = "certificate-{$safeNumber}.pdf";
+            $relativePath = "certificates/{$filename}";
+
+            \Illuminate\Support\Facades\Storage::disk('public')->put($relativePath, $pdf->output());
+
+            $req->certificate_path = $relativePath;
+            $req->save();
+
+            \Illuminate\Support\Facades\DB::commit();
+
+            $this->dispatch('app-toast', ['title'=>'Approved','message'=>'Certificate approved and PDF generated','ttl'=>3000]);
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            \Log::error('Livewire certificate approval failed: '.$e->getMessage());
+            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Approval failed. Check logs.','ttl'=>5000]);
+        }
+
         $this->closeModal();
     }
 

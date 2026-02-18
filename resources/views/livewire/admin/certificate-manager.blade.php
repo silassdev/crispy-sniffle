@@ -152,16 +152,16 @@
                                 <div class="grid grid-cols-2 gap-4 text-sm">
                                     <div class="bg-gray-50 p-3 rounded">
                                         <span class="block text-xs uppercase text-gray-500 font-bold">Student</span>
-                                        <span class="text-gray-900 font-medium">{{ $selectedCert->student->name }}</span>
-                                        <span class="block text-gray-500 text-xs">{{ $selectedCert->student->email }}</span>
+                                        <span class="text-gray-900 font-medium">{{ $selectedCert->student?->name ?? 'Unknown' }}</span>
+                                        <span class="block text-gray-500 text-xs">{{ $selectedCert->student?->email ?? '' }}</span>
                                     </div>
                                     <div class="bg-gray-50 p-3 rounded">
                                         <span class="block text-xs uppercase text-gray-500 font-bold">Trainer</span>
-                                        <span class="text-gray-900 font-medium">{{ $selectedCert->trainer->name }}</span>
+                                        <span class="text-gray-900 font-medium">{{ $selectedCert->trainer?->name ?? 'Unknown' }}</span>
                                     </div>
                                     <div class="col-span-2 bg-gray-50 p-3 rounded">
                                         <span class="block text-xs uppercase text-gray-500 font-bold">Course</span>
-                                        <span class="text-gray-900 font-medium">{{ $selectedCert->course->title }}</span>
+                                        <span class="text-gray-900 font-medium">{{ $selectedCert->course?->title ?? 'General' }}</span>
                                         <span class="block text-gray-500 text-xs capitalize">Type: {{ str_replace('_', ' ', $selectedCert->type) }}</span>
                                     </div>
                                 </div>
@@ -232,6 +232,10 @@
                     @else
                         <!-- Non-pending actions -->
                         @if($selectedCert->status === 'approved')
+                            <a href="{{ route('certificates.pdf.preview', $selectedCert->id) }}" target="_blank"
+                               class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                <i class="fas fa-eye mr-2 mt-1"></i> Preview PDF
+                            </a>
                             <a href="{{ route('certificates.pdf.download', $selectedCert->id) }}" 
                                class="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
                                 <i class="fas fa-download mr-2 mt-1"></i> Download PDF

@@ -222,6 +222,47 @@
     @includeIf('partials.testimonials')
   </section>
 
+  {{-- VERIFY CERTIFICATE --}}
+  <section class="mt-24" id="verify-certificate">
+    <div class="relative p-10 md:p-16 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-[2.5rem] border border-indigo-100 shadow-sm overflow-hidden">
+        {{-- Decorative accent --}}
+        <div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-200 rounded-full blur-[80px] opacity-30"></div>
+        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-purple-200 rounded-full blur-[60px] opacity-20"></div>
+
+        <div class="relative z-10 max-w-2xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                Certificate Verification
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-4 leading-tight">
+                Verify a <span class="text-indigo-600">Certificate</span>
+            </h2>
+            <p class="text-slate-500 mb-8 max-w-md mx-auto">
+                Enter a certificate number to instantly verify its authenticity and view the certificate details.
+            </p>
+
+            <form id="verify-cert-form" class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                <div class="relative flex-1">
+                    <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    </span>
+                    <input type="text" id="cert-verify-input"
+                           placeholder="e.g. CERT-20260218-ABC123"
+                           class="w-full pl-12 pr-4 py-4 bg-white border border-slate-200 rounded-2xl text-sm font-medium focus:ring-4 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all duration-300 shadow-sm"
+                           required>
+                </div>
+                <button type="submit"
+                        class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 hover:-translate-y-0.5 transition-all duration-300 shadow-lg shadow-indigo-200 whitespace-nowrap">
+                    Verify Now
+                </button>
+            </form>
+
+            <div id="cert-verify-feedback" class="mt-4 text-sm font-medium hidden"></div>
+        </div>
+    </div>
+  </section>
+
   {{-- CTA footer --}}
   <section class="mt-24 mb-12 group">
     <div class="relative p-12 md:p-20 bg-slate-900 rounded-[3rem] overflow-hidden">
@@ -301,6 +342,19 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   counters.forEach(counter => counterIo.observe(counter));
+
+  // Certificate verification form
+  const certForm = document.getElementById('verify-cert-form');
+  if (certForm) {
+    certForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('cert-verify-input');
+      const num = input.value.trim();
+      if (num) {
+        window.location.href = '/verify/' + encodeURIComponent(num);
+      }
+    });
+  }
 });
 </script>
 @endpush

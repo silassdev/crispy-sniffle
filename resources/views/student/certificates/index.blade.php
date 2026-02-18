@@ -44,8 +44,12 @@
                                     {{ $cert->created_at->format('M d, Y') }}
                                 </td>
                                 <td class="px-6 py-4 text-right flex justify-end gap-3">
-                                    <a href="{{ route('certificates.public', $cert->certificate_number) }}" target="_blank" class="text-sky-600 hover:underline font-medium">
+                                    <a href="{{ route('certificate.public', $cert->certificate_number) }}" target="_blank" class="text-sky-600 hover:underline font-medium">
                                         View
+                                    </a>
+                                    <span class="text-slate-300">|</span>
+                                    <a href="{{ route('certificates.pdf.preview', $cert->id) }}" target="_blank" class="text-slate-500 hover:text-slate-700">
+                                        Preview PDF
                                     </a>
                                     <span class="text-slate-300">|</span>
                                     <a href="{{ route('certificates.pdf.download', $cert->id) }}" class="text-slate-500 hover:text-slate-700">
