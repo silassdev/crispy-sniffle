@@ -113,7 +113,7 @@ class CertificateManager extends Component
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\DB::rollBack();
             \Log::error('Livewire certificate approval failed: '.$e->getMessage());
-            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Approval failed. Check logs.','ttl'=>5000]);
+            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Approval failed: '.$e->getMessage(),'ttl'=>8000]);
         }
 
         $this->closeModal();

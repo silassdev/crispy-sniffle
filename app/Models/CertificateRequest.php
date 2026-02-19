@@ -28,6 +28,7 @@ class CertificateRequest extends Model
         'trainer_id', 
         'type',
         'notes',
+        'admin_note',
         'status',
         'approved_by',
         'issued_at',
@@ -161,12 +162,10 @@ class CertificateRequest extends Model
         $approverId = $approver instanceof User ? $approver->id : $approver;
 
         $this->status      = self::STATUS_REJECTED;
-        $this->approved_by = $approverId ?? $this->approved_by;
+        $this->rejected_by = $approverId ?? $this->rejected_by;
         $this->rejected_at = now();
         if ($notes) {
-            // append rejection note (preserve existing notes)
-            $existing = $this->notes ? $this->notes . "\n\n" : '';
-            $this->notes = $existing . 'Rejection note: ' . $notes;
+            $this->admin_note = $notes;
         }
         $this->save();
 
