@@ -177,9 +177,13 @@ body {
         </table>
 
         <div class="qr-section">
-            <?php echo QrCode::size(80)->generate($verificationUrl); ?>
+            <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 8px; background: #f9fafb;">
+                <div style="font-size: 8px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Verify Online</div>
+                <div style="font-size: 9px; color: #4f46e5; max-width: 140px; word-break: break-all; font-weight: bold;">
+                    <?php echo e($verificationUrl); ?>
 
-            <div class="qr-label">Scan to Verify</div>
+                </div>
+            </div>
         </div>
 
     </div>

@@ -16,6 +16,9 @@ return new class extends Migration
             if (!Schema::hasColumn('certificate_requests', 'admin_note')) {
                 $table->text('admin_note')->nullable()->after('notes');
             }
+            if (!Schema::hasColumn('certificate_requests', 'certificate_path')) {
+                $table->string('certificate_path')->nullable()->after('status');
+            }
         });
     }
 

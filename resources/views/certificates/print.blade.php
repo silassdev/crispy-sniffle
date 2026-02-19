@@ -177,24 +177,12 @@ body {
         </table>
 
         <div class="qr-section">
-            @php
-                $qrHtml = '';
-                try {
-                    $qrImage = base64_encode(QrCode::format('png')->size(80)->generate($verificationUrl));
-                    $qrHtml = '<img src="data:image/png;base64,' . $qrImage . '" width="80" height="80" alt="QR Code">';
-                } catch (\Throwable $e) {
-                    // PNG QR requires imagick — fall back to verification text
-                    $qrHtml = '';
-                }
-            @endphp
-            @if($qrHtml)
-                {!! $qrHtml !!}
-            @else
-                <div style="font-size: 9px; color: #6b7280; max-width: 120px; word-break: break-all;">
-                    Verify at:<br>{{ $verificationUrl }}
+            <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 8px; background: #f9fafb;">
+                <div style="font-size: 8px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Verify Online</div>
+                <div style="font-size: 9px; color: #4f46e5; max-width: 140px; word-break: break-all; font-weight: bold;">
+                    {{ $verificationUrl }}
                 </div>
-            @endif
-            <div class="qr-label">Scan to Verify</div>
+            </div>
         </div>
 
     </div>
