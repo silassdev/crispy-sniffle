@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Certificate - {{ $cert->certificate_number }}</title>
     <style>
         @page {
             size: a4 landscape;
@@ -11,23 +10,25 @@
         html, body {
             margin: 0;
             padding: 0;
-            width: 100%;
-            height: 100%;
+            width: 297mm;
+            height: 210mm;
             font-family: 'DejaVu Sans', sans-serif;
-            overflow: hidden; /* Prevent extra pages */
-        }
-        .page-wrapper {
-            width: 100%;
-            height: 100%;
-            padding: 0; /* Let the table handle padding */
-            box-sizing: border-box;
+            overflow: hidden;
             background: #ffffff;
+        }
+        .pdf-shell {
+            width: 297mm;
+            height: 210mm;
+            padding: 0;
+            margin: 0;
+            display: block;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        @include('certificates._certificate_content', ['cert' => $cert])
+    <div class="pdf-shell">
+        @include('certificates._certificate_content', ['cert' => $cert, 'is_pdf_render' => true])
     </div>
 </body>
 </html>
