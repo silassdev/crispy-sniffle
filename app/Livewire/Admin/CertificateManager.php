@@ -5,6 +5,8 @@ namespace App\Livewire\Admin;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\CertificateRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CertificateManager extends Component
 {
@@ -14,7 +16,6 @@ class CertificateManager extends Component
     public $perPage = 15;
     public $status = 'pending';
     
-    // Modal State
     public $selectedCertId = null;
     public $isModalOpen = false;
     public $confirmingAction = null;
@@ -61,7 +62,7 @@ class CertificateManager extends Component
         $certs = $query->orderByDesc('created_at')->paginate($this->perPage);
 
         $selectedCert = $this->selectedCertId 
-            ? CertificateRequest::with(['student','trainer','course'])->find($this->selectedCertId) 
+            ? CertificateRequest::with(['student','trainer','course','approver'])->find($this->selectedCertId) 
             : null;
 
         return view('livewire.admin.certificate-manager', [
@@ -72,65 +73,148 @@ class CertificateManager extends Component
 
     public function approve()
     {
-        if (!$this->selectedCertId) return;
-
-        $req = CertificateRequest::with(['student','trainer','course','approver'])
-            ->findOrFail($this->selectedCertId);
-
-        if ($req->status !== 'pending') {
-            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Certificate is not pending','ttl'=>3000]);
+        Log::info('🔵 APPROVE ACTION STARTED', ['cert_id' => $this->selectedCertId, 'user_id' => auth()->id()]);
+        
+        if (!$this->selectedCertId) {
+            Log::warning('❌ No cert ID selected');
             return;
         }
 
-        \Illuminate\Support\Facades\DB::beginTransaction();
-
         try {
+            $req = CertificateRequest::with(['student','trainer','course','approver'])
+                ->findOrFail($this->selectedCertId);
+            
+            Log::info('Found certificate', ['status' => $req->status, 'id' => $req->id]);
+
+            if ($req->status !== 'pending') {
+                Log::warning('❌ Certificate not pending', ['current_status' => $req->status]);
+                $this->dispatch('app-toast', [
+                    'title' => 'Error',
+                    'message' => "Certificate is not pending. Current status: {$req->status}",
+                    'type' => 'error',
+                    'ttl' => 5000
+                ]);
+                return;
+            }
+
+            DB::beginTransaction();
+            Log::info('Transaction started');
+
             if (empty($req->certificate_number)) {
                 $req->certificate_number = CertificateRequest::generateNumber();
+                Log::info('Generated certificate number', ['number' => $req->certificate_number]);
             }
 
             $req->status = 'approved';
             $req->approved_by = auth()->id();
             $req->issued_at = now();
-            $req->save();
+            
+            if (!$req->save()) {
+                throw new \Exception('Failed to save certificate');
+            }
+            Log::info('Certificate marked as approved');
 
             // Generate PDF
             $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('certificates.print', ['cert' => $req])
                 ->setPaper('a4', 'landscape');
+            Log::info('PDF generated');
 
             $safeNumber = \Illuminate\Support\Str::slug($req->certificate_number);
             $filename = "certificate-{$safeNumber}.pdf";
             $relativePath = "certificates/{$filename}";
 
-            \Illuminate\Support\Facades\Storage::disk('public')->put($relativePath, $pdf->output());
+            $stored = \Illuminate\Support\Facades\Storage::disk('public')->put($relativePath, $pdf->output());
+            Log::info('PDF stored', ['path' => $relativePath, 'stored' => $stored]);
 
             $req->certificate_path = $relativePath;
-            $req->save();
+            if (!$req->save()) {
+                throw new \Exception('Failed to save certificate path');
+            }
+            Log::info('Certificate path saved');
 
-            \Illuminate\Support\Facades\DB::commit();
+            DB::commit();
+            Log::info('✅ TRANSACTION COMMITTED');
 
-            $this->dispatch('app-toast', ['title'=>'Approved','message'=>'Certificate approved and PDF generated','ttl'=>3000]);
+            $this->dispatch('app-toast', [
+                'title' => 'Success',
+                'message' => 'Certificate approved and PDF generated successfully!',
+                'type' => 'success',
+                'ttl' => 4000
+            ]);
+
+            $this->closeModal();
+            
         } catch (\Throwable $e) {
-            \Illuminate\Support\Facades\DB::rollBack();
-            \Log::error('Livewire certificate approval failed: '.$e->getMessage());
-            $this->dispatch('app-toast', ['title'=>'Error','message'=>'Approval failed: '.$e->getMessage(),'ttl'=>8000]);
+            DB::rollBack();
+            Log::error('❌ APPROVE FAILED: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            $this->dispatch('app-toast', [
+                'title' => 'Approval Failed',
+                'message' => $e->getMessage(),
+                'type' => 'error',
+                'ttl' => 8000
+            ]);
         }
-
-        $this->closeModal();
     }
 
     public function reject()
     {
-        if (!$this->selectedCertId) return;
-
-        $req = CertificateRequest::findOrFail($this->selectedCertId);
-        $req->update([
-            'status' => 'rejected',
-            'rejected_at' => now(),
-            'rejected_by' => auth()->id(),
-        ]);
+        Log::info('🔵 REJECT ACTION STARTED', ['cert_id' => $this->selectedCertId, 'user_id' => auth()->id()]);
         
-        $this->dispatch('app-toast', ['title'=>'Rejected','message'=>'Certificate rejected','ttl'=>3000]);
-        $this->closeModal();
+        if (!$this->selectedCertId) {
+            Log::warning('❌ No cert ID selected');
+            return;
+        }
+
+        try {
+            $req = CertificateRequest::findOrFail($this->selectedCertId);
+            Log::info('Found certificate', ['status' => $req->status, 'id' => $req->id]);
+
+            if ($req->status !== 'pending') {
+                Log::warning('❌ Certificate not pending', ['current_status' => $req->status]);
+                $this->dispatch('app-toast', [
+                    'title' => 'Error',
+                    'message' => "Certificate is not pending. Current status: {$req->status}",
+                    'type' => 'error',
+                    'ttl' => 5000
+                ]);
+                return;
+            }
+
+            $updated = $req->update([
+                'status' => 'rejected',
+                'rejected_at' => now(),
+                'rejected_by' => auth()->id(),
+            ]);
+            
+            Log::info('Certificate rejected', ['updated' => $updated]);
+
+            $this->dispatch('app-toast', [
+                'title' => 'Success',
+                'message' => 'Certificate rejected successfully!',
+                'type' => 'success',
+                'ttl' => 4000
+            ]);
+
+            $this->closeModal();
+            
+        } catch (\Throwable $e) {
+            Log::error('❌ REJECT FAILED: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+            
+            $this->dispatch('app-toast', [
+                'title' => 'Rejection Failed',
+                'message' => $e->getMessage(),
+                'type' => 'error',
+                'ttl' => 8000
+            ]);
+        }
     }
 }
