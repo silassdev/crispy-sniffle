@@ -3,70 +3,73 @@
 @section('title', 'Certificate Verification — ' . $cert->certificate_number)
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-10 px-4">
-    <div class="max-w-4xl mx-auto">
-
-        {{-- Verification Badge --}}
-        <div class="flex items-center justify-center gap-2 mb-6">
-            <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold border border-green-200">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                Verified Certificate
-            </span>
+<div class="min-h-screen bg-slate-100 py-12 px-4 flex flex-col items-center">
+    
+    <!-- Certificate Container - Fixed Aspect Ratio -->
+    <div class="certificate-web-outer shadow-2xl rounded-lg overflow-hidden bg-white mb-10">
+        <div class="certificate-web-inner">
+            @include('certificates._certificate_content', ['cert' => $cert])
         </div>
+    </div>
 
-        {{-- Certificate Card --}}
-        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-            {{-- Header Bar --}}
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 sm:px-10 py-6 text-center">
-                <h1 class="text-xl sm:text-2xl font-bold tracking-wide">Certificate of Achievement</h1>
-                <p class="text-indigo-200 text-sm mt-1">Official Verification</p>
+    <!-- Actions Bar -->
+    <div class="flex flex-wrap justify-center gap-4 mb-10">
+        <a href="{{ route('certificates.pdf.download', $cert->id) }}" 
+           class="flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-xl hover:-translate-y-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a2 2 0 002 2h14a2 2 0 002-2v-3"/></svg>
+            Download Official PDF
+        </a>
+        <a href="{{ route('certificates.pdf.preview', $cert->id) }}" target="_blank"
+           class="flex items-center gap-2 px-8 py-4 bg-white text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all shadow-lg border border-slate-200 hover:-translate-y-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Full Screen Preview
+        </a>
+    </div>
+
+    <!-- Verification Card -->
+    <div class="w-full max-w-3xl bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center">
+        <h4 class="text-slate-800 font-bold mb-2">Verification Information</h4>
+        <p class="text-sm text-slate-500 mb-6">
+            This digital certificate is an official record issued by IGNISCODE LMS. 
+            The authenticity can be verified by anyone using the details below.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Status</span>
+                <span class="text-green-600 font-bold flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Verified & Active
+                </span>
             </div>
-
-            {{-- Certificate Body --}}
-            <div class="px-6 sm:px-10 py-8 sm:py-12 text-center">
-                <p class="text-slate-500 text-sm uppercase tracking-widest mb-2">This is to certify that</p>
-                <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-6">{{ $cert->student?->name ?? 'Student' }}</h2>
-
-                <p class="text-slate-500 text-sm uppercase tracking-widest mb-2">has successfully completed</p>
-                <h3 class="text-xl sm:text-2xl font-semibold text-slate-800 mb-8">{{ $cert->course?->title ?? 'Course Program' }}</h3>
-
-                {{-- Details Grid --}}
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
-                    <div class="bg-slate-50 rounded-lg p-4 text-center">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Certificate No.</span>
-                        <span class="block text-sm font-mono font-bold text-slate-800">{{ $cert->certificate_number }}</span>
-                    </div>
-                    <div class="bg-slate-50 rounded-lg p-4 text-center">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Date Issued</span>
-                        <span class="block text-sm font-bold text-slate-800">{{ $cert->issued_at?->format('F d, Y') ?? 'N/A' }}</span>
-                    </div>
-                    <div class="bg-slate-50 rounded-lg p-4 text-center">
-                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Instructor</span>
-                        <span class="block text-sm font-bold text-slate-800">{{ $cert->trainer?->name ?? 'N/A' }}</span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Footer Actions --}}
-            <div class="bg-slate-50 border-t border-slate-200 px-6 sm:px-10 py-5 flex flex-col sm:flex-row items-center justify-center gap-3">
-                <a href="{{ route('certificates.pdf.download', $cert->id) }}"
-                   class="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a2 2 0 002 2h14a2 2 0 002-2v-3"/></svg>
-                    Download PDF
-                </a>
-                <a href="{{ route('certificates.pdf.preview', $cert->id) }}" target="_blank"
-                   class="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-slate-700 font-medium rounded-lg hover:bg-slate-100 transition-colors shadow-sm border border-slate-300">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    Preview PDF
-                </a>
+            <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Authenticity URL</span>
+                <span class="text-indigo-600 font-mono text-xs break-all">{{ route('certificate.verify', $cert->certificate_number) }}</span>
             </div>
         </div>
-
-        {{-- Verification Info --}}
-        <div class="mt-6 text-center text-sm text-slate-500">
-            <p>This certificate can be verified at: <span class="font-mono text-indigo-600">{{ url('/verify/' . $cert->certificate_number) }}</span></p>
-        </div>
-
     </div>
 </div>
+
+<style>
+    /* Fixed aspect ratio container for the certificate to match A4 Landscape */
+    .certificate-web-outer {
+        width: 1000px;
+        height: 707px; /* A4 Landscape Ratio (297/210 * 1000) */
+        position: relative;
+    }
+    
+    .certificate-web-inner {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Scaling for smaller screens */
+    @media (max-width: 1024px) {
+        .certificate-web-outer {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 297/210;
+        }
+    }
+</style>
 @endsection
