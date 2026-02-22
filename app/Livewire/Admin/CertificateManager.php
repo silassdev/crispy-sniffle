@@ -14,7 +14,7 @@ class CertificateManager extends Component
 
     public $q = '';
     public $perPage = 15;
-    public $status = 'pending';
+    public $status = ''; // Default to empty to show all certificates
     
     public $selectedCertId = null;
     public $isModalOpen = false;
@@ -48,6 +48,12 @@ class CertificateManager extends Component
     public function cancelAction()
     {
         $this->confirmingAction = null;
+        $this->dispatch('app-toast', [
+            'title' => 'Cancelled',
+            'message' => 'Action was cancelled.',
+            'type' => 'info',
+            'ttl' => 2000
+        ]);
     }
 
     public function render()
@@ -110,7 +116,7 @@ class CertificateManager extends Component
             $req->issued_at = now();
             
             if (!$req->save()) {
-                throw new \Exception('Failed to save certificate');
+                throw new \Exception('Failed to update certificate status');
             }
             Log::info('Certificate marked as approved');
 
@@ -189,6 +195,7 @@ class CertificateManager extends Component
                 'status' => 'rejected',
                 'rejected_at' => now(),
                 'rejected_by' => auth()->id(),
+                'admin_note' => 'Rejected by admin'
             ]);
             
             Log::info('Certificate rejected', ['updated' => $updated]);

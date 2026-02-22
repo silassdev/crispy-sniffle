@@ -1,5 +1,15 @@
 <?php
     $verificationUrl = route('certificate.verify', $cert->certificate_number);
+    // Generate QR code as Base64 SVG for DomPDF
+    // SVG is safer as it doesnot require imagick extension
+    $qrCode = base64_encode(SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')
+        ->size(100)
+        ->margin(2)
+        ->generate($verificationUrl));
+        
+    $title = $cert->type === App\Models\CertificateRequest::TYPE_GRADUATION 
+        ? 'Certificate of Graduation' 
+        : 'Certificate of Completion';
 ?>
 
 <!doctype html>
@@ -148,7 +158,7 @@ body {
 
         <div class="header-line"></div>
         <div class="subtitle">Official Document</div>
-        <div class="title">Certificate of Achievement</div>
+        <div class="title"><?php echo e($title); ?></div>
         <div class="header-line" style="margin-top: 15px;"></div>
 
         <div class="presented-to">This is proudly presented to</div>
@@ -179,8 +189,9 @@ body {
         <div class="qr-section">
             <div style="border: 1px solid #e5e7eb; border-radius: 4px; padding: 8px; background: #f9fafb;">
                 <div style="font-size: 8px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Verify Online</div>
-                <div style="font-size: 9px; color: #4f46e5; max-width: 140px; word-break: break-all; font-weight: bold;">
-                    <?php echo e($verificationUrl); ?>
+                <img src="data:image/svg+xml;base64,<?php echo e($qrCode); ?>" alt="QR Code" style="width: 80px; height: 80px;">
+                <div style="font-size: 8px; color: #4f46e5; max-width: 140px; word-break: break-all; font-weight: bold; margin-top: 4px;">
+                    <?php echo e($cert->certificate_number); ?>
 
                 </div>
             </div>

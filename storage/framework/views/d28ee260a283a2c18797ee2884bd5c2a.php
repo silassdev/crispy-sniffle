@@ -1,295 +1,74 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Certificate - <?php echo e($cert->certificate_number ?? ''); ?></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    @page { margin: 0; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    body { 
-      font-family: 'DejaVu Sans', Arial, sans-serif; 
-      color: #1a1a1a; 
-      background: #ffffff;
-    }
-    
-    .certificate-container {
-      width: 100%;
-      height: 100vh;
-      padding: 40px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      position: relative;
-    }
-    
-    .certificate-inner {
-      width: 100%;
-      height: 100%;
-      background: #ffffff;
-      border: 12px solid #f8f9fa;
-      box-shadow: inset 0 0 0 3px #667eea;
-      position: relative;
-      padding: 50px 60px;
-    }
-    
-    /* Decorative corners */
-    .corner {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      border: 3px solid #667eea;
-    }
-    .corner-tl { top: 25px; left: 25px; border-right: none; border-bottom: none; }
-    .corner-tr { top: 25px; right: 25px; border-left: none; border-bottom: none; }
-    .corner-bl { bottom: 25px; left: 25px; border-right: none; border-top: none; }
-    .corner-br { bottom: 25px; right: 25px; border-left: none; border-top: none; }
-    
-    /* Logo */
-    .logo-container {
-      position: absolute;
-      top: 40px;
-      right: 60px;
-      width: 100px;
-      height: 100px;
-      background: #ffffff;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    
-    .logo-container img {
-      width: 80px;
-      height: auto;
-      max-height: 80px;
-      object-fit: contain;
-    }
-    
-    .logo-placeholder {
-      font-size: 28px;
-      font-weight: 700;
-      color: #667eea;
-      text-align: center;
-      line-height: 1;
-    }
-    
-    /* Header */
-    .cert-header {
-      text-align: center;
-      margin-top: 60px;
-      margin-bottom: 40px;
-    }
-    
-    .cert-badge {
-      display: inline-block;
-      padding: 8px 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #ffffff;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 15px;
-    }
-    
-    .cert-title {
-      font-size: 42px;
-      font-weight: 700;
-      color: #1a1a1a;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-    
-    .cert-subtitle {
-      font-size: 14px;
-      color: #6b7280;
-      font-style: italic;
-    }
-    
-    /* Body */
-    .cert-body {
-      text-align: center;
-      margin: 40px auto;
-      max-width: 600px;
-    }
-    
-    .presented-to {
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 15px;
-      font-style: italic;
-    }
-    
-    .recipient-name {
-      font-size: 36px;
-      font-weight: 700;
-      color: #667eea;
-      margin-bottom: 25px;
-      padding-bottom: 10px;
-      border-bottom: 3px solid #667eea;
-      display: inline-block;
-    }
-    
-    .completion-text {
-      font-size: 14px;
-      color: #4b5563;
-      line-height: 1.8;
-      margin-bottom: 15px;
-    }
-    
-    .course-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: #1a1a1a;
-      margin: 15px 0;
-    }
-    
-    .notes-section {
-      margin-top: 25px;
-      padding: 15px;
-      background: #f9fafb;
-      border-left: 4px solid #667eea;
-      font-size: 12px;
-      color: #4b5563;
-      font-style: italic;
-      text-align: left;
-    }
-    
-    /* Footer */
-    .cert-footer {
-      position: absolute;
-      bottom: 60px;
-      left: 60px;
-      right: 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    
-    .signature-block {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .signature-line {
-      width: 180px;
-      height: 2px;
-      background: #667eea;
-      margin: 0 auto 8px;
-    }
-    
-    .signature-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-      margin-bottom: 3px;
-    }
-    
-    .signature-title {
-      font-size: 11px;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    .cert-meta {
-      text-align: center;
-      flex: 1;
-    }
-    
-    .cert-number {
-      font-size: 10px;
-      color: #9ca3af;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 3px;
-    }
-    
-    .cert-id {
-      font-size: 13px;
-      font-weight: 600;
-      color: #667eea;
-    }
-    
-    .cert-date {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 3px;
-    }
-  </style>
-</head>
-<body>
-  <div class="certificate-container">
-    <div class="certificate-inner">
-      <!-- Decorative Corners -->
-      <div class="corner corner-tl"></div>
-      <div class="corner corner-tr"></div>
-      <div class="corner corner-bl"></div>
-      <div class="corner corner-br"></div>
-      
-      <!-- Logo (Top Right) -->
-      <div class="logo-container">
-        <?php if(file_exists(public_path('img/igniscode.png'))): ?>
-          <img src="<?php echo e(public_path('img/igniscode.png')); ?>" alt="Logo">
-        <?php else: ?>
-          <div class="logo-placeholder"><?php echo e(substr(config('app.name'), 0, 1)); ?></div>
-        <?php endif; ?>
-      </div>
-      
-      <!-- Header -->
-      <div class="cert-header">
-        <div class="cert-badge">Official Certificate</div>
-        <h1 class="cert-title">Certificate of Achievement</h1>
-        <p class="cert-subtitle"><?php echo e(config('app.name')); ?></p>
-      </div>
-      
-      <!-- Body -->
-      <div class="cert-body">
-        <p class="presented-to">This certificate is proudly presented to</p>
-        <div class="recipient-name"><?php echo e($cert->student->name); ?></div>
-        
-        <p class="completion-text">
-          For successfully completing the course with excellence and dedication
-        </p>
-        
-        <?php if($cert->course): ?>
-          <div class="course-title"><?php echo e($cert->course->title); ?></div>
-        <?php endif; ?>
-        
-        <?php if($cert->notes): ?>
-          <div class="notes-section">
-            <?php echo e($cert->notes); ?>
 
-          </div>
-        <?php endif; ?>
-      </div>
-      
-      <!-- Footer -->
-      <div class="cert-footer">
-        <div class="signature-block">
-          <div class="signature-line"></div>
-          <div class="signature-name"><?php echo e($cert->trainer->name ?? 'Trainer'); ?></div>
-          <div class="signature-title">Course Trainer</div>
-        </div>
+
+<?php $__env->startSection('title', 'Certificate Verification — ' . $cert->certificate_number); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+
         
-        <div class="cert-meta">
-          <div class="cert-number">Certificate No.</div>
-          <div class="cert-id"><?php echo e($cert->certificate_number ?? '—'); ?></div>
-          <div class="cert-date"><?php echo e(optional($cert->issued_at)->format('F d, Y') ?? '—'); ?></div>
+        <div class="flex items-center justify-center gap-2 mb-6">
+            <span class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold border border-green-200">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                Verified Certificate
+            </span>
         </div>
+
         
-        <div class="signature-block">
-          <div class="signature-line"></div>
-          <div class="signature-name"><?php echo e($cert->approver?->name ?? 'Administrator'); ?></div>
-          <div class="signature-title">Approved By</div>
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            
+            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 sm:px-10 py-6 text-center">
+                <h1 class="text-xl sm:text-2xl font-bold tracking-wide">Certificate of Achievement</h1>
+                <p class="text-indigo-200 text-sm mt-1">Official Verification</p>
+            </div>
+
+            
+            <div class="px-6 sm:px-10 py-8 sm:py-12 text-center">
+                <p class="text-slate-500 text-sm uppercase tracking-widest mb-2">This is to certify that</p>
+                <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-6"><?php echo e($cert->student?->name ?? 'Student'); ?></h2>
+
+                <p class="text-slate-500 text-sm uppercase tracking-widest mb-2">has successfully completed</p>
+                <h3 class="text-xl sm:text-2xl font-semibold text-slate-800 mb-8"><?php echo e($cert->course?->title ?? 'Course Program'); ?></h3>
+
+                
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto text-left">
+                    <div class="bg-slate-50 rounded-lg p-4 text-center">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Certificate No.</span>
+                        <span class="block text-sm font-mono font-bold text-slate-800"><?php echo e($cert->certificate_number); ?></span>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-4 text-center">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Date Issued</span>
+                        <span class="block text-sm font-bold text-slate-800"><?php echo e($cert->issued_at?->format('F d, Y') ?? 'N/A'); ?></span>
+                    </div>
+                    <div class="bg-slate-50 rounded-lg p-4 text-center">
+                        <span class="block text-xs text-slate-500 uppercase font-semibold mb-1">Instructor</span>
+                        <span class="block text-sm font-bold text-slate-800"><?php echo e($cert->trainer?->name ?? 'N/A'); ?></span>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="bg-slate-50 border-t border-slate-200 px-6 sm:px-10 py-5 flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a href="<?php echo e(route('certificates.pdf.download', $cert->id)); ?>"
+                   class="inline-flex items-center gap-2 px-6 py-2.5 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a2 2 0 002 2h14a2 2 0 002-2v-3"/></svg>
+                    Download PDF
+                </a>
+                <a href="<?php echo e(route('certificates.pdf.preview', $cert->id)); ?>" target="_blank"
+                   class="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-slate-700 font-medium rounded-lg hover:bg-slate-100 transition-colors shadow-sm border border-slate-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    Preview PDF
+                </a>
+            </div>
         </div>
-      </div>
+
+        
+        <div class="mt-6 text-center text-sm text-slate-500">
+            <p>This certificate can be verified at: <span class="font-mono text-indigo-600"><?php echo e(url('/verify/' . $cert->certificate_number)); ?></span></p>
+        </div>
+
     </div>
-  </div>
-</body>
-</html>
-<?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/certificates/public.blade.php ENDPATH**/ ?>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\xampp\htdocs\laravel-lms\resources\views/certificates/public.blade.php ENDPATH**/ ?>

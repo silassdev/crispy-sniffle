@@ -24,8 +24,7 @@ class CertificatePdfController extends Controller
     public function preview($id)
     {
         $cert = $this->getApprovedCertificate($id);
-        $this->authorize('view', $cert);
-
+        
         return Pdf::loadView('certificates.print', compact('cert'))
             ->setPaper('a4', 'landscape')
             ->stream("certificate-{$cert->certificate_number}.pdf");
@@ -34,7 +33,6 @@ class CertificatePdfController extends Controller
     public function download($id)
     {
         $cert = $this->getApprovedCertificate($id);
-        $this->authorize('view', $cert);
 
         return Pdf::loadView('certificates.print', compact('cert'))
             ->setPaper('a4', 'landscape')

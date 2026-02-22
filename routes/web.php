@@ -118,12 +118,12 @@ Route::get('/verify/{certificate_number}', [CertificateController::class, 'publi
 Route::get('/certificates/{certificate}/pdf/download', [CertificatePdfController::class, 'download'])
     ->name('certificates.pdf.download');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview']) ->name('certificates.pdf.preview');
-    Route::get('/certificate/{id}/preview', [CertificatePdfController::class, 'preview']);
-    Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download']);
-    Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage']) ->name('certificates.pdf.save');
+// Public PDF routes for approved certificates
+Route::get('/certificates/{id}/pdf', [CertificatePdfController::class, 'preview'])->name('certificates.pdf.preview');
+Route::get('/certificates/{id}/download', [CertificatePdfController::class, 'download']);
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/certificates/{id}/save', [CertificatePdfController::class, 'saveToStorage'])->name('certificates.pdf.save');
 });
 
 
