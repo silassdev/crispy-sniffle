@@ -1,1 +1,0 @@
-How can i make the certificate come with qr code 'MUST' what logic do i need to apply

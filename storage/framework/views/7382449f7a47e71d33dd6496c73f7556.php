@@ -3,7 +3,7 @@
 <?php $__env->startSection('content'); ?>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-  
+
   <section class="relative mb-16 overflow-visible">
     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div class="relative z-10" data-reveal>
@@ -11,7 +11,7 @@
           <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-emerald-500 text-transparent bg-clip-text">Upskill with industry‑ready programs.</span><br>
           <span class="text-amber-400 italic">Teach &amp; certify to make impact.</span>
         </h1>
-        <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-200 mb-8 max-w-xl leading-relaxed font-['Inter']">
+        <p class="text-lg sm:text-xl text-slate-700 dark:text-slate-500 mb-8 max-w-xl leading-relaxed font-['Inter']">
           Hands-on micro‑credentials, cohort-based projects, and verified instructor-led programs. Build portfolio-grade work and earn credentials recognized by employers.
         </p>
 
@@ -21,7 +21,7 @@
             Start learning — free
           </a>
 
-          <a href="<?php echo e(route('home')); ?>#explore" class="inline-flex items-center gap-2 px-8 py-4 border-2 border-slate-200 rounded-full font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all duration-300" aria-label="Explore courses">
+          <a href="<?php echo e(route('courses.index')); ?>" class="inline-flex items-center gap-2 px-8 py-4 border-2 border-slate-200 rounded-full font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all duration-300" aria-label="Explore courses">
             Explore programs
           </a>
         </div>
@@ -42,9 +42,8 @@
     </div>
   </section>
 
-  
   <section class="mb-20">
-      <div class="p-8 md:p-12 bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-10 items-center">
+      <div class="p-8 md:p-12 bg-white dark:bg-slate-600 rounded-3xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-10 items-center">
         <div class="w-full md:w-1/2">
            <img src="/img/mission.png" alt="Mission: transform careers with education" class="rounded-2xl shadow-lg w-full">
         </div>

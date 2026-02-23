@@ -32,6 +32,12 @@ class User extends Authenticatable
         'role',
         'approved',
         'avatar',
+        'bio',
+        'phone',
+        'github_url',
+        'linkedin_url',
+        'twitter_url',
+        'website_url',
     ];
 
     /**

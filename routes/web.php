@@ -69,7 +69,9 @@ Route::post('/feedback', [FeedbackController::class, 'submit'])->name('feedback.
 Route::get('/notifications/unread', [NotificationsController::class, 'unread'])->name('notifications.unread')->middleware('auth');
 Route::post('/notifications/mark-read', [NotificationsController::class, 'markRead'])->name('notifications.markRead')->middleware('auth');
 Route::get('/notifications', function () { return view('notifications.index'); })->name('notifications.index')->middleware('auth');
-Route::get('/profile', function () { return "Profile management functionality is coming soon!"; })->name('profile.index')->middleware('auth');
+Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
+Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy')->middleware('auth');
 
 // Careers / Jobs / Sponsor & Feedback
 Route::get('/careers', [JobController::class, 'index'])->name('careers.index');
