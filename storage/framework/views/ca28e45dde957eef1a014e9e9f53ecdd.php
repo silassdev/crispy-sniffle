@@ -46,7 +46,7 @@
                             <p class="cert-summary-text">
                                 For successfully meeting all requirements and demonstrating exceptional proficiency in
                             </p>
-                            <h3 class="course-title-h3"><?php echo e($cert->course?->title ?? 'Introduction to Web Development'); ?></h3>
+                            <h3 class="course-title-h3"><?php echo e($cert->course?->title ?? 'Learning at Igniscode LMS'); ?></h3>
 
                             <!-- Footer Section: Signatures & Verification -->
                             <table class="footer-layout-table" width="100%">
@@ -57,14 +57,9 @@
                                             <tr>
                                                 <td align="center">
                                                     <div class="sig-line-mark"></div>
-                                                    <div class="sig-role-text">Training Director</div>
+                                                    <div class="sig-role-text">Administrator</div>
                                                 </td>
                                                 <td width="20"></td>
-                                                <td align="center">
-                                                    <div class="sig-line-mark"></div>
-                                                    <div class="sig-role-text">Lead Instructor</div>
-                                                    <div class="sig-instructor-name"><?php echo e($cert->trainer?->name ?? 'James B'); ?></div>
-                                                </td>
                                             </tr>
                                         </table>
                                     </td>
