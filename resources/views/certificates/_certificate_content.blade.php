@@ -52,27 +52,37 @@
                             <table class="footer-layout-table" width="100%">
                                 <tr>
                                     <!-- Signatures -->
-                                    <td width="55%" valign="bottom">
+                                    <td width="50%" valign="bottom" class="sig-cell">
                                         <table class="signatures-sub-table" width="100%">
                                             <tr>
                                                 <td align="center">
-                                                    <div class="sig-line-mark"></div>
+                                                    @if($cert->administrator_signature)
+                                                        <div class="sig-image-frame">
+                                                            <img src="{{ $cert->administrator_signature }}" alt="Administrator Signature" class="sig-image">
+                                                        </div>
+                                                    @else
+                                                        <div class="sig-line-mark"></div>
+                                                    @endif
                                                     <div class="sig-role-text">Administrator</div>
                                                 </td>
-                                                <td width="20"></td>
                                             </tr>
                                         </table>
                                     </td>
                                     
                                     <!-- QR and Info -->
-                                    <td width="45%" align="right" valign="bottom">
-                                        <table class="info-qr-sub-table">
+                                    <td width="50%" align="right" valign="bottom" class="info-qr-cell">
+                                        <table class="info-qr-sub-table" width="100%">
                                             <tr>
                                                 <td align="left" class="meta-data-cell">
-                                                    <div class="meta-item"><span class="meta-label">Certificate No:</span> {{ $cert->certificate_number }}</div>
-                                                    <div class="meta-item"><span class="meta-label">Issued On:</span> {{ $cert->issued_at?->format('F d, Y') ?? now()->format('F d, Y') }}</div>
+                                                    <div class="meta-info-row">
+                                                        <span class="meta-label">Certificate No:</span>
+                                                        <span class="meta-value">{{ $cert->certificate_number }}</span>
+                                                    </div>
+                                                    <div class="meta-info-row">
+                                                        <span class="meta-label">Issued On:</span>
+                                                        <span class="meta-value">{{ $cert->issued_at?->format('F d, Y') ?? now()->format('F d, Y') }}</span>
+                                                    </div>
                                                 </td>
-                                                <td width="15"></td>
                                                 <td align="center" class="qr-col-cell">
                                                     <div class="qr-code-frame">
                                                         <img src="data:image/svg+xml;base64,{{ $qrCode }}" width="75" height="75">
@@ -229,17 +239,47 @@
         font-weight: bold;
     }
 
-    /* Footer Signatures */
+    /* Footer Layout */
     .footer-layout-table {
         margin-top: 25pt;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .sig-cell {
+        padding-right: 15pt;
+        border-collapse: collapse;
+    }
+
+    .info-qr-cell {
+        padding-left: 15pt;
+        border-collapse: collapse;
+    }
+
+    /* Footer Signatures */
+    .signatures-sub-table {
+        border-collapse: collapse;
     }
 
     .sig-line-mark {
         border-top: 1pt solid #d1d5db;
         margin-bottom: 8pt;
-        width: 160pt;
+        width: 120pt;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .sig-image-frame {
+        display: inline-block;
+        margin-bottom: 8pt;
+        max-width: 140pt;
+        max-height: 50pt;
+    }
+
+    .sig-image {
+        max-width: 100%;
+        max-height: 50pt;
+        display: block;
     }
 
     .sig-role-text {
@@ -260,18 +300,21 @@
     .info-qr-sub-table {
         border-top: 1pt solid #f3f4f6;
         padding-top: 15pt;
-        width: auto;
+        width: 100%;
+        border-collapse: collapse;
     }
 
     .meta-data-cell {
         text-align: left;
-        white-space: nowrap;
+        padding-right: 20pt;
     }
 
-    .meta-item {
+    .meta-info-row {
         font-size: 11pt;
         color: #1f2937;
-        margin-bottom: 4pt;
+        margin-bottom: 6pt;
+        display: flex;
+        align-items: center;
     }
 
     .meta-label {
@@ -279,7 +322,19 @@
         color: #9ca3af;
         font-size: 9pt;
         text-transform: uppercase;
-        margin-right: 5pt;
+        margin-right: 8pt;
+        min-width: 85pt;
+        flex-shrink: 0;
+    }
+
+    .meta-value {
+        color: #1f2937;
+        font-size: 11pt;
+    }
+
+    .qr-col-cell {
+        text-align: center;
+        padding-left: 15pt;
     }
 
     .qr-code-frame {
