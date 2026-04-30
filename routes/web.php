@@ -166,5 +166,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('admins/{id}', [AdminController::class, 'show'])->name('admins.show');
         Route::get('admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
 
+        // Certificate routes
+        Route::get('certificates', [\App\Http\Controllers\Admin\CertificateController::class, 'index'])->name('certificates.index');
+        Route::get('certificates/{id}', [\App\Http\Controllers\Admin\CertificateController::class, 'show'])->name('certificates.show');
+        Route::get('certificates/{id}/sign', [\App\Http\Controllers\Admin\CertificateController::class, 'sign'])->name('certificates.sign');
+        Route::post('certificates/{id}/sign', [\App\Http\Controllers\Admin\CertificateController::class, 'saveSigned'])->name('certificates.saveSigned');
+        Route::post('certificates/{id}/approve', [\App\Http\Controllers\Admin\CertificateController::class, 'approve'])->name('certificates.approve');
+        Route::post('certificates/{id}/reject', [\App\Http\Controllers\Admin\CertificateController::class, 'reject'])->name('certificates.reject');
+        Route::post('certificates/{id}/revoke', [\App\Http\Controllers\Admin\CertificateController::class, 'revoke'])->name('certificates.revoke');
+
     });
 });
